@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.Context;
+using Model.Entity;
 
 namespace Api.Controllers;
 
@@ -17,7 +18,6 @@ public class ChecklistController : ControllerBase
     {
         _logger = logger;
         _context = context;
-
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
