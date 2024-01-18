@@ -1,49 +1,49 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Inventory.Models
+namespace Model.Entities;
+
+public enum UserStatus
 {
-    public enum UserStatus
-    {
-        [Display(Name = "Active")]
-        Active,
-        [Display(Name = "Disabled")]
-        Disabled,
-        [Display(Name = "Deleted")]
-        Deleted,
-    }
-    public class User
-    {
-
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-        
-        public string? UmId { get; set; }
-
-        public string? AzureAdUserId { get; set; }
-        
-        [StringLength(150)]
-        public string? UserRole { get; set; }
-
-        [StringLength(50)]
-        public string? FirstName { get; set; }
-
-        [StringLength(50)]
-        public string? LastName { get; set; }
-
-        [EmailAddress]
-        [StringLength(100)]
-        public string? Email { get; set; }
-
-        [StringLength(50)]
-        public string? Username { get; set; }
-
-        [EnumDataType(typeof(UserStatus))]
-        public UserStatus Status { get; set; }
-
-        public DateTime? CreatedDate { get; set; }
-
-        public DateTime? UpdatedDate { get; set; }
-    }
+    [Display(Name = "Active")]
+    Active,
+    [Display(Name = "Disabled")]
+    Disabled,
+    [Display(Name = "Deleted")]
+    Deleted,
 }
+public class User
+{
+
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid Id { get; set; }
+
+    public required string UmId { get; set; }
+
+    public required string AzureAdUserId { get; set; }
+
+    [MaxLength(150)]
+    public required string UserRole { get; set; }
+
+    [MaxLength(50)]
+    public required string FirstName { get; set; }
+
+    [MaxLength(50)]
+    public required string LastName { get; set; }
+
+    [EmailAddress]
+    [MaxLength(100)]
+    public required string Email { get; set; }
+
+    [MaxLength(50)]
+    public required string Username { get; set; }
+
+    [EnumDataType(typeof(UserStatus))]
+    public UserStatus Status { get; set; }
+
+    public DateOnly CreatedDate { get; set; }
+
+    public DateOnly? UpdatedDate { get; set; }
+}
+

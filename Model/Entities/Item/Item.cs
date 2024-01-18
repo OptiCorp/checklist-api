@@ -1,0 +1,47 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Model.Entities;
+
+public class Item
+{
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public required string Id { get; set; }
+
+    public required string WpId { get; set; }
+
+    public required string SerialNumber { get; set; }
+
+    public required string CreatedById { get; set; }
+
+    [MaxLength(300)]
+    public string? Comment { get; set; }
+
+    public DateOnly CreatedDate { get; set; }
+
+    public DateOnly? UpdatedDate { get; set; }
+
+    public ICollection<Item>? Children { get; set; }
+
+    // public string VendorId { get; set; }
+    // public Vendor Vendor { get; set; }
+
+    // public string LocationId { get; set; }
+    // public Location? Location { get; set; }
+
+    //public IEnumerable<LogEntry>? LogEntries { get; set; }
+
+    //public User? CreatedBy { get; set; } //Should be requiered?
+    // public string? PreCheckId { get; set; }
+
+    // public PreCheck? PreCheck { get; set; } 
+    
+    public required string ItemTemplateId { get; set; }
+    public required ItemTemplate ItemTemplate { get; set; }
+
+    //public ICollection<Document>? Documents { get; set; }
+
+    public string? ParentId { get; set; }
+    public Item? Parent { get; set; }
+}
+
