@@ -1,23 +1,36 @@
 
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Model.Entities;
 
+public enum ChecklistStatus
+{
+    [Display(Name = "NotStarted")]
+    NotStarted,
+    [Display(Name = "Completed")]
+    Completed,
+    [Display(Name = "InProgress")]
+    InProgress,
+}
 public class Checklist
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public required int Id {get; set;}
-    public required string ItemId {get; set;}
+    public int Id {get; set;}
 
-    public required Item Item {get; set;}
+    // [EnumDataType(typeof(ChecklistStatus))]
+    // public ChecklistStatus Status {get; set;}
+    public int ItemId {get; set;}
 
-    public required string ChecklistTemplateId {get; set;}
+    public Item Item {get; set;} = null!; //TODO: 
 
-    public required ChecklistTemplate ChecklistTemplate {get; set;}
+    public int ChecklistTemplateId {get; set;}
 
-    public required string MobilizationId {get; set;}
+    public ChecklistTemplate ChecklistTemplate {get; set;} = null!;
 
-    public required Mobilization Mobilization {get; set;}
+    public int MobilizationId {get; set;}
 
-    public ICollection<Punch> Puches {get; set;} = new List<Punch>();
+    public Mobilization Mobilization {get; set;} = null!;
+
+    public List<ChecklistChecklistItem> ChecklistChecklistItems {get; set;} = null!;
 }

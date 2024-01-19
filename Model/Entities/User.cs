@@ -17,7 +17,7 @@ public class User
 
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Id { get; set; }
+    public int Id { get; set; }
 
     public required string UmId { get; set; }
 

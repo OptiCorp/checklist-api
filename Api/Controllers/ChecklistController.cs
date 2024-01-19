@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.Context;
-using Model.Entity;
+using Model.Entities;
+
 
 namespace Api.Controllers;
 
@@ -21,8 +22,8 @@ public class ChecklistController : ControllerBase
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
-    public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems(CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<Item>>> GetTodoItems(CancellationToken cancellationToken)
     {
-        return await _context.TodoItems.ToListAsync(cancellationToken);
+        return await _context.Items.ToListAsync(cancellationToken);
     }
 }

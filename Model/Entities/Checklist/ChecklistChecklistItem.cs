@@ -17,7 +17,7 @@ public class ChecklistChecklistItem
 
     public ChecklistItem ChecklistItem {get; set;} = null!;
 
-
+    public Punch? Puch {get; set;}
 
 
     //TODO: add additional props

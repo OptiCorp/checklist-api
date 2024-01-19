@@ -13,7 +13,7 @@ public enum MobilizationType
 }
 public class Mobilization 
 {
-    public required string Id {get; set;}
+    public int Id {get; set;}
 
     public DateOnly CreatedDate {get; set;}
 
@@ -25,5 +25,8 @@ public class Mobilization
 
     public MobilizationType MobilizationType {get; set;}
 
-    public ICollection<Item> Items {get; set;} = new List<Item>();
+    public List<Item> Items {get; set;} = new List<Item>();
+
+    public List<ItemMobilization> ItemMobilizations {get; set;} = new List<ItemMobilization>();
+    
 }

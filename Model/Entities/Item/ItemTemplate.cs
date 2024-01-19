@@ -5,15 +5,15 @@ namespace Model.Entities;
 public class ItemTemplate
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public required string Id { get; set; }
+    public int Id { get; set; }
 
     public required string Name { get; set; }
 
     public required string Type { get; set; }
 
-    public required string CategoryId { get; set; }
+    // public required string CategoryId { get; set; }
 
-    public required string ProductNumber { get; set; }
+    // public required string ProductNumber { get; set; }
 
     public string? Revision { get; set; }
 
@@ -23,7 +23,7 @@ public class ItemTemplate
 
     public DateOnly? UpdatedDate { get; set; }
 
-    public required string CreatedById { get; set; }
+    public int CreatedById { get; set; }
 
     public ChecklistTemplate? ChecklistTemplate {get; set;}
 

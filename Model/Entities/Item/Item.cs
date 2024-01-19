@@ -6,7 +6,7 @@ namespace Model.Entities;
 public class Item
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public required string Id { get; set; }
+    public int Id { get; set; }
 
     public required string WpId { get; set; }
 
@@ -36,12 +36,16 @@ public class Item
 
     // public PreCheck? PreCheck { get; set; } 
     
-    public required string ItemTemplateId { get; set; }
-    public required ItemTemplate ItemTemplate { get; set; }
+    public int ItemTemplateId { get; set; }
+    public ItemTemplate ItemTemplate { get; set; } = null!;
 
     //public ICollection<Document>? Documents { get; set; }
-
-    public string? ParentId { get; set; }
+    public int ParentId { get; set; }
     public Item? Parent { get; set; }
+
+    public List<Mobilization> Mobilizations {get; set;} = [];
+
+    public List<ItemMobilization> ItemMobilizations {get; set;} = [];
+
 }
 

@@ -12,9 +12,7 @@ public class ChecklistItem
     [MaxLength(150)]
     public required string Question {get; set;} 
 
-    public required string ChecklistTemplateId {get; set;}
+    public List<ChecklistTemplateChecklistItem> ChecklistTemplateChecklistItems {get; set;} = new List<ChecklistTemplateChecklistItem>();
 
-
-
-    //TODO: add additional props
+    public List<ChecklistTemplate> ChecklistTemplates {get; set;} = new List<ChecklistTemplate>();
 }
