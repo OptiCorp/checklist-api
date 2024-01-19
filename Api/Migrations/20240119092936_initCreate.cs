@@ -229,6 +229,7 @@ namespace Api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     ChecklistId = table.Column<int>(type: "int", nullable: false),
                     ChecklistItemId = table.Column<int>(type: "int", nullable: false)
                 },

@@ -64,6 +64,9 @@ namespace Api.Migrations
                     b.Property<int>("ChecklistItemId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ChecklistId");

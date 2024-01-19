@@ -12,7 +12,7 @@ using Model.Context;
 namespace Api.Migrations
 {
     [DbContext(typeof(ModelContextBase))]
-    [Migration("20240119092112_initCreate")]
+    [Migration("20240119092936_initCreate")]
     partial class initCreate
     {
         /// <inheritdoc />
@@ -65,6 +65,9 @@ namespace Api.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("ChecklistItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

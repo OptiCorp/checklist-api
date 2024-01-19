@@ -4,15 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Model.Entities;
 
-public enum ChecklistStatus
-{
-    [Display(Name = "NotStarted")]
-    NotStarted,
-    [Display(Name = "Completed")]
-    Completed,
-    [Display(Name = "InProgress")]
-    InProgress,
-}
 public class Checklist
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
