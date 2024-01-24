@@ -7,7 +7,7 @@ namespace Model.Entities;
 public class ChecklistItem
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id {get; set;}
+    public required string Id {get; set;}
 
     [MaxLength(150)]
     public required string Question {get; set;} 

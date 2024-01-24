@@ -5,7 +5,7 @@ namespace Model.Entities;
 public class ItemTemplate
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public required string Id { get; set; }
 
     public required string Name { get; set; }
 
@@ -23,7 +23,7 @@ public class ItemTemplate
 
     public DateOnly? UpdatedDate { get; set; }
 
-    public int CreatedById { get; set; }
+    public required string CreatedById { get; set; }
 
     public ChecklistTemplate? ChecklistTemplate {get; set;}
 

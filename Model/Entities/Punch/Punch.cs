@@ -1,14 +1,23 @@
 namespace Model.Entities;
 
-public class Punch 
+public class Punch
 {
-    public int Id {get; set;}
+    public required string Id { get; set; }
 
-    public DateOnly PunchCreated {get; set;}
+    public DateOnly PunchCreated { get; set; }
 
-    public string? Description {get; set;}
+    public string? Description { get; set; }
 
-    public int ChecklistChecklistItemId {get; set;}
+    public required string ChecklistChecklistItemId { get; set; }
 
-    public ChecklistChecklistItem ChecklistChecklistItem {get; set;} = null!;
+    //public ChecklistChecklistItem ChecklistChecklistItem {get; set;} = null!;
+    public string? ChecklistId {get; set;}
+
+    public Checklist? Checklist {get; set;} = null!;
+
+    public required string ItemId {get; set;}
+
+    public Item Item {get; set;} = null!;
+
+
 }

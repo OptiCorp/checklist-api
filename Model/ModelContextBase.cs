@@ -22,7 +22,7 @@ public class ModelContextBase : DbContext
 
          modelBuilder.Entity<Item>() //Many-to-many for item and mobilization
             .HasMany(e => e.Mobilizations)
-            .WithMany(e => e.Items)
+            .WithMany()
             .UsingEntity<ItemMobilization>();
 
         modelBuilder.Entity<Item>() //on delete behaviour for an Item
@@ -46,8 +46,5 @@ public class ModelContextBase : DbContext
     public DbSet<Checklist> Checklists { get; set; } = null!;
     public DbSet<ChecklistItem> ChecklistItems { get; set; } = null!;
     public DbSet<Mobilization> Mobilizations { get; set; } = null!;
-    public DbSet<Punch> Puches { get; set; } = null!;
-
-
-
+    public DbSet<Punch> Punches { get; set; } = null!;
 }

@@ -7,19 +7,21 @@ namespace Model.Entities;
 public class Checklist
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id {get; set;}
+    public required string Id {get; set;}
 
     // [EnumDataType(typeof(ChecklistStatus))]
     // public ChecklistStatus Status {get; set;}
-    public int ItemId {get; set;}
+    public required string ItemId {get; set;}
 
     public Item Item {get; set;} = null!; //TODO: 
 
-    public int ChecklistTemplateId {get; set;}
+    public List<Punch> Punch {get; set;} = [];
+
+    public required string ChecklistTemplateId {get; set;}
 
     public ChecklistTemplate ChecklistTemplate {get; set;} = null!;
 
-    public int MobilizationId {get; set;}
+    public required string MobilizationId {get; set;}
 
     public Mobilization Mobilization {get; set;} = null!;
 

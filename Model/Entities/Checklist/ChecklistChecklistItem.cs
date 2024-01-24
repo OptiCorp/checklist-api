@@ -14,21 +14,20 @@ public enum ChecklistStatus
     InProgress,
 }
 
-public class ChecklistChecklistItem
+public class ChecklistChecklistItem //checklistItemWithStatus
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public required string Id { get; set; }
 
     [EnumDataType(typeof(ChecklistStatus))]
     public ChecklistStatus Status { get; set; }
 
-    public int ChecklistId { get; set; }
+    public required string ChecklistId { get; set; }
 
     public Checklist Checklist { get; set; } = null!;
 
-    public int ChecklistItemId { get; set; }
+    public required string ChecklistItemId { get; set; }
 
     public ChecklistItem ChecklistItem { get; set; } = null!;
 
-    public Punch? Puch { get; set; }
 }

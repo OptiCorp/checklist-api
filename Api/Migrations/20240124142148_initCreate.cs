@@ -15,8 +15,7 @@ namespace Api.Migrations
                 name: "ChecklistItems",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Question = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
                 },
                 constraints: table =>
@@ -28,8 +27,7 @@ namespace Api.Migrations
                 name: "Mobilizations",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedDate = table.Column<DateOnly>(type: "date", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -44,8 +42,7 @@ namespace Api.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UmId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AzureAdUserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserRole = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
@@ -66,15 +63,14 @@ namespace Api.Migrations
                 name: "ItemTemplates",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Revision = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDate = table.Column<DateOnly>(type: "date", nullable: false),
                     UpdatedDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    CreatedById = table.Column<int>(type: "int", nullable: false)
+                    CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -91,9 +87,8 @@ namespace Api.Migrations
                 name: "ChecklistTemplates",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ItemTemplateId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ItemTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -110,16 +105,15 @@ namespace Api.Migrations
                 name: "Items",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     WpId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedById = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
                     CreatedDate = table.Column<DateOnly>(type: "date", nullable: false),
                     UpdatedDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    ItemTemplateId = table.Column<int>(type: "int", nullable: false),
-                    ParentId = table.Column<int>(type: "int", nullable: false)
+                    ItemTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ParentId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -142,10 +136,9 @@ namespace Api.Migrations
                 name: "ChecklistTemplateChecklistItem",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ChecklistItemId = table.Column<int>(type: "int", nullable: false),
-                    ChecklistTemplateId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ChecklistItemId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ChecklistTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -168,11 +161,10 @@ namespace Api.Migrations
                 name: "Checklists",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ItemId = table.Column<int>(type: "int", nullable: false),
-                    ChecklistTemplateId = table.Column<int>(type: "int", nullable: false),
-                    MobilizationId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ItemId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ChecklistTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    MobilizationId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -201,10 +193,9 @@ namespace Api.Migrations
                 name: "ItemMobilization",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MobilizationId = table.Column<int>(type: "int", nullable: false),
-                    ItemId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    MobilizationId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ItemId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -227,11 +218,10 @@ namespace Api.Migrations
                 name: "ChecklistChecklistItem",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    ChecklistId = table.Column<int>(type: "int", nullable: false),
-                    ChecklistItemId = table.Column<int>(type: "int", nullable: false)
+                    ChecklistId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ChecklistItemId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -251,22 +241,28 @@ namespace Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Puches",
+                name: "Punches",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     PunchCreated = table.Column<DateOnly>(type: "date", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ChecklistChecklistItemId = table.Column<int>(type: "int", nullable: false)
+                    ChecklistChecklistItemId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ChecklistId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ItemId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Puches", x => x.Id);
+                    table.PrimaryKey("PK_Punches", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Puches_ChecklistChecklistItem_ChecklistChecklistItemId",
-                        column: x => x.ChecklistChecklistItemId,
-                        principalTable: "ChecklistChecklistItem",
+                        name: "FK_Punches_Checklists_ChecklistId",
+                        column: x => x.ChecklistId,
+                        principalTable: "Checklists",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Punches_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Items",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -338,15 +334,22 @@ namespace Api.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Puches_ChecklistChecklistItemId",
-                table: "Puches",
-                column: "ChecklistChecklistItemId",
-                unique: true);
+                name: "IX_Punches_ChecklistId",
+                table: "Punches",
+                column: "ChecklistId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Punches_ItemId",
+                table: "Punches",
+                column: "ItemId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ChecklistChecklistItem");
+
             migrationBuilder.DropTable(
                 name: "ChecklistTemplateChecklistItem");
 
@@ -354,10 +357,7 @@ namespace Api.Migrations
                 name: "ItemMobilization");
 
             migrationBuilder.DropTable(
-                name: "Puches");
-
-            migrationBuilder.DropTable(
-                name: "ChecklistChecklistItem");
+                name: "Punches");
 
             migrationBuilder.DropTable(
                 name: "ChecklistItems");

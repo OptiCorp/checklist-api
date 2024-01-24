@@ -24,20 +24,21 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Model.Entities.Checklist", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("ChecklistTemplateId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ChecklistTemplateId")
-                        .HasColumnType("int");
+                    b.Property<string>("ItemId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MobilizationId")
-                        .HasColumnType("int");
+                    b.Property<string>("MobilizationId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -52,17 +53,17 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Model.Entities.ChecklistChecklistItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("ChecklistId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ChecklistId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ChecklistItemId")
-                        .HasColumnType("int");
+                    b.Property<string>("ChecklistItemId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -78,11 +79,9 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Model.Entities.ChecklistItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Question")
                         .IsRequired()
@@ -96,14 +95,13 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Model.Entities.ChecklistTemplate", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ItemTemplateId")
-                        .HasColumnType("int");
+                    b.Property<string>("ItemTemplateId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -115,17 +113,17 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Model.Entities.ChecklistTemplateChecklistItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("ChecklistItemId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ChecklistItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ChecklistTemplateId")
-                        .HasColumnType("int");
+                    b.Property<string>("ChecklistTemplateId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -138,11 +136,9 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Model.Entities.Item", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Comment")
                         .HasMaxLength(300)
@@ -155,11 +151,13 @@ namespace Api.Migrations
                     b.Property<DateOnly>("CreatedDate")
                         .HasColumnType("date");
 
-                    b.Property<int>("ItemTemplateId")
-                        .HasColumnType("int");
+                    b.Property<string>("ItemTemplateId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ParentId")
-                        .HasColumnType("int");
+                    b.Property<string>("ParentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SerialNumber")
                         .IsRequired()
@@ -183,17 +181,16 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Model.Entities.ItemMobilization", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("ItemId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MobilizationId")
-                        .HasColumnType("int");
+                    b.Property<string>("MobilizationId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -206,14 +203,13 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Model.Entities.ItemTemplate", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CreatedById")
-                        .HasColumnType("int");
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateOnly>("CreatedDate")
                         .HasColumnType("date");
@@ -244,11 +240,8 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Model.Entities.Mobilization", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateOnly>("CreatedDate")
                         .HasColumnType("date");
@@ -270,36 +263,40 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Model.Entities.Punch", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("ChecklistChecklistItemId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ChecklistChecklistItemId")
-                        .HasColumnType("int");
+                    b.Property<string>("ChecklistId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ItemId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateOnly>("PunchCreated")
                         .HasColumnType("date");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChecklistChecklistItemId")
-                        .IsUnique();
+                    b.HasIndex("ChecklistId");
 
-                    b.ToTable("Puches");
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("Punches");
                 });
 
             modelBuilder.Entity("Model.Entities.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AzureAdUserId")
                         .IsRequired()
@@ -475,23 +472,26 @@ namespace Api.Migrations
 
             modelBuilder.Entity("Model.Entities.Punch", b =>
                 {
-                    b.HasOne("Model.Entities.ChecklistChecklistItem", "ChecklistChecklistItem")
-                        .WithOne("Puch")
-                        .HasForeignKey("Model.Entities.Punch", "ChecklistChecklistItemId")
+                    b.HasOne("Model.Entities.Checklist", "Checklist")
+                        .WithMany("Punch")
+                        .HasForeignKey("ChecklistId");
+
+                    b.HasOne("Model.Entities.Item", "Item")
+                        .WithMany("Punches")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ChecklistChecklistItem");
+                    b.Navigation("Checklist");
+
+                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("Model.Entities.Checklist", b =>
                 {
                     b.Navigation("ChecklistChecklistItems");
-                });
 
-            modelBuilder.Entity("Model.Entities.ChecklistChecklistItem", b =>
-                {
-                    b.Navigation("Puch");
+                    b.Navigation("Punch");
                 });
 
             modelBuilder.Entity("Model.Entities.ChecklistItem", b =>
@@ -509,6 +509,8 @@ namespace Api.Migrations
                     b.Navigation("Children");
 
                     b.Navigation("ItemMobilizations");
+
+                    b.Navigation("Punches");
                 });
 
             modelBuilder.Entity("Model.Entities.ItemTemplate", b =>
