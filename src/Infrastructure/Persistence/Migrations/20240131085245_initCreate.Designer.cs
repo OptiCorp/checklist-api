@@ -12,7 +12,7 @@ using Model.Context;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ModelContextBase))]
-    [Migration("20240131071750_initCreate")]
+    [Migration("20240131085245_initCreate")]
     partial class initCreate
     {
         /// <inheritdoc />
@@ -34,6 +34,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("ChecklistTemplateId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateOnly>("Created")
+                        .HasColumnType("date");
 
                     b.Property<string>("ItemId")
                         .IsRequired()
@@ -86,6 +89,9 @@ namespace Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateOnly>("Created")
+                        .HasColumnType("date");
+
                     b.Property<string>("Question")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -101,6 +107,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateOnly>("Created")
+                        .HasColumnType("date");
 
                     b.Property<string>("ItemTemplateId")
                         .IsRequired()
@@ -147,16 +156,19 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
+                    b.Property<DateOnly>("Created")
+                        .HasColumnType("date");
+
                     b.Property<string>("CreatedById")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly>("CreatedDate")
-                        .HasColumnType("date");
-
                     b.Property<string>("ItemTemplateId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateOnly?>("LastModified")
+                        .HasColumnType("date");
 
                     b.Property<string>("ParentId")
                         .IsRequired()
@@ -165,9 +177,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("SerialNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateOnly?>("UpdatedDate")
-                        .HasColumnType("date");
 
                     b.Property<string>("WpId")
                         .IsRequired()
@@ -210,15 +219,18 @@ namespace Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateOnly>("Created")
+                        .HasColumnType("date");
+
                     b.Property<string>("CreatedById")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateOnly>("CreatedDate")
-                        .HasColumnType("date");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly?>("LastModified")
+                        .HasColumnType("date");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -230,9 +242,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateOnly?>("UpdatedDate")
-                        .HasColumnType("date");
 
                     b.HasKey("Id");
 
@@ -246,7 +255,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateOnly>("CreatedDate")
+                    b.Property<DateOnly>("Created")
                         .HasColumnType("date");
 
                     b.Property<string>("Description")
@@ -276,15 +285,15 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("ChecklistId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateOnly>("Created")
+                        .HasColumnType("date");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ItemId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateOnly>("PunchCreated")
-                        .HasColumnType("date");
 
                     b.HasKey("Id");
 
@@ -305,7 +314,7 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly>("CreatedDate")
+                    b.Property<DateOnly>("Created")
                         .HasColumnType("date");
 
                     b.Property<string>("Email")
@@ -318,6 +327,9 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<DateOnly?>("LastModified")
+                        .HasColumnType("date");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -329,9 +341,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("UmId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateOnly?>("UpdatedDate")
-                        .HasColumnType("date");
 
                     b.Property<string>("UserRole")
                         .IsRequired()

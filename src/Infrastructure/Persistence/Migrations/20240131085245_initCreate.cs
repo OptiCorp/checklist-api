@@ -16,7 +16,8 @@ namespace Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Question = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
+                    Question = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Created = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -28,10 +29,10 @@ namespace Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CreatedDate = table.Column<DateOnly>(type: "date", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MobilizationType = table.Column<int>(type: "int", nullable: false)
+                    MobilizationType = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,8 +52,8 @@ namespace Infrastructure.Persistence.Migrations
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    CreatedDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    UpdatedDate = table.Column<DateOnly>(type: "date", nullable: true)
+                    LastModified = table.Column<DateOnly>(type: "date", nullable: true),
+                    Created = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,9 +69,9 @@ namespace Infrastructure.Persistence.Migrations
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Revision = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    UpdatedDate = table.Column<DateOnly>(type: "date", nullable: true),
-                    CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    LastModified = table.Column<DateOnly>(type: "date", nullable: true),
+                    CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Created = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -88,7 +89,8 @@ namespace Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ItemTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ItemTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Created = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -110,10 +112,10 @@ namespace Infrastructure.Persistence.Migrations
                     SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedById = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: true),
-                    CreatedDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    UpdatedDate = table.Column<DateOnly>(type: "date", nullable: true),
+                    LastModified = table.Column<DateOnly>(type: "date", nullable: true),
                     ItemTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ParentId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ParentId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Created = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -164,7 +166,8 @@ namespace Infrastructure.Persistence.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ItemId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ChecklistTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    MobilizationId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    MobilizationId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Created = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -245,11 +248,11 @@ namespace Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PunchCreated = table.Column<DateOnly>(type: "date", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ChecklistChecklistItemId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ChecklistId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ItemId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ItemId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Created = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
