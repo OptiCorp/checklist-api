@@ -10,7 +10,7 @@
                 "isDefault": true
             },
             "options": {
-                "cwd": "${workspaceFolder}/API"
+                "cwd": "${workspaceFolder}/src/API"
             }
         }
     ]

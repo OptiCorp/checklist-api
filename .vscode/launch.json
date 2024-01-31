@@ -6,9 +6,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/API/bin/Debug/net8.0/Api.dll",
+            "program": "${workspaceFolder}/src/API/bin/Debug/net8.0/Api.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/API",
+            "cwd": "${workspaceFolder}/src/API",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
@@ -18,7 +18,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceFolder}/API/Views"
+                "/Views": "${workspaceFolder}/src/API/Views"
             }
         }
     ]
