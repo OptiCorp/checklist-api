@@ -15,10 +15,6 @@ public enum UserStatus
 public class User : AuditableEntity
 {
 
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public required string Id { get; set; }
-
     public required string UmId { get; set; }
 
     public required string AzureAdUserId { get; set; }
@@ -41,7 +37,5 @@ public class User : AuditableEntity
 
     [EnumDataType(typeof(UserStatus))]
     public UserStatus Status { get; set; }
-
-    public DateOnly? LastModified { get; set; }
 }
 

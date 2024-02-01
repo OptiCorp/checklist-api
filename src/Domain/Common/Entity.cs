@@ -5,6 +5,7 @@ namespace MobDeMob.Domain.Common;
 
 public abstract class Entity
 {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public required string Id {get; set;}
 
     private readonly List<Event> _domainEvents = new();

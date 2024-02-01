@@ -1,8 +1,10 @@
 
 using Microsoft.EntityFrameworkCore;
-using Model.Context;
+using MobDeMob.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 // Add services to the container.
 
@@ -11,9 +13,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ModelContextBase>(opt => opt.UseSqlServer(
-    builder.Configuration.GetConnectionString("SqlDatabase"), x => x.MigrationsAssembly("Infrastructure"))
-);
+// builder.Services.AddDbContext<ModelContextBase>(opt => opt.UseSqlServer(
+//     builder.Configuration.GetConnectionString("SqlDatabase"), x => x.MigrationsAssembly("Infrastructure"))
+// );
 
 var app = builder.Build();
 

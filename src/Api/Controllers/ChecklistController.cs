@@ -1,8 +1,10 @@
+using Checklist.Application.Items.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MobDeMob.Domain.Entities;
-using Model;
-using Model.Context;
+using MobDeMob.Domain.Entities.ItemAggregate;
+using MobDeMob.Infrastructure;
 
 
 
@@ -14,17 +16,19 @@ public class ChecklistController : ControllerBase
 {
 
     private readonly ILogger<ChecklistController> _logger;
-    private readonly ModelContextBase _context;
 
-    public ChecklistController(ILogger<ChecklistController> logger, ModelContextBase context)
+    private readonly IMediator _mediator;
+
+    public ChecklistController(ILogger<ChecklistController> logger, IMediator mediator)
     {
         _logger = logger;
-        _context = context;
+        _mediator = mediator;
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
-    public async Task<ActionResult<IEnumerable<Item>>> GetTodoItems(CancellationToken cancellationToken)
+    [HttpGet("{itemId: string}")]
+    public async Task<ActionResult<IEnumerable<Item>>> GetItemById(string itemId ,CancellationToken cancellationToken)
     {
-        return await _context.Items.ToListAsync(cancellationToken);
+        var part = await _mediator.Send(new GetItemByIdQuery {Id = itemId}, cancellationToken);
+        return part is not null ? Ok(part) : NotFound();
     }
 }

@@ -2,29 +2,45 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MobDeMob.Domain.Common;
+using MobDeMob.Domain.Entities.ItemAggregate;
 
-namespace MobDeMob.Domain.Entities;
+namespace MobDeMob.Domain.Entities.ChecklistAggregate;
 
 public class Checklist : AuditableEntity
 {
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public required string Id {get; set;}
 
     // [EnumDataType(typeof(ChecklistStatus))]
     // public ChecklistStatus Status {get; set;}
-    public required string ItemId {get; set;}
 
-    public Item Item {get; set;} = null!; //TODO: 
+    public IEnumerable<Item> Items { get; set; } = [];
 
-    public List<Punch> Punch {get; set;} = [];
+    public IEnumerable<ChecklistSection> ChecklistSections { get; set; } = [];
 
-    public required string ChecklistTemplateId {get; set;}
+    [NotMapped]
+    public IEnumerable<Punch> Punches => ChecklistSections.SelectMany(section => section.Punches) ?? Enumerable.Empty<Punch>();
 
-    public ChecklistTemplate ChecklistTemplate {get; set;} = null!;
+    [NotMapped]
+    public double CompletionPercentage => GetCompletionPercentage();
 
-    public required string MobilizationId {get; set;}
+    private double GetCompletionPercentage()
+    {
+        var allSections = ChecklistSections.SelectMany(section => section.GetAllSections());
 
-    public Mobilization Mobilization {get; set;} = null!;
+        var completionProgressionDecimal = allSections.Count(i => i.IsCompleted) / allSections.Count();
+        var completionProgressionPercentage = 100.0 * completionProgressionDecimal;
+        return completionProgressionPercentage;
+    }
 
-    public List<ChecklistChecklistItem> ChecklistChecklistItems {get; set;} = null!;
+
+    // public List<Punch> Punch {get; set;} = [];
+
+    // public required string ChecklistTemplateId {get; set;}
+
+    // public ChecklistTemplate ChecklistTemplate {get; set;} = null!;
+
+    // public required string MobilizationId {get; set;}
+
+    // public Mobilization Mobilization {get; set;} = null!;
+
+    // public List<ChecklistChecklistItem> ChecklistChecklistItems {get; set;} = null!;
 }
