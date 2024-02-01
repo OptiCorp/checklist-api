@@ -2,11 +2,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MobDeMob.Domain.Common;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
-using MobDeMob.Domain.Entities.ItemAggregate;
+using MobDeMob.Domain.ItemAggregate;
 
 namespace MobDeMob.Domain.Entities.Mobilization;
 
-public class Mobilization : Entity
+public class Mobilization : AuditableEntity
 {
         public required string Title { get; set; }
 
@@ -14,10 +14,12 @@ public class Mobilization : Entity
 
         public MobilizationType Type { get; set; }
 
-        public required Checklist Checklist { get; set; }
+        public string? ChecklistId {get; set;}
+
+        public Checklist? Checklist { get; set; }
 
         [NotMapped]
-        public IEnumerable<Item> Items => Checklist?.Items ?? Enumerable.Empty<Item>();
+        public IEnumerable<Part> Parts => Checklist?.Parts ?? Enumerable.Empty<Part>();
 
         [NotMapped]
         public IEnumerable<Punch> Punches => Checklist?.Punches ?? Enumerable.Empty<Punch>();

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using MobDeMob.Domain.Common;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
-using MobDeMob.Domain.Entities.ItemAggregate;
+using MobDeMob.Domain.ItemAggregate;
 
 namespace MobDeMob.Domain.Entities.ChecklistAggregate;
 
@@ -28,7 +28,7 @@ public class Punch : AuditableEntity
     public string? Description { get; set; }
 
     [NotMapped]
-    public Item Item => Section.Item;
+    public Part Part => Section.Part;
 
 
 }

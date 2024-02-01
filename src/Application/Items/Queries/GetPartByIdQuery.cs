@@ -1,10 +1,10 @@
 
 using MediatR;
-using MobDeMob.Domain.Entities.ItemAggregate;
+using MobDeMob.Domain.ItemAggregate;
 
-namespace Checklist.Application.Items.Queries
+namespace MobDeMob.Application.Parts.Queries
 {
-    public class GetItemByIdQuery : IRequest<Item>
+    public class GetItemByIdQuery : IRequest<Part>
     {
         public required string Id { get; init; }
     }

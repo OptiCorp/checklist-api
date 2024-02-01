@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using MobDeMob.Domain.Entities;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
-using MobDeMob.Domain.Entities.ItemAggregate;
 using MobDeMob.Domain.Entities.Mobilization;
+using MobDeMob.Domain.ItemAggregate;
 
 namespace MobDeMob.Infrastructure;
 
@@ -17,6 +17,12 @@ public class ModelContextBase : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Part>()
+            .HasDiscriminator<PartType>("Type")
+            .HasValue<Unit>(PartType.Unit)
+            .HasValue<Assembly>(PartType.Assembly)
+            .HasValue<SubAssembly>(PartType.SubAssembly);
 
         // modelBuilder.Entity<ChecklistTemplate>() //many-to-many for ChecklistTemplate and ChecklistItem
         //     .HasMany(e => e.ChecklistItems)
@@ -43,8 +49,8 @@ public class ModelContextBase : DbContext
 
 
     public DbSet<User> Users { get; set; } = null!;
-    public DbSet<ItemTemplate> ItemTemplates { get; set; } = null!;
-    public DbSet<Item> Items { get; set; } = null!;
+    public DbSet<PartTemplate> PartTemplates { get; set; } = null!;
+    public DbSet<Part> Parts { get; set; } = null!;
     public DbSet<ChecklistSection> ChecklistSections { get; set; } = null!;
     public DbSet<MobDeMob.Domain.Entities.ChecklistAggregate.Checklist> Checklists { get; set; } = null!; //TODO:
     public DbSet<ChecklistSectionTemplate> ChecklistSectionTemplate { get; set; } = null!;

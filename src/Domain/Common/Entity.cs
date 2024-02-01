@@ -1,12 +1,14 @@
 
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MobDeMob.Domain.Common;
 
 public abstract class Entity
 {
+    // [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public required string Id {get; set;}
+    public string Id {get; set;}
 
     private readonly List<Event> _domainEvents = new();
 

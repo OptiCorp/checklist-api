@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MobDeMob.Domain.Common;
-using MobDeMob.Domain.Entities.ItemAggregate;
+using MobDeMob.Domain.ItemAggregate;
 
 namespace MobDeMob.Domain.Entities.ChecklistAggregate;
 
@@ -12,7 +12,7 @@ public class Checklist : AuditableEntity
     // [EnumDataType(typeof(ChecklistStatus))]
     // public ChecklistStatus Status {get; set;}
 
-    public IEnumerable<Item> Items { get; set; } = [];
+    public IEnumerable<Part> Parts { get; set; } = [];
 
     public IEnumerable<ChecklistSection> ChecklistSections { get; set; } = [];
 

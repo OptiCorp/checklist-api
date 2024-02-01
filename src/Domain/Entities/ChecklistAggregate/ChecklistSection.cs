@@ -1,21 +1,26 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using MobDeMob.Domain.Entities.ItemAggregate;
+using MobDeMob.Domain.Common;
+using MobDeMob.Domain.ItemAggregate;
 
 namespace MobDeMob.Domain.Entities.ChecklistAggregate;
 
-public class ChecklistSection
+public class ChecklistSection : AuditableEntity
 {
     public required string ChecklistSectionTemplateId { get; set; }
 
     public required ChecklistSectionTemplate ChecklistSectionTemplate { get; set; }
 
     // the question (and some other fields) can be fetched from the template
+    
+    public required string PartId { get; set; }
 
-    public required string ItemId { get; set; }
+    public required Part Part { get; set; }
 
-    public required Item Item { get; set; }
+    public string? ChecklistSectionId {get; set;}
 
-    // the name of the item (or other fields) can be fetched from the item
+    public required string ChecklistId {get; set;}
+
+    // the name of the item (or other fields) can be fetched from the Part
 
     public IEnumerable<ChecklistSection> SubSections { get; set; } = [];
 

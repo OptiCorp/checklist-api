@@ -1,10 +1,14 @@
 
 using Microsoft.EntityFrameworkCore;
 using MobDeMob.Infrastructure;
+using MobDeMob.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+builder.Services
+    .AddApplication()
+    .AddInfrastructure(builder.Configuration)
+    .AddApplicationDbContextInitializer();
 
 // Add services to the container.
 
@@ -24,6 +28,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var initializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitializer>();
+        await initializer.SeedAsync();
+    }
 }
 
 app.UseHttpsRedirection();

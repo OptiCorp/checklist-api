@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MobDeMob.Application.Common.Interfaces;
-using MobDeMob.Domain.Entities.ItemAggregate;
+using MobDeMob.Domain.ItemAggregate;
 
 
 namespace MobDeMob.Infrastructure.Repositories;
@@ -15,15 +15,15 @@ public class ItemsRepository : IItemsRepository
             _modelContextBase = modelContextBase;
         }
 
-        public async Task AddItem(Item item, CancellationToken cancellationToken = default)
+        public async Task AddItem(Part part, CancellationToken cancellationToken = default)
         {
-            await _modelContextBase.Items.AddAsync(item, cancellationToken);
+            await _modelContextBase.Parts.AddAsync(part, cancellationToken);
 
             await _modelContextBase.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<Item?> GetById(string id)
+        public async Task<Part?> GetById(string id)
         {
-            return await _modelContextBase.Items.FirstOrDefaultAsync(x => x.Id == id);
+            return await _modelContextBase.Parts.FirstOrDefaultAsync(x => x.Id == id);
         }
 }
