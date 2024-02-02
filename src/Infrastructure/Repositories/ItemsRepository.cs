@@ -15,15 +15,17 @@ public class ItemsRepository : IItemsRepository
             _modelContextBase = modelContextBase;
         }
 
-        public async Task AddItem(Part part, CancellationToken cancellationToken = default)
+        public async Task AddItem(Part part, CancellationToken cancellationToken)
         {
             await _modelContextBase.Parts.AddAsync(part, cancellationToken);
 
             await _modelContextBase.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<Part?> GetById(string id)
+        public async Task<Part?> GetById(string id, CancellationToken cancellationToken)
         {
-            return await _modelContextBase.Parts.FirstOrDefaultAsync(x => x.Id == id);
+            return await _modelContextBase.Parts
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 }

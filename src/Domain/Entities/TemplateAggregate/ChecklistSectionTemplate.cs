@@ -7,7 +7,7 @@ public class ChecklistSectionTemplate : AuditableEntity
 {
     public required string ChecklistQuestion { get; set; }
 
-    public IEnumerable<ChecklistSectionTemplate> SubSections { get; set; } = [];
+    public ICollection<ChecklistSectionTemplate> SubSections { get; set; } = [];
 
     public bool HasSubSections => SubSections?.Any() ?? false;
 }

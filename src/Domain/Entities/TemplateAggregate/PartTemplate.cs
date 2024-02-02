@@ -14,7 +14,7 @@ public class PartTemplate : AuditableEntity
 
     public string? Description { get; set; }    
 
-    public ChecklistSectionTemplate? ItemCheckListTemplate { get; set; }
+    public ChecklistSectionTemplate? PartCheckListTemplate { get; set; }
 
     public ICollection<Part> Parts { get; set; } = [];
 

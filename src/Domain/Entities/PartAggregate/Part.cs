@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MobDeMob.Domain.Common;
+using MobDeMob.Domain.Entities.ChecklistAggregate;
 
 namespace MobDeMob.Domain.ItemAggregate;
 
@@ -12,8 +13,6 @@ public abstract class Part : AuditableEntity
     public required string SerialNumber { get; set; }
 
     public required string Name { get; set; }
-
-    public string? ChecklistId {get; set;}
     public string? PartTemplateId { get; set; }
 
     public PartTemplate PartTemplate { get; set; } = null!;

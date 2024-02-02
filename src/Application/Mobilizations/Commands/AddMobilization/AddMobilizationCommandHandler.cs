@@ -22,9 +22,10 @@ public class AddMobilizationCommandHandler : IRequestHandler<AddMobilizationComm
         var mobilization = MapToMobilization(request, checklistId);
 
         return mobilization.Id;
+        throw new NotImplementedException();
     }
 
-    public Mobilization MapToMobilization(AddMobilizationCommand request, string checklistId)
+    private static Mobilization MapToMobilization(AddMobilizationCommand request, string checklistId)
     {
         return new Mobilization
         {

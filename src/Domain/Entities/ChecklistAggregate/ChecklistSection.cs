@@ -6,19 +6,21 @@ namespace MobDeMob.Domain.Entities.ChecklistAggregate;
 
 public class ChecklistSection : AuditableEntity
 {
-    public required string ChecklistSectionTemplateId { get; set; }
+    public string? ChecklistSectionTemplateId { get; set; }
 
-    public required ChecklistSectionTemplate ChecklistSectionTemplate { get; set; }
+    public ChecklistSectionTemplate ChecklistSectionTemplate { get; set; } = null!;
 
     // the question (and some other fields) can be fetched from the template
     
-    public required string PartId { get; set; }
+    public string? PartId { get; set; }
 
-    public required Part Part { get; set; }
+    public Part Part { get; set; } = null!;
 
-    public string? ChecklistSectionId {get; set;}
+    // public string? ChecklistSectionId {get; set;}
 
-    public required string ChecklistId {get; set;}
+    public string? ChecklistId {get; set;}
+
+    public Checklist Checklist {get; set;} = null!;
 
     // the name of the item (or other fields) can be fetched from the Part
 

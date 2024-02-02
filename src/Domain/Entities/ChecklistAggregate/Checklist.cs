@@ -12,9 +12,9 @@ public class Checklist : AuditableEntity
     // [EnumDataType(typeof(ChecklistStatus))]
     // public ChecklistStatus Status {get; set;}
 
-    public IEnumerable<Part> Parts { get; set; } = [];
+    public ICollection<Part> Parts { get; set; } = [];
 
-    public IEnumerable<ChecklistSection> ChecklistSections { get; set; } = [];
+    public ICollection<ChecklistSection> ChecklistSections { get; set; } = [];
 
     [NotMapped]
     public IEnumerable<Punch> Punches => ChecklistSections.SelectMany(section => section.Punches) ?? Enumerable.Empty<Punch>();

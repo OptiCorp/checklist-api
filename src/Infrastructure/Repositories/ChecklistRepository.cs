@@ -8,13 +8,13 @@ namespace MobDeMob.Infrastructure.Repositories;
 
 public class CheklistRepository : IChecklistRepository
 {
-  
-        private readonly ModelContextBase _modelContextBase;
 
-        public CheklistRepository(ModelContextBase modelContextBase)
-        {
-            _modelContextBase = modelContextBase;
-        }
+    private readonly ModelContextBase _modelContextBase;
+
+    public CheklistRepository(ModelContextBase modelContextBase)
+    {
+        _modelContextBase = modelContextBase;
+    }
 
     public Task<string> AddChecklist()
     {

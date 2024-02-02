@@ -21,7 +21,7 @@ public class ItemsController : ControllerBase
     }
     
     [HttpGet("{itemId}")]
-    public async Task<ActionResult<IEnumerable<Part>>> GetItemById(string itemId, CancellationToken cancellationToken)
+    public async Task<ActionResult<Part>> GetItemById(string itemId, CancellationToken cancellationToken)
     {
         var part = await _sender.Send(new GetItemByIdQuery { Id = itemId }, cancellationToken);
         return part is not null ? Ok(part) : NotFound();

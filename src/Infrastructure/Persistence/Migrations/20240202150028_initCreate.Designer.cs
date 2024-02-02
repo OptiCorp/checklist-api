@@ -12,7 +12,7 @@ using MobDeMob.Infrastructure;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ModelContextBase))]
-    [Migration("20240201142621_initCreate")]
+    [Migration("20240202150028_initCreate")]
     partial class initCreate
     {
         /// <inheritdoc />
@@ -55,14 +55,12 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ChecklistId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ChecklistSectionId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ChecklistSectionTemplateId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateOnly>("Created")
@@ -81,7 +79,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PartId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -289,7 +286,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PartTemplateId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SerialNumber")
@@ -333,9 +329,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ItemCheckListTemplateId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
 
@@ -346,6 +339,9 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PartCheckListTemplateId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Revision")
                         .HasColumnType("nvarchar(max)");
 
@@ -355,7 +351,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ItemCheckListTemplateId");
+                    b.HasIndex("PartCheckListTemplateId");
 
                     b.ToTable("PartTemplates");
                 });
@@ -383,11 +379,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("MobDeMob.Domain.Entities.ChecklistAggregate.ChecklistSection", b =>
                 {
-                    b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.Checklist", null)
+                    b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.Checklist", "Checklist")
                         .WithMany("ChecklistSections")
-                        .HasForeignKey("ChecklistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ChecklistId");
 
                     b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.ChecklistSection", null)
                         .WithMany("SubSections")
@@ -395,15 +389,13 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.ChecklistSectionTemplate", "ChecklistSectionTemplate")
                         .WithMany()
-                        .HasForeignKey("ChecklistSectionTemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ChecklistSectionTemplateId");
 
                     b.HasOne("MobDeMob.Domain.ItemAggregate.Part", "Part")
                         .WithMany()
-                        .HasForeignKey("PartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PartId");
+
+                    b.Navigation("Checklist");
 
                     b.Navigation("ChecklistSectionTemplate");
 
@@ -449,20 +441,18 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasOne("MobDeMob.Domain.ItemAggregate.PartTemplate", "PartTemplate")
                         .WithMany("Parts")
-                        .HasForeignKey("PartTemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PartTemplateId");
 
                     b.Navigation("PartTemplate");
                 });
 
             modelBuilder.Entity("MobDeMob.Domain.ItemAggregate.PartTemplate", b =>
                 {
-                    b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.ChecklistSectionTemplate", "ItemCheckListTemplate")
+                    b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.ChecklistSectionTemplate", "PartCheckListTemplate")
                         .WithMany()
-                        .HasForeignKey("ItemCheckListTemplateId");
+                        .HasForeignKey("PartCheckListTemplateId");
 
-                    b.Navigation("ItemCheckListTemplate");
+                    b.Navigation("PartCheckListTemplate");
                 });
 
             modelBuilder.Entity("MobDeMob.Domain.Entities.ChecklistAggregate.Checklist", b =>
