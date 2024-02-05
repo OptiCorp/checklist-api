@@ -16,8 +16,10 @@ public class CheklistRepository : IChecklistRepository
         _modelContextBase = modelContextBase;
     }
 
-    public Task<string> AddChecklist()
+    public async Task<string> AddChecklist(CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var newChecklist = new Checklist(){};
+        await _modelContextBase.Checklists.AddAsync(newChecklist, cancellationToken);
+        return newChecklist.Id;
     }
 }

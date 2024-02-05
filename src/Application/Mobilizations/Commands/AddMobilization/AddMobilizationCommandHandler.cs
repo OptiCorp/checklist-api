@@ -18,11 +18,10 @@ public class AddMobilizationCommandHandler : IRequestHandler<AddMobilizationComm
     }
     public async Task<string> Handle(AddMobilizationCommand request, CancellationToken cancellationToken)
     {
-        var checklistId = await _checkListRepository.AddChecklist();
+        var checklistId = await _checkListRepository.AddChecklist(cancellationToken);
         var mobilization = MapToMobilization(request, checklistId);
-
+        await _mobilizationRepository.AddMobilization(mobilization, cancellationToken);
         return mobilization.Id;
-        throw new NotImplementedException();
     }
 
     private static Mobilization MapToMobilization(AddMobilizationCommand request, string checklistId)

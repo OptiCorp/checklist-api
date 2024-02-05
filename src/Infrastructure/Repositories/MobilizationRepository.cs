@@ -15,9 +15,10 @@ public class MobilizationRepository : IMobilizationRepository
     {
         _modelContextBase = modelContextBase;
     }
-    public Task AddMobilization(Mobilization mobilization)
+    public async Task AddMobilization(Mobilization mobilization, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await _modelContextBase.Mobilizations.AddAsync(mobilization, cancellationToken);
+        await _modelContextBase.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<Mobilization?> GetById(string id, CancellationToken cancellationToken)

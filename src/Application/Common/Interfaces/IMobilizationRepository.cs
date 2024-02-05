@@ -5,7 +5,7 @@ namespace Application.Common.Interfaces;
 
 public interface IMobilizationRepository
 {
-    Task AddMobilization(Mobilization mobilization);
+    Task AddMobilization(Mobilization mobilization, CancellationToken cancellationToken);
 
     Task<Mobilization?> GetById(string id, CancellationToken cancellationToken);
 
@@ -14,4 +14,6 @@ public interface IMobilizationRepository
     Task UpdateMobilization(string id ,string? title, string? desription ,CancellationToken cancellationToken);
 
     Task DeleteMobilization(string id, CancellationToken cancellationToken);
+
+    
 }

@@ -6,5 +6,5 @@ namespace MobDeMob.Application.Common.Interfaces;
 
 public interface IChecklistRepository
 {
-    Task<string> AddChecklist();
+    Task<string> AddChecklist(CancellationToken cancellationToken);
 }

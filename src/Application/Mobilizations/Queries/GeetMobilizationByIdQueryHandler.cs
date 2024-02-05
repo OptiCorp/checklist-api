@@ -7,7 +7,7 @@ using MobDeMob.Domain.Entities.Mobilization;
 
 namespace MobDeMob.Application.Mobilizations.Queries;
 
-public class GetMobilizationByIdQueryHandler : IRequestHandler<GetMobilizationByIdQuery, Mobilization?>
+public class GetMobilizationByIdQueryHandler : IRequestHandler<GetMobilizationByIdQuery, MobilizationDto?>
 
 {
     private readonly IMobilizationRepository _mobilizationRepository;
@@ -18,8 +18,11 @@ public class GetMobilizationByIdQueryHandler : IRequestHandler<GetMobilizationBy
     }
 
 
-    public async Task<Mobilization?> Handle(GetMobilizationByIdQuery request, CancellationToken cancellationToken)
+    public async Task<MobilizationDto?> Handle(GetMobilizationByIdQuery request, CancellationToken cancellationToken)
     {
-        return await _mobilizationRepository.GetById(request.id, cancellationToken);
+
+        var mob = await _mobilizationRepository.GetById(request.id, cancellationToken);
+        return mob?.AsDto();
     }
+    
 }

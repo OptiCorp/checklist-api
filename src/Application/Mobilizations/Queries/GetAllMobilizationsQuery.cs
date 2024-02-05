@@ -5,7 +5,7 @@ using MobDeMob.Domain.Entities.Mobilization;
 
 namespace MobDeMob.Application.Mobilizations.Queries;
 
-public class GetAllMobilizationsQuery : IRequest<IEnumerable<Mobilization>>
+public class GetAllMobilizationsQuery : IRequest<IEnumerable<MobilizationDto>>
 {
 
 }
