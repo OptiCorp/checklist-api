@@ -13,7 +13,9 @@ public abstract class Part : AuditableEntity
     public required string SerialNumber { get; set; }
 
     public required string Name { get; set; }
-    public string? PartTemplateId { get; set; }
+
+    public string? ChecklistId {get; set;} //foreign key to checklist
+    public string? PartTemplateId { get; set; } //foreign key to partTemplate
 
     public PartTemplate PartTemplate { get; set; } = null!;
 

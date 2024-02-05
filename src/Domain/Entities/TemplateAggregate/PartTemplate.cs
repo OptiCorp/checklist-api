@@ -12,7 +12,7 @@ public class PartTemplate : AuditableEntity
 
     public string? Revision { get; set; }
 
-    public string? Description { get; set; }    
+    public string? Description { get; set; }        
 
     public ChecklistSectionTemplate? PartCheckListTemplate { get; set; }
 

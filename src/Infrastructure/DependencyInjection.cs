@@ -19,7 +19,7 @@ public static class DependencyInjection
 
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IItemsRepository, ItemsRepository>();
+        services.AddScoped<IPartsRepository, PartsRepository>();
         services.AddScoped<IMobilizationRepository, MobilizationRepository>();
         services.AddScoped<IChecklistRepository, CheklistRepository>();
         return services;

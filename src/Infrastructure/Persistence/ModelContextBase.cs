@@ -20,6 +20,7 @@ public class ModelContextBase : DbContext
 
         modelBuilder.Entity<Part>()
             .HasDiscriminator<PartType>("Type")
+            .HasValue<Item>(PartType.Item)
             .HasValue<Unit>(PartType.Unit)
             .HasValue<Assembly>(PartType.Assembly)
             .HasValue<SubAssembly>(PartType.SubAssembly);

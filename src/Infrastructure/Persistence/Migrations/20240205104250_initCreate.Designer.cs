@@ -12,7 +12,7 @@ using MobDeMob.Infrastructure;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ModelContextBase))]
-    [Migration("20240202150028_initCreate")]
+    [Migration("20240205104250_initCreate")]
     partial class initCreate
     {
         /// <inheritdoc />

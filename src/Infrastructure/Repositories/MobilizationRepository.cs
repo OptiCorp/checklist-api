@@ -57,4 +57,46 @@ public class MobilizationRepository : IMobilizationRepository
             .Where(m => m.Id == id)
             .ExecuteDeleteAsync(cancellationToken);
     }
+
+    public async Task AddPartToMobilization(string id, string partId, CancellationToken cancellationToken)
+    {
+        var mob = await _modelContextBase.Mobilizations
+            .AsNoTracking()
+            .Include(m => m.Checklist)
+            .FirstAsync(m => m.Id == id, cancellationToken);
+        
+        if (mob.ChecklistId == null)
+        {
+            throw new Exception($"Mobilizaiton with id: {id} does not have any Checklist associated");
+        }
+
+        var part = await _modelContextBase.Parts
+            .FirstAsync(p => p.Id == partId, cancellationToken);
+
+        if (part.ChecklistId != null)
+        {
+            throw new Exception($"PartId: '{partId}' already belongs to a different mobilization");
+        }
+
+        part.ChecklistId = mob.ChecklistId;
+        await _modelContextBase.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task RemovePartFromMobilization(string id, string partId, CancellationToken cancellationToken)
+    {
+        var mob = await _modelContextBase.Mobilizations
+            .Include(m => m.Checklist)
+            .ThenInclude(c => c.Parts)
+            .FirstAsync(m => m.Id == id, cancellationToken);
+
+        foreach (var m in mob.Parts)
+        {
+            if (m.Id == partId)
+            {
+                mob.Checklist.Parts.Remove(m);
+                break;
+            }
+        }
+        await _modelContextBase.SaveChangesAsync(cancellationToken);
+    }
 }

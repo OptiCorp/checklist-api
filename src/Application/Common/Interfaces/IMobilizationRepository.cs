@@ -15,5 +15,9 @@ public interface IMobilizationRepository
 
     Task DeleteMobilization(string id, CancellationToken cancellationToken);
 
+    Task AddPartToMobilization(string id, string partId, CancellationToken cancellationToken);
+
+    Task RemovePartFromMobilization(string id, string partId, CancellationToken cancellationToken);
+
     
 }

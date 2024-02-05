@@ -29,7 +29,8 @@ public class MobilizationController : ControllerBase
         return mob is not null ? Ok(mob) : NotFound();
     }
 
-    [HttpGet(Name = "GetAll")]
+    [HttpGet()]
+    [Route("GetAll")]
     public async Task<ActionResult<IEnumerable<MobilizationDto>>> GetAllMobilizations(CancellationToken cancellationToken)
     {
         var mobs = await _sender.Send(new GetAllMobilizationsQuery { }, cancellationToken);
@@ -48,5 +49,19 @@ public class MobilizationController : ControllerBase
     {
         var id = await _sender.Send(new AddMobilizationCommand { Title = mobilizationDto.Title, Description = mobilizationDto.Description }, cancellationToken);
         return CreatedAtAction(nameof(GetMobilizationById), new { itemId = id }, mobilizationDto);
+    }
+
+    [HttpPut("AddPartToMobilization/{mobId}")]
+    public async Task<ActionResult> AddPartToMoblization(string mobId, string partId, CancellationToken cancellationToken)
+    {
+        await _sender.Send(new AddPartToMobilizationCommand { id = mobId, partId = partId }, cancellationToken);
+        return NoContent();
+    }
+
+    [HttpPut("RemovePartFromMobilization/{mobId}")]
+    public async Task<ActionResult> RemovePartFromMoblization(string mobId, string partId, CancellationToken cancellationToken)
+    {
+        await _sender.Send(new RemovePartFromMobilizationCommand { id = mobId, partId = partId }, cancellationToken);
+        return NoContent();
     }
 }

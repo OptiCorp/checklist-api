@@ -9,5 +9,7 @@ public class ChecklistSectionTemplate : AuditableEntity
 
     public ICollection<ChecklistSectionTemplate> SubSections { get; set; } = [];
 
-    public bool HasSubSections => SubSections?.Any() ?? false;
+    public bool HasSubSections => SubSections?.Count > 0;
+
+    
 }
