@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MobDeMob.Domain.Common;
+using MobDeMob.Domain.Enums;
 
 namespace MobDeMob.Domain.Entities;
 public enum UserStatus
@@ -15,16 +16,9 @@ public enum UserStatus
 public class User : AuditableEntity
 {
 
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public required string Id { get; set; }
-
     public required string UmId { get; set; }
 
     public required string AzureAdUserId { get; set; }
-
-    [MaxLength(150)]
-    public required string UserRole { get; set; }
 
     [MaxLength(50)]
     public required string FirstName { get; set; }
@@ -42,6 +36,7 @@ public class User : AuditableEntity
     [EnumDataType(typeof(UserStatus))]
     public UserStatus Status { get; set; }
 
-    public DateOnly? LastModified { get; set; }
+    [EnumDataType(typeof(UserRole))]
+    public UserRole UserRole { get; set; }
 }
 

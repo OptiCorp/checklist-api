@@ -1,30 +1,30 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MobDeMob.Application.Items.Queries;
+using MobDeMob.Application.Parts.Queries;
 using MobDeMob.Domain.Entities;
-using Model;
-using Model.Context;
+using MobDeMob.Domain.ItemAggregate;
+using MobDeMob.Infrastructure;
 
 
 
 namespace Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("[api/checklists]")]
 public class ChecklistController : ControllerBase
 {
 
     private readonly ILogger<ChecklistController> _logger;
-    private readonly ModelContextBase _context;
 
-    public ChecklistController(ILogger<ChecklistController> logger, ModelContextBase context)
+
+    private readonly ISender _sender;
+
+    public ChecklistController(ILogger<ChecklistController> logger, ISender sender)
     {
         _logger = logger;
-        _context = context;
+        _sender = sender;
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
-    public async Task<ActionResult<IEnumerable<Item>>> GetTodoItems(CancellationToken cancellationToken)
-    {
-        return await _context.Items.ToListAsync(cancellationToken);
-    }
 }

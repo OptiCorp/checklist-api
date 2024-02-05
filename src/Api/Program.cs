@@ -1,8 +1,14 @@
 
 using Microsoft.EntityFrameworkCore;
-using Model.Context;
+using MobDeMob.Infrastructure;
+using MobDeMob.Application;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services
+    .AddApplication()
+    .AddInfrastructure(builder.Configuration)
+    .AddApplicationDbContextInitializer();
 
 // Add services to the container.
 
@@ -11,9 +17,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ModelContextBase>(opt => opt.UseSqlServer(
-    builder.Configuration.GetConnectionString("SqlDatabase"), x => x.MigrationsAssembly("Infrastructure"))
-);
+// builder.Services.AddDbContext<ModelContextBase>(opt => opt.UseSqlServer(
+//     builder.Configuration.GetConnectionString("SqlDatabase"), x => x.MigrationsAssembly("Infrastructure"))
+// );
 
 var app = builder.Build();
 
@@ -22,6 +28,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var initializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitializer>();
+        await initializer.SeedAsync();
+    }
 }
 
 app.UseHttpsRedirection();
