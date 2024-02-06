@@ -160,7 +160,7 @@ public class ApplicationDbContextInitializer
         };
         await _modelContextBase.Checklists.AddAsync(checklist);
 
-        await seedChecklistSection(item, ["Does the finger look ok?", "Does the finger have a nail?"], checklist);
+        //await seedChecklistSection(item, ["Does the finger look ok?", "Does the finger have a nail?"], checklist);
         await seedChecklistSection(unit, ["Does the robot look ok?"], checklist);
         await seedChecklistSection(subAssembly, ["Does the arms look ok?"], checklist);
         await seedChecklistSection(assembly, ["Does the arm look good?"], checklist);

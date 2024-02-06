@@ -101,9 +101,6 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ChecklistSectionTemplateId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateOnly>("Created")
                         .HasColumnType("date");
 
@@ -116,9 +113,12 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ParentChecklistSectionTemplateId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ChecklistSectionTemplateId");
+                    b.HasIndex("ParentChecklistSectionTemplateId");
 
                     b.ToTable("ChecklistSectionTemplate");
                 });
@@ -360,6 +360,13 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasDiscriminator().HasValue(2);
                 });
 
+            modelBuilder.Entity("MobDeMob.Domain.ItemAggregate.Item", b =>
+                {
+                    b.HasBaseType("MobDeMob.Domain.ItemAggregate.Part");
+
+                    b.HasDiscriminator().HasValue(0);
+                });
+
             modelBuilder.Entity("MobDeMob.Domain.ItemAggregate.SubAssembly", b =>
                 {
                     b.HasBaseType("MobDeMob.Domain.ItemAggregate.Part");
@@ -401,9 +408,12 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("MobDeMob.Domain.Entities.ChecklistAggregate.ChecklistSectionTemplate", b =>
                 {
-                    b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.ChecklistSectionTemplate", null)
+                    b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.ChecklistSectionTemplate", "ParentChecklistSectionTemplate")
                         .WithMany("SubSections")
-                        .HasForeignKey("ChecklistSectionTemplateId");
+                        .HasForeignKey("ParentChecklistSectionTemplateId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ParentChecklistSectionTemplate");
                 });
 
             modelBuilder.Entity("MobDeMob.Domain.Entities.ChecklistAggregate.Punch", b =>

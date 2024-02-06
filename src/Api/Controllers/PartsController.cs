@@ -36,12 +36,4 @@ public class PartsController : ControllerBase
         var parts = await _sender.Send(new GetAllPartsQuery { }, cancellationToken);
         return Ok(parts);
     }
-
-    [HttpGet()]
-    [Route("{partId}/GetAllQuestions")]
-    public async Task<ActionResult<IEnumerable<string>>> GetAllQuestions(string partId, CancellationToken cancellationToken)
-    {
-        var questions = await _sender.Send(new GetPartQuestionsQuery { Id = partId}, cancellationToken);
-        return Ok(questions);
-    }
 }

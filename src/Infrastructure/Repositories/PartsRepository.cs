@@ -38,42 +38,4 @@ public class PartsRepository : IPartsRepository
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
-
-    public async Task<IEnumerable<ChecklistSectionTemplate>> GetQuestions(string id, CancellationToken cancellationToken)
-    {
-        //var part = await _modelContextBase.Parts.FirstAsync(p => p.Id  == id);
-        var sections =  await _modelContextBase.Parts
-            .Include(p => p.PartTemplate)
-            .ThenInclude(p => p.PartCheckListTemplate)
-            .ThenInclude(p => p.SubSections)
-            .Where(p => p.Id == id)
-            .Select(p => p.PartTemplate.PartCheckListTemplate)
-            .ToListAsync(cancellationToken);
-        
-        var allQuestions = new List<ChecklistSectionTemplate>();
-        if (sections == null) return allQuestions;
-
-        foreach(var section in sections)
-        {
-            if (section == null) break;
-            allQuestions.AddRange(GetAllQuestions(section));
-        }
-        return allQuestions;
-    }
-
-    private static List<ChecklistSectionTemplate> GetAllQuestions(ChecklistSectionTemplate section)
-    {
-        var questions = new List<ChecklistSectionTemplate>();
-
-        // Add the question from the current section
-        questions.Add(section);
-
-        // Recursively add the questions from the subsections
-        foreach (var subSection in section.SubSections)
-        {
-            questions.AddRange(GetAllQuestions(subSection));
-        }
-
-        return questions;
-    }
 }

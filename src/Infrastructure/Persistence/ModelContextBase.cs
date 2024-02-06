@@ -25,6 +25,12 @@ public class ModelContextBase : DbContext
             .HasValue<Assembly>(PartType.Assembly)
             .HasValue<SubAssembly>(PartType.SubAssembly);
 
+        modelBuilder.Entity<ChecklistSectionTemplate>()
+            .HasMany(s => s.SubSections)
+            .WithOne(s => s.ParentChecklistSectionTemplate)
+            .HasForeignKey(s => s.ParentChecklistSectionTemplateId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         // modelBuilder.Entity<ChecklistTemplate>() //many-to-many for ChecklistTemplate and ChecklistItem
         //     .HasMany(e => e.ChecklistItems)
         //     .WithMany(e => e.ChecklistTemplates)

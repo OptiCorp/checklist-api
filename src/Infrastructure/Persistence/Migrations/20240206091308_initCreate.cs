@@ -32,7 +32,7 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ChecklistQuestion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ChecklistSectionTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ParentChecklistSectionTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Created = table.Column<DateOnly>(type: "date", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -42,10 +42,11 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_ChecklistSectionTemplate", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ChecklistSectionTemplate_ChecklistSectionTemplate_ChecklistSectionTemplateId",
-                        column: x => x.ChecklistSectionTemplateId,
+                        name: "FK_ChecklistSectionTemplate_ChecklistSectionTemplate_ParentChecklistSectionTemplateId",
+                        column: x => x.ParentChecklistSectionTemplateId,
                         principalTable: "ChecklistSectionTemplate",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -129,8 +130,8 @@ namespace Infrastructure.Persistence.Migrations
                     WpId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PartTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ChecklistId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    PartTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     PartId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Created = table.Column<DateOnly>(type: "date", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -242,9 +243,9 @@ namespace Infrastructure.Persistence.Migrations
                 column: "PartId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChecklistSectionTemplate_ChecklistSectionTemplateId",
+                name: "IX_ChecklistSectionTemplate_ParentChecklistSectionTemplateId",
                 table: "ChecklistSectionTemplate",
-                column: "ChecklistSectionTemplateId");
+                column: "ParentChecklistSectionTemplateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Mobilizations_ChecklistId",
