@@ -30,7 +30,7 @@ public class ChecklistController : ControllerBase
 
     [HttpPost()]
     [Route("{partId}/CreatePartChecklistQuestions")]
-    public async Task<ActionResult> CreatePartChecklistQuestions(string partId, [FromBody] IEnumerable<string> questions, CancellationToken cancellationToken)
+    public async Task<ActionResult> CreatePartChecklistQuestions(string partId, [FromBody] List<string> questions, CancellationToken cancellationToken)
     {
         await _sender.Send(new CreatePartChecklistQuestionsCommand { partId = partId, questions = questions }, cancellationToken);
         return NoContent();

@@ -1,5 +1,6 @@
 using System.Data.Common;
 using MobDeMob.Domain.Entities.Mobilization;
+using MobDeMob.Domain.ItemAggregate;
 
 namespace Application.Common.Interfaces;
 
@@ -18,6 +19,8 @@ public interface IMobilizationRepository
     Task AddPartToMobilization(string id, string partId, CancellationToken cancellationToken);
 
     Task RemovePartFromMobilization(string id, string partId, CancellationToken cancellationToken);
+
+    Task<IEnumerable<Part>> GetAllPartsInMobilization(string mobId, bool includeChildren, CancellationToken cancellationToken);
 
     
 }

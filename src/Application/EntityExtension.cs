@@ -11,10 +11,19 @@ public static class EntityExtenstions
 {
     public static MobilizationDto AsDto(this Mobilization mobilization)
     {
-        return new MobilizationDto{
+        return new MobilizationDto(mobilization.Type)
+        {
             Title = mobilization.Title,
             Id = mobilization.Id,
-            Description = mobilization.Description
+            Description = mobilization.Description,
+        };
+    }
+
+    private static PartChildDto AsChildDto(this Part part)
+    {
+        return new PartChildDto(part.Type)
+        {
+            partChildId = part.Id,
         };
     }
 
@@ -22,11 +31,13 @@ public static class EntityExtenstions
     {
         return new PartDto(part.Type)
         {
-             WpId = part.WpId,
-             Name = part.Name,
-             SerialNumber = part.SerialNumber,
-             Children = part.Children,
-             PartTemplateId = part.PartTemplateId,
+            PartId = part.Id,
+            WpId = part.WpId,
+            Name = part.Name,
+            SerialNumber = part.SerialNumber,
+            //Children = part.Children.Select(c => c.AsDto()),
+            Children = part.Children.Select(c => c.AsChildDto()),
+            PartTemplateId = part.PartTemplateId,
         };
     }
 

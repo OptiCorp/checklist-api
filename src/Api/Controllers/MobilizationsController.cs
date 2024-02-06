@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MobDeMob.Application.Mobilizations;
 using MobDeMob.Application.Mobilizations.Commands;
 using MobDeMob.Application.Mobilizations.Queries;
+using MobDeMob.Application.Parts;
 using MobDeMob.Domain.Entities.Mobilization;
 
 namespace Api.Controllers;
@@ -22,10 +23,11 @@ public class MobilizationController : ControllerBase
         _sender = sender;
     }
 
-    [HttpGet("{itemId}", Name = "GetSingle")]
-    public async Task<ActionResult<MobilizationDto?>> GetMobilizationById(string itemId, CancellationToken cancellationToken)
+    [HttpGet()]
+    [Route("GetSingle/{mobId}")]
+    public async Task<ActionResult<MobilizationDto?>> GetMobilizationById(string mobId, CancellationToken cancellationToken)
     {
-        var mob = await _sender.Send(new GetMobilizationByIdQuery { id = itemId }, cancellationToken);
+        var mob = await _sender.Send(new GetMobilizationByIdQuery { id = mobId }, cancellationToken);
         return mob is not null ? Ok(mob) : NotFound();
     }
 
@@ -63,5 +65,12 @@ public class MobilizationController : ControllerBase
     {
         await _sender.Send(new RemovePartFromMobilizationCommand { id = mobId, partId = partId }, cancellationToken);
         return NoContent();
+    }
+
+    [HttpGet("GetAllPartsInMobilization/{mobId}")]
+    public async Task<ActionResult<IEnumerable<PartDto>>> GetAllPartsInMobilization(string mobId, CancellationToken cancellationToken, bool includeChildren = false)
+    {
+        var parts = await _sender.Send(new GetAllPartsInMobilizationQuery { id = mobId, includeChildren = includeChildren }, cancellationToken);
+        return Ok(parts);
     }
 }

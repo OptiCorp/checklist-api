@@ -28,14 +28,20 @@ public class PartsRepository : IPartsRepository
     {
         return await _modelContextBase.Parts
             .AsNoTracking()
+            .Include(p => p.Children)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     }
 
-    public async Task<IEnumerable<Part>> GetAll(CancellationToken cancellationToken)
+    public async Task<IEnumerable<Part>> GetAll(bool includeChildren,CancellationToken cancellationToken)
     {
-        return await _modelContextBase.Parts
-            .AsNoTracking()
-            .ToListAsync(cancellationToken);
+        var query = _modelContextBase.Parts.AsNoTracking();
+
+        if (includeChildren){
+            query = query.Include(p => p.Children);
+        }
+
+        return await query.ToListAsync(cancellationToken);
+            
     }
 }

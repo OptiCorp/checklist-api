@@ -65,7 +65,7 @@ public class CheklistRepository : IChecklistRepository
 
     public async Task CreatePartChecklistQuestions(string id, List<string> questions, CancellationToken cancellationToken)
     {
-        var partTemplate = await _modelContextBase.Parts
+        var partTemp = await _modelContextBase.Parts
             .Where(p => p.Id == id)
             .Include(p => p.PartTemplate)
             .ThenInclude(pt => pt.PartCheckListTemplate)
@@ -73,33 +73,33 @@ public class CheklistRepository : IChecklistRepository
             .Select(p => p.PartTemplate)
             .SingleAsync(cancellationToken);
 
+        var firstQuestion = questions.First();
+        var restQuestions = questions.Skip(1);
 
+        if (partTemp.PartCheckListTemplate == null)
+        {
+            partTemp.PartCheckListTemplate = new ChecklistSectionTemplate
+            {
+                ChecklistQuestion = firstQuestion,
+            };
+            foreach (var q in restQuestions)
+            {
+                partTemp.PartCheckListTemplate.SubSections.Add(new ChecklistSectionTemplate { ChecklistQuestion = q });
+            }
+        }
 
-        // var firstQuestion = questions.First();
-        // var restQuestions = questions.Skip(1);
+        else
+        {
+            //TODO: dont delete, update the existing
+            _modelContextBase.ChecklistSectionTemplate.RemoveRange(partTemp.PartCheckListTemplate.SubSections);
 
-        // if (partTemplate.PartCheckListTemplate != null)
-        // {
-        //     if (partTemplate.PartCheckListTemplate.HasSubSections) 
-        //     {
-        //         partTemplate.PartCheckListTemplate.SubSections.Clear();
-        //     }
-        //     partTemplate.PartCheckListTemplate.ChecklistQuestion = firstQuestion;
-        // }
+            partTemp.PartCheckListTemplate.ChecklistQuestion = firstQuestion;
 
-        // else
-        // {
-        //     partTemplate.PartCheckListTemplate = new ChecklistSectionTemplate()
-        //     {
-        //         ChecklistQuestion = firstQuestion,
-        //     };
-        // }
-
-        // foreach (var q in restQuestions)
-        // {
-        //     partTemplate.PartCheckListTemplate.SubSections.Add(new ChecklistSectionTemplate { ChecklistQuestion = q });
-        // }
-
+            foreach (var q in restQuestions)
+            {
+                partTemp.PartCheckListTemplate.SubSections.Add(new ChecklistSectionTemplate { ChecklistQuestion = q });
+            }
+        }
         await _modelContextBase.SaveChangesAsync(cancellationToken);
     }
 }

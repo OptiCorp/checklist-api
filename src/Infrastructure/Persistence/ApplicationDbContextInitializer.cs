@@ -156,21 +156,25 @@ public class ApplicationDbContextInitializer
 
         var checklist = new Checklist
         {
-            Parts = [unit, item, assembly, subAssembly],
+            Parts = [item, assembly, subAssembly],
         };
         await _modelContextBase.Checklists.AddAsync(checklist);
 
-        //await seedChecklistSection(item, ["Does the finger look ok?", "Does the finger have a nail?"], checklist);
-        await seedChecklistSection(unit, ["Does the robot look ok?"], checklist);
-        await seedChecklistSection(subAssembly, ["Does the arms look ok?"], checklist);
-        await seedChecklistSection(assembly, ["Does the arm look good?"], checklist);
+        var checklistSec1 = seedChecklistSection(item, ["Does the finger look ok?", "Does the finger have a nail?"], checklist);
+        var checklistSec2 = seedChecklistSection(subAssembly, ["Does the arms look ok?"], checklist);
+        var checklistSec3 = seedChecklistSection(assembly, ["Does the arm look good?"], checklist);
+        //var checklistSec4 = seedChecklistSection(unit, ["Does the robot look ok?"], checklist);
+
+        checklistSec3.SubSections = [checklistSec2, checklistSec1];
+
+        await _modelContextBase.ChecklistSections.AddAsync(checklistSec3);
 
         await seedMobilization(checklist);
     }
 
 
 
-    private async Task seedChecklistSection(Part part, List<string> questions, Checklist checklist)
+    private static ChecklistSection seedChecklistSection(Part part, List<string> questions, Checklist checklist)
     {
         var checklistSectionTemp = new ChecklistSectionTemplate
         {
@@ -190,10 +194,11 @@ public class ApplicationDbContextInitializer
         {
             Part = part,
             ChecklistSectionTemplate = checklistSectionTemp,
-            Checklist = checklist
+            Checklist = checklist,
+            
         };
 
-        await _modelContextBase.ChecklistSections.AddAsync(checklistSection);
+        return checklistSection;
     }
 
     private async Task seedMobilization(Checklist checklist)
@@ -203,6 +208,7 @@ public class ApplicationDbContextInitializer
             Title = "mobilization to Equinor",
             Description = "some nice description",
             Type = MobilizationType.Mobilization,
+            ChecklistId = checklist.Id,
             Checklist = checklist
         };
 

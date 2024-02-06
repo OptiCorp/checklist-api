@@ -80,7 +80,8 @@ namespace Infrastructure.Persistence.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<int>(type: "int", nullable: false),
-                    ChecklistId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    ChecklistId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Created = table.Column<DateOnly>(type: "date", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -93,7 +94,8 @@ namespace Infrastructure.Persistence.Migrations
                         name: "FK_Mobilizations_Checklists_ChecklistId",
                         column: x => x.ChecklistId,
                         principalTable: "Checklists",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

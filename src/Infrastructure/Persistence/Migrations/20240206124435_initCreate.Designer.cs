@@ -12,7 +12,7 @@ using MobDeMob.Infrastructure;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ModelContextBase))]
-    [Migration("20240206091308_initCreate")]
+    [Migration("20240206124435_initCreate")]
     partial class initCreate
     {
         /// <inheritdoc />
@@ -169,6 +169,7 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ChecklistId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateOnly>("Created")
@@ -185,6 +186,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -434,7 +438,9 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.Checklist", "Checklist")
                         .WithMany()
-                        .HasForeignKey("ChecklistId");
+                        .HasForeignKey("ChecklistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Checklist");
                 });

@@ -23,8 +23,9 @@ public class ChecklistSection : AuditableEntity
     public Checklist Checklist {get; set;} = null!;
 
     // the name of the item (or other fields) can be fetched from the Part
+    public string? ChecklistSectionId {get; set;} //foreign key to parent
 
-    public IEnumerable<ChecklistSection> SubSections { get; set; } = [];
+    public ICollection<ChecklistSection> SubSections { get; set; } = [];
 
     public IEnumerable<Punch> Punches { get; set; } = [];
 

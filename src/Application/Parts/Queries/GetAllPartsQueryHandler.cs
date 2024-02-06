@@ -19,7 +19,7 @@ public class GetAllPartsQueryHandler : IRequestHandler<GetAllPartsQuery, IEnumer
 
     public async Task<IEnumerable<PartDto>> Handle(GetAllPartsQuery request, CancellationToken cancellationToken)
     {
-        var parts = await _partsRepository.GetAll(cancellationToken);
+        var parts = await _partsRepository.GetAll(request.includeChildren, cancellationToken);
         return parts.Select(p => p.AsDto());
     }   
 }
