@@ -23,8 +23,6 @@ public abstract class Part : AuditableEntity
 
     public PartTemplate PartTemplate { get; set; } = null!;
 
-
-
     public ICollection<Part> Children { get; set; } = [];
 
     [NotMapped]

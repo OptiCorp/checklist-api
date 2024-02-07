@@ -8,10 +8,10 @@ public record MobilizationDto
     public required string Title {get; init;}
     public string? Description {get; init;}
 
-    public string MobilizationType {get; init;}
+    public MobilizationType MobilizationType {get; init;}
 
     public MobilizationDto(MobilizationType mobilizationType)
     {
-        MobilizationType = mobilizationType.ToString();
+        MobilizationType = mobilizationType;
     }
 }

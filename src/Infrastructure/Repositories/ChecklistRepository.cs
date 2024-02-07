@@ -90,7 +90,7 @@ public class CheklistRepository : IChecklistRepository
         else
         {
             //TODO: dont delete, update the existing (Robin from the future: I dont think that is possible due to determenism)
-            // partTemp.PartCheckListTemplate.ChecklistQuestion = firstQuestion;
+            partTemp.PartCheckListTemplate.ChecklistQuestion = firstQuestion;
 
             // var diffQuestionsCount = partTemp.PartCheckListTemplate.SubSections.Count - restQuestions.Count();
             // if (diffQuestionsCount > 0)//diff need to be deleted

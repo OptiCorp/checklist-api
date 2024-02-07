@@ -31,6 +31,7 @@ public class AddMobilizationCommandHandler : IRequestHandler<AddMobilizationComm
             Title = request.Title,
             Description = request.Description,
             ChecklistId = checklistId,
+            Type = request.MobilizationType
         };
     }
 }

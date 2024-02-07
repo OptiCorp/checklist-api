@@ -141,19 +141,17 @@ public class MobilizationRepository : IMobilizationRepository
             //     .ThenInclude(c => c.ChecklistSections
             //         .Where(cs => cs.PartId == partId
             //     ))
-            .FirstAsync(m => m.Id == id, cancellationToken);
+            .SingleAsync(m => m.Id == id, cancellationToken);
+            
 
-        foreach (var m in mob.Checklist.Parts)
-        {
-            if (m.Id == partId)
-            {
-                mob.Checklist.Parts.Remove(m);
-                break;
-            }
-        }
-        await _modelContextBase.ChecklistSections
+        var part = mob.Checklist.Parts.Single(p => p.Id == partId);
+        mob.Checklist.Parts.Remove(part);
+
+        var cs = await _modelContextBase.ChecklistSections
             .Where(cs => cs.ChecklistId == mob.ChecklistId && cs.PartId == partId)
-            .ExecuteDeleteAsync(cancellationToken);
+            .SingleAsync(cancellationToken);
+
+        _modelContextBase.ChecklistSections.Remove(cs);
 
         await _modelContextBase.SaveChangesAsync(cancellationToken);
     }
@@ -163,21 +161,23 @@ public class MobilizationRepository : IMobilizationRepository
         var query = _modelContextBase.Mobilizations
             .AsNoTracking()
             .Where(m => m.Id == mobId);
-        // .Include(m => m.Checklist)
-        // .ThenInclude(c => c.Parts)
-
-        // .Select(m => m.Checklist)
-        // .SingleAsync(cancellationToken);
 
         if (includeChildren)
         {
-            query = query.Include(m => m.Checklist).ThenInclude(c => c.Parts).ThenInclude(p => p.Children);
+            query = query
+                .Include(m => m.Checklist)
+                    .ThenInclude(c => c.Parts)
+                        .ThenInclude(p => p.Children);
         }
         else
         {
-            query = query.Include(m => m.Checklist).ThenInclude(c => c.Parts);
+            query = query
+                .Include(m => m.Checklist)
+                    .ThenInclude(c => c.Parts);
         }
-        var checklist = await query.Select(m => m.Checklist).SingleAsync(cancellationToken);
+        var checklist = await query
+            .Select(m => m.Checklist)
+            .SingleAsync(cancellationToken);
 
         return checklist.Parts;
     }

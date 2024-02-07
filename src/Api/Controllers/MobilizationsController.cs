@@ -49,7 +49,7 @@ public class MobilizationController : ControllerBase
     [HttpPost(Name = "CreateMobilization")]
     public async Task<ActionResult<MobilizationDto>> CreateMobilization(MobilizationDto mobilizationDto, CancellationToken cancellationToken)
     {
-        var id = await _sender.Send(new AddMobilizationCommand { Title = mobilizationDto.Title, Description = mobilizationDto.Description }, cancellationToken);
+        var id = await _sender.Send(new AddMobilizationCommand { Title = mobilizationDto.Title, Description = mobilizationDto.Description, MobilizationType = mobilizationDto.MobilizationType }, cancellationToken);
         return CreatedAtAction(nameof(GetMobilizationById), new { itemId = id }, mobilizationDto);
     }
 
