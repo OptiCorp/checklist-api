@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MobDeMob.Domain.Entities;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
-using MobDeMob.Domain.Entities.Mobilization;
+using MobDeMob.Domain.Entities;
 using MobDeMob.Domain.ItemAggregate;
 
 namespace MobDeMob.Infrastructure;

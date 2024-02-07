@@ -25,6 +25,8 @@ public record PartDto
     public required string Name { get; set; }
     public string? PartTemplateId { get; set; }
 
+    public required bool hasChecklistTemplate {get; set;}
+
     public IEnumerable<PartChildDto>? Children { get; set; }
 
     public PartDto(PartType partType)

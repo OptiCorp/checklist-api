@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MobDeMob.Domain.Entities.Mobilization;
+namespace MobDeMob.Domain.Entities;
 
 public enum MobilizationStatus
 {

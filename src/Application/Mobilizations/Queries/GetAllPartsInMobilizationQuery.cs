@@ -1,6 +1,6 @@
 using MediatR;
 using MobDeMob.Application.Parts;
-using MobDeMob.Domain.Entities.Mobilization;
+using MobDeMob.Domain.Entities;
 
 namespace MobDeMob.Application.Mobilizations.Queries;
 

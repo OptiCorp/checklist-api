@@ -17,9 +17,18 @@ public abstract class Part : AuditableEntity
     public string? ChecklistId {get; set;} //foreign key to checklist
     public string? PartTemplateId { get; set; } //foreign key to partTemplate
 
+    public string? PartParentId {get; set;} //foreign key to parent part
+
+    public Part ParentPart {get; set;} //navigation to parent
+
     public PartTemplate PartTemplate { get; set; } = null!;
 
+
+
     public ICollection<Part> Children { get; set; } = [];
+
+    [NotMapped]
+    public bool hasChecklistTemplate {get; set;}
 
     public Part(PartType partType)
     {

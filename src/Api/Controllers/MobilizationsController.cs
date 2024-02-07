@@ -4,7 +4,7 @@ using MobDeMob.Application.Mobilizations;
 using MobDeMob.Application.Mobilizations.Commands;
 using MobDeMob.Application.Mobilizations.Queries;
 using MobDeMob.Application.Parts;
-using MobDeMob.Domain.Entities.Mobilization;
+using MobDeMob.Domain.Entities;
 
 namespace Api.Controllers;
 

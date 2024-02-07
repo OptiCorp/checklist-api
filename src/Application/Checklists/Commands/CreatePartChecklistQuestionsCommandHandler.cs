@@ -2,7 +2,7 @@
 using Application.Common.Interfaces;
 using MediatR;
 using MobDeMob.Application.Common.Interfaces;
-using MobDeMob.Domain.Entities.Mobilization;
+using MobDeMob.Domain.Entities;
 
 namespace MobDeMob.Application.Checklists;
 

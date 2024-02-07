@@ -134,7 +134,7 @@ namespace Infrastructure.Persistence.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ChecklistId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     PartTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    PartId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    PartParentId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Created = table.Column<DateOnly>(type: "date", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -154,8 +154,8 @@ namespace Infrastructure.Persistence.Migrations
                         principalTable: "PartTemplates",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Parts_Parts_PartId",
-                        column: x => x.PartId,
+                        name: "FK_Parts_Parts_PartParentId",
+                        column: x => x.PartParentId,
                         principalTable: "Parts",
                         principalColumn: "Id");
                 });
@@ -165,11 +165,11 @@ namespace Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ChecklistSectionTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    PartId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ChecklistId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    IsValidated = table.Column<bool>(type: "bit", nullable: false),
+                    ChecklistSectionTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PartId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ChecklistId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ChecklistSectionId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsValidated = table.Column<bool>(type: "bit", nullable: false),
                     Created = table.Column<DateOnly>(type: "date", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -182,7 +182,8 @@ namespace Infrastructure.Persistence.Migrations
                         name: "FK_ChecklistSections_ChecklistSectionTemplate_ChecklistSectionTemplateId",
                         column: x => x.ChecklistSectionTemplateId,
                         principalTable: "ChecklistSectionTemplate",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ChecklistSections_ChecklistSections_ChecklistSectionId",
                         column: x => x.ChecklistSectionId,
@@ -192,12 +193,14 @@ namespace Infrastructure.Persistence.Migrations
                         name: "FK_ChecklistSections_Checklists_ChecklistId",
                         column: x => x.ChecklistId,
                         principalTable: "Checklists",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ChecklistSections_Parts_PartId",
                         column: x => x.PartId,
                         principalTable: "Parts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -252,7 +255,8 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Mobilizations_ChecklistId",
                 table: "Mobilizations",
-                column: "ChecklistId");
+                column: "ChecklistId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parts_ChecklistId",
@@ -260,9 +264,9 @@ namespace Infrastructure.Persistence.Migrations
                 column: "ChecklistId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Parts_PartId",
+                name: "IX_Parts_PartParentId",
                 table: "Parts",
-                column: "PartId");
+                column: "PartParentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parts_PartTemplateId",

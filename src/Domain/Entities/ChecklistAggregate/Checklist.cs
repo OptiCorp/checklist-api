@@ -11,7 +11,7 @@ public class Checklist : AuditableEntity
 
     // [EnumDataType(typeof(ChecklistStatus))]
     // public ChecklistStatus Status {get; set;}
-
+    public Mobilization? Mobilization {get; set;}
     public ICollection<Part> Parts { get; set; } = [];
 
     public ICollection<ChecklistSection> ChecklistSections { get; set; } = [];

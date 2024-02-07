@@ -26,11 +26,17 @@ public class PartsRepository : IPartsRepository
 
     public async Task<Part?> GetById(string id, CancellationToken cancellationToken)
     {
-        return await _modelContextBase.Parts
+        var part =  await _modelContextBase.Parts
             .AsNoTracking()
+            .Include(p => p.PartTemplate)
+            .ThenInclude(pt => pt.PartCheckListTemplate)
             .Include(p => p.Children)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        
+        if (part == null) return null;
 
+        part.hasChecklistTemplate = part.PartTemplate.PartCheckListTemplate is not null;
+        return part;
     }
 
     public async Task<IEnumerable<Part>> GetAll(bool includeChildren,CancellationToken cancellationToken)
@@ -41,7 +47,18 @@ public class PartsRepository : IPartsRepository
             query = query.Include(p => p.Children);
         }
 
-        return await query.ToListAsync(cancellationToken);
-            
+        query = query
+            .Include(p => p.PartTemplate)
+            .ThenInclude(pt => pt.PartCheckListTemplate)
+            .Include(p => p.Children);
+
+        var parts = await query.ToListAsync(cancellationToken);
+
+        foreach (var part in parts)
+        {
+            part.hasChecklistTemplate = part.PartTemplate.PartCheckListTemplate is not null;
+        }
+
+        return parts;
     }
 }

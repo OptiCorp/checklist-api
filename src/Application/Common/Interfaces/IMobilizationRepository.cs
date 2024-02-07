@@ -1,5 +1,5 @@
 using System.Data.Common;
-using MobDeMob.Domain.Entities.Mobilization;
+using MobDeMob.Domain.Entities;
 using MobDeMob.Domain.ItemAggregate;
 
 namespace Application.Common.Interfaces;

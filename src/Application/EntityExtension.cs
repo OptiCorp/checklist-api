@@ -2,7 +2,7 @@
 using MobDeMob.Application.Parts;
 using MobDeMob.Application.Templates;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
-using MobDeMob.Domain.Entities.Mobilization;
+using MobDeMob.Domain.Entities;
 using MobDeMob.Domain.ItemAggregate;
 
 namespace MobDeMob.Application.Mobilizations;
@@ -35,6 +35,7 @@ public static class EntityExtenstions
             WpId = part.WpId,
             Name = part.Name,
             SerialNumber = part.SerialNumber,
+            hasChecklistTemplate = part.hasChecklistTemplate,
             //Children = part.Children.Select(c => c.AsDto()),
             Children = part.Children.Select(c => c.AsChildDto()),
             PartTemplateId = part.PartTemplateId,

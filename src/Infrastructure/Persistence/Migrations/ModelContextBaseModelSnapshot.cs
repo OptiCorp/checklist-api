@@ -52,12 +52,14 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ChecklistId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ChecklistSectionId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ChecklistSectionTemplateId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateOnly>("Created")
@@ -76,6 +78,7 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PartId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -159,7 +162,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Punches");
                 });
 
-            modelBuilder.Entity("MobDeMob.Domain.Entities.Mobilization.Mobilization", b =>
+            modelBuilder.Entity("MobDeMob.Domain.Entities.Mobilization", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -196,7 +199,8 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChecklistId");
+                    b.HasIndex("ChecklistId")
+                        .IsUnique();
 
                     b.ToTable("Mobilizations");
                 });
@@ -283,7 +287,7 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PartId")
+                    b.Property<string>("PartParentId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PartTemplateId")
@@ -304,7 +308,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ChecklistId");
 
-                    b.HasIndex("PartId");
+                    b.HasIndex("PartParentId");
 
                     b.HasIndex("PartTemplateId");
 
@@ -389,23 +393,31 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.Checklist", "Checklist")
                         .WithMany("ChecklistSections")
-                        .HasForeignKey("ChecklistId");
+                        .HasForeignKey("ChecklistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.ChecklistSection", null)
+                    b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.ChecklistSection", "ParentChecklistSection")
                         .WithMany("SubSections")
                         .HasForeignKey("ChecklistSectionId");
 
                     b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.ChecklistSectionTemplate", "ChecklistSectionTemplate")
                         .WithMany()
-                        .HasForeignKey("ChecklistSectionTemplateId");
+                        .HasForeignKey("ChecklistSectionTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("MobDeMob.Domain.ItemAggregate.Part", "Part")
                         .WithMany()
-                        .HasForeignKey("PartId");
+                        .HasForeignKey("PartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Checklist");
 
                     b.Navigation("ChecklistSectionTemplate");
+
+                    b.Navigation("ParentChecklistSection");
 
                     b.Navigation("Part");
                 });
@@ -431,11 +443,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Section");
                 });
 
-            modelBuilder.Entity("MobDeMob.Domain.Entities.Mobilization.Mobilization", b =>
+            modelBuilder.Entity("MobDeMob.Domain.Entities.Mobilization", b =>
                 {
                     b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.Checklist", "Checklist")
-                        .WithMany()
-                        .HasForeignKey("ChecklistId")
+                        .WithOne("Mobilization")
+                        .HasForeignKey("MobDeMob.Domain.Entities.Mobilization", "ChecklistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -448,13 +460,15 @@ namespace Infrastructure.Persistence.Migrations
                         .WithMany("Parts")
                         .HasForeignKey("ChecklistId");
 
-                    b.HasOne("MobDeMob.Domain.ItemAggregate.Part", null)
+                    b.HasOne("MobDeMob.Domain.ItemAggregate.Part", "ParentPart")
                         .WithMany("Children")
-                        .HasForeignKey("PartId");
+                        .HasForeignKey("PartParentId");
 
                     b.HasOne("MobDeMob.Domain.ItemAggregate.PartTemplate", "PartTemplate")
                         .WithMany("Parts")
                         .HasForeignKey("PartTemplateId");
+
+                    b.Navigation("ParentPart");
 
                     b.Navigation("PartTemplate");
                 });
@@ -471,6 +485,8 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("MobDeMob.Domain.Entities.ChecklistAggregate.Checklist", b =>
                 {
                     b.Navigation("ChecklistSections");
+
+                    b.Navigation("Mobilization");
 
                     b.Navigation("Parts");
                 });

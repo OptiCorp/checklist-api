@@ -4,7 +4,7 @@ using MobDeMob.Domain.Common;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
 using MobDeMob.Domain.ItemAggregate;
 
-namespace MobDeMob.Domain.Entities.Mobilization;
+namespace MobDeMob.Domain.Entities;
 
 public class Mobilization : AuditableEntity
 {
@@ -16,7 +16,7 @@ public class Mobilization : AuditableEntity
 
         public MobilizationStatus Status {get; set;}
 
-        public required string ChecklistId {get; set;}
+        public string ChecklistId {get; set;}
 
         public Checklist Checklist { get; set; } = null!;
 

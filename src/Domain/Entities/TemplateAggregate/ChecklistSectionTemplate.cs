@@ -9,7 +9,7 @@ public class ChecklistSectionTemplate : AuditableEntity
 
     public string? ParentChecklistSectionTemplateId {get; set;}
 
-    public ChecklistSectionTemplate ParentChecklistSectionTemplate {get; set;} = null!;
+    public ChecklistSectionTemplate? ParentChecklistSectionTemplate {get; set;}
 
     public ICollection<ChecklistSectionTemplate> SubSections { get; set; } = [];
 

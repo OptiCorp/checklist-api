@@ -1,4 +1,4 @@
-using MobDeMob.Domain.Entities.Mobilization;
+using MobDeMob.Domain.Entities;
 
 namespace MobDeMob.Application.Mobilizations;
 

@@ -3,7 +3,7 @@
 using Application.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
-using MobDeMob.Domain.Entities.Mobilization;
+using MobDeMob.Domain.Entities;
 using MobDeMob.Domain.ItemAggregate;
 
 namespace MobDeMob.Infrastructure.Repositories;
@@ -79,7 +79,12 @@ public class MobilizationRepository : IMobilizationRepository
 
         if (part.ChecklistId != null)
         {
-            throw new Exception($"PartId: '{partId}' already belongs to a mobilization");
+            var partBelongsToMobId = await _modelContextBase.Mobilizations
+                .Where(m => m.ChecklistId == part.ChecklistId)
+                .Select(m => m.Id)
+                .SingleAsync(cancellationToken);
+            if (mob.Id == partBelongsToMobId) throw new Exception ($"PartId: '{partId}' already belongs to this mobilization");
+            throw new Exception($"PartId: '{partId}' already belongs to mobilization with id: {partBelongsToMobId} ");
         }
 
         if (part.PartTemplate.PartCheckListTemplate == null)

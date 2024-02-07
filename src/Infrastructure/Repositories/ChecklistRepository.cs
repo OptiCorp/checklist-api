@@ -59,7 +59,6 @@ public class CheklistRepository : IChecklistRepository
         {
             questions.AddRange(GetAllQuestions(subSection));
         }
-
         return questions;
     }
 
@@ -90,10 +89,18 @@ public class CheklistRepository : IChecklistRepository
 
         else
         {
-            //TODO: dont delete, update the existing
-            _modelContextBase.ChecklistSectionTemplate.RemoveRange(partTemp.PartCheckListTemplate.SubSections);
+            //TODO: dont delete, update the existing (Robin from the future: I dont think that is possible due to determenism)
+            // partTemp.PartCheckListTemplate.ChecklistQuestion = firstQuestion;
 
-            partTemp.PartCheckListTemplate.ChecklistQuestion = firstQuestion;
+            // var diffQuestionsCount = partTemp.PartCheckListTemplate.SubSections.Count - restQuestions.Count();
+            // if (diffQuestionsCount > 0)//diff need to be deleted
+            // {
+            //     _modelContextBase.ChecklistSectionTemplate.RemoveRange(partTemp.PartCheckListTemplate.SubSections.Take(diffQuestionsCount));
+            // }else if (diffQuestionsCount <= 0) //non need to be deleted
+            // {
+
+            // }
+            _modelContextBase.ChecklistSectionTemplate.RemoveRange(partTemp.PartCheckListTemplate.SubSections);
 
             foreach (var q in restQuestions)
             {

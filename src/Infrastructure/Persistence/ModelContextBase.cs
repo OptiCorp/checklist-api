@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using MobDeMob.Domain.Entities;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
-using MobDeMob.Domain.Entities.Mobilization;
 using MobDeMob.Domain.ItemAggregate;
 
 namespace MobDeMob.Infrastructure;
@@ -25,11 +24,22 @@ public class ModelContextBase : DbContext
             .HasValue<Assembly>(PartType.Assembly)
             .HasValue<SubAssembly>(PartType.SubAssembly);
 
+        modelBuilder.Entity<Part>()
+            .HasOne(p => p.ParentPart)
+            .WithMany(p => p.Children)
+            .HasForeignKey(p => p.PartParentId);
+
         modelBuilder.Entity<ChecklistSectionTemplate>()
             .HasMany(s => s.SubSections)
             .WithOne(s => s.ParentChecklistSectionTemplate)
             .HasForeignKey(s => s.ParentChecklistSectionTemplateId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Checklist>()
+            .HasOne(c => c.Mobilization)
+            .WithOne(m => m.Checklist)
+            .HasForeignKey<Mobilization>(c => c.ChecklistId)
+            .IsRequired();
 
         // modelBuilder.Entity<ChecklistTemplate>() //many-to-many for ChecklistTemplate and ChecklistItem
         //     .HasMany(e => e.ChecklistItems)
