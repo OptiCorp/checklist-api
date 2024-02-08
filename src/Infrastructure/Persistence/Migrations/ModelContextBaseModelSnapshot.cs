@@ -141,6 +141,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageBlobUri")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
 

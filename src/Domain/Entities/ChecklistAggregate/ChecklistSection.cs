@@ -29,7 +29,7 @@ public class ChecklistSection : AuditableEntity
 
     public ICollection<ChecklistSection> SubSections { get; set; } = [];
 
-    public IEnumerable<Punch> Punches { get; set; } = [];
+    public ICollection<Punch> Punches { get; set; } = [];
 
     public bool IsValidated { get; set; }
 

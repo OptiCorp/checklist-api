@@ -211,6 +211,7 @@ namespace Infrastructure.Persistence.Migrations
                     SectionId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageBlobUri = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Created = table.Column<DateOnly>(type: "date", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastModified = table.Column<DateTime>(type: "datetime2", nullable: false),

@@ -10,7 +10,8 @@ builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration)
     .AddApplicationDbContextInitializer()
-    .AddAzureClient(builder.Configuration);
+    .AddAzureClient(builder.Configuration)
+    .AddMemoryCacheService();
 
 // Add services to the container.
 

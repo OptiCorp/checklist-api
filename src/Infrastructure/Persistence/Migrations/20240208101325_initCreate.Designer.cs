@@ -12,7 +12,7 @@ using MobDeMob.Infrastructure;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ModelContextBase))]
-    [Migration("20240207080625_initCreate")]
+    [Migration("20240208101325_initCreate")]
     partial class initCreate
     {
         /// <inheritdoc />
@@ -142,6 +142,9 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageBlobUri")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("LastModified")

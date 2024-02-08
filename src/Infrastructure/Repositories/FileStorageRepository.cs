@@ -30,7 +30,7 @@ public class FileStorageRepositories : IFileStorageRepository
         return userDelegationKey;
     }
 
-    private static BlobUriBuilder CreateUserDelegationSASContainer(
+    private static Uri CreateUserDelegationSASContainer(
     BlobContainerClient containerClient,
     UserDelegationKey userDelegationKey)
     {
@@ -55,8 +55,8 @@ public class FileStorageRepositories : IFileStorageRepository
                 containerClient.GetParentBlobServiceClient().AccountName)
         };
 
-        //return uriBuilder.ToUri();
-        return uriBuilder;
+        return uriBuilder.ToUri();
+        //return uriBuilder;
     }
 
     private async Task<BlobContainerClient> GetContainer(string containerName, CancellationToken cancellationToken)
@@ -88,7 +88,7 @@ public class FileStorageRepositories : IFileStorageRepository
         return $"{fileId}.{fileExt}".ToLower();
     }
 
-    public async Task<string> UploadImage(Stream stream, string fileName, string containerName, string contentType, CancellationToken cancellationToken)
+    public async Task<Uri> UploadImage(Stream stream, string fileName, string containerName, string contentType, CancellationToken cancellationToken)
     {
         BlobContainerClient container = await GetContainer(containerName, cancellationToken);
         var fileId = Guid.NewGuid();
@@ -103,14 +103,35 @@ public class FileStorageRepositories : IFileStorageRepository
                 ContentType = contentType,
             }
         });
-        var userDelegationKey = await RequestUserDelegationKey();
-        // Uri containerSASURI = CreateUserDelegationSASContainer(container, userDelegationKey);
-        BlobUriBuilder sasUriBuilder = CreateUserDelegationSASContainer(container, userDelegationKey);
+        //var userDelegationKey = await RequestUserDelegationKey();
+        //Uri containerSASURI = CreateUserDelegationSASContainer(container, userDelegationKey);
+
+        //BlobUriBuilder sasUriBuilder = CreateUserDelegationSASContainer(container, userDelegationKey);
 
 
         //blobInstance.GenerateSasUri(sasBuilder)
         //var absUrl = string.Concat(blobInstance.Uri.AbsoluteUri, "?", containerSASURI.AbsoluteUri);
-        sasUriBuilder.BlobName = blobInstance.Name;
-        return sasUriBuilder.ToString();
+
+        //sasUriBuilder.BlobName = blobInstance.Name;
+        //return sasUriBuilder.ToString();
+        return blobInstance.Uri;
+    }
+
+    public async Task<Uri> GenerateContainerSAS(string containerName, CancellationToken cancellationToken)
+    {
+        BlobContainerClient blobContainerClient = await GetContainer(containerName, cancellationToken);
+        var userDelegationKey = await RequestUserDelegationKey();
+        Uri containerSASURI = CreateUserDelegationSASContainer(blobContainerClient, userDelegationKey);
+        return containerSASURI;
+    }
+
+    public string ConcatBlobUriWithContainerSasTokenUri (Uri blobUri, Uri containerSasUri)
+    {
+        var sasToken = containerSasUri.Query;
+    
+        // Concatenate the blob URI with the SAS token
+        var blobUriWithSas = new Uri(blobUri + sasToken);
+    
+        return blobUriWithSas.ToString();
     }
 }

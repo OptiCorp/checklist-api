@@ -19,7 +19,7 @@ public class Punch : AuditableEntity
     // public required string ItemId {get; set;}
 
     // public Item Item {get; set;} = null!;
-    public required string SectionId { get; set; }
+    public string SectionId { get; set; }
 
     public ChecklistSection Section { get; set; } = null!;
 
@@ -27,8 +27,19 @@ public class Punch : AuditableEntity
 
     public string? Description { get; set; }
 
+    public Uri? ImageBlobUri {get; set;}
+
+    [NotMapped]
+    public string? PartId {get; set;}
+
     [NotMapped]
     public Part Part => Section.Part;
+
+    [NotMapped]
+    public string? ChecklistId {get; set;}
+
+    [NotMapped]
+    public string ParantChecklistSectionId {get; set;}
 
 
 }

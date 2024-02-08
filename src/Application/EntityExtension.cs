@@ -42,6 +42,19 @@ public static class EntityExtenstions
         };
     }
 
+    public static PunchDto AsDto (this Punch punch, string? blobURIWithSAS)
+    {
+        return new PunchDto
+        {
+            Id = punch.Id,
+            Title = punch.Title,
+            ChecklistId = punch.ChecklistId,
+            PartId = punch.PartId,
+            Description = punch.Description,
+            ImageBlobUri = blobURIWithSAS
+        };
+    }
+
     public static ChecklistSectionTemplateDto AsDto(this ChecklistSectionTemplate checklistSectionTemplate)
     {
         return new ChecklistSectionTemplateDto

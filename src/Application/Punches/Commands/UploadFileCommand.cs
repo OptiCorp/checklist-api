@@ -1,13 +1,13 @@
 using MediatR;
 
-namespace MobDeMob.Application.Mobilizations.Commands;
+namespace MobDeMob.Application.Punches.Commands;
 
-public class UploadFileCommand : IRequest<string>
+public class UploadFileCommand : IRequest<Uri>
 {
+    public required string PunchId {get; set;}
     public required Stream Stream {get; set;}
 
     public required string FileName {get; set;}
 
-    public required string ContainerName {get; set;}
     public required string ContentType {get; set;} 
 }

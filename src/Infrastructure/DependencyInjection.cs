@@ -6,6 +6,7 @@ using MobDeMob.Infrastructure.Repositories;
 using Application.Common.Interfaces;
 using Azure.Identity;
 using Microsoft.Extensions.Azure;
+using MobDeMob.Application.Punches;
 
 namespace MobDeMob.Infrastructure;
 public static class DependencyInjection
@@ -25,6 +26,8 @@ public static class DependencyInjection
         services.AddScoped<IMobilizationRepository, MobilizationRepository>();
         services.AddScoped<IChecklistRepository, CheklistRepository>();
         services.AddScoped<IFileStorageRepository, FileStorageRepositories>();
+        //services.AddScoped<ICacheRepository, CacheRepository>();
+        services.AddScoped<IPunchRepository, PunchRepository>();
         return services;
     }
 
@@ -50,6 +53,13 @@ public static class DependencyInjection
                 throw new Exception("Could not find the connectionstring for the storage account uri")));
             builder.UseCredential(new DefaultAzureCredential());
         });
+        return services;
+    }
+
+    public static IServiceCollection AddMemoryCacheService(this IServiceCollection services)
+    {
+        services.AddMemoryCache();
+        services.AddSingleton<ICacheRepository, CacheRepository>();
         return services;
     }
 }
