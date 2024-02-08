@@ -41,7 +41,7 @@ public class GetPunchQueryHandler : IRequestHandler<GetPunchQuery, PunchDto?>
                 if (containerSasUri == null)
                 {
                     var newContainerSAS = await _fileStorageRepository.GenerateContainerSAS(punch.ParantChecklistSectionId, cancellationToken);
-                    _cacheRepository.SetKeyValye(punch.ParantChecklistSectionId, newContainerSAS);
+                    _cacheRepository.SetKeyValue(punch.ParantChecklistSectionId, newContainerSAS);
                     var blobUriWithSas = _fileStorageRepository.ConcatBlobUriWithContainerSasTokenUri(blobUri, newContainerSAS);
 
                     return punch.AsDto(blobUriWithSas);

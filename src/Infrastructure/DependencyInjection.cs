@@ -58,7 +58,11 @@ public static class DependencyInjection
 
     public static IServiceCollection AddMemoryCacheService(this IServiceCollection services)
     {
-        services.AddMemoryCache();
+        services.AddMemoryCache(options => 
+        {
+            options.SizeLimit = 1024;
+            options.ExpirationScanFrequency = TimeSpan.FromMinutes(30);
+        });
         services.AddSingleton<ICacheRepository, CacheRepository>();
         return services;
     }

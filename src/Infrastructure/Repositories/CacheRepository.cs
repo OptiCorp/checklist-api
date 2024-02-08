@@ -17,8 +17,18 @@ public class CacheRepository : ICacheRepository
         return _memoryCache.Get<Uri>(key);
     }
 
-    public void SetKeyValye(string key, Uri uri)
+    public void SetKeyValue(string key, Uri uri,  TimeSpan? absoluteExpirationRelativeToNow = null)
     {
-        _memoryCache.Set(key, uri);
+        var cacheEntryOptions = new MemoryCacheEntryOptions()
+            .SetSize(1) // Set the size of the cache entry
+            .SetPriority(CacheItemPriority.High) // Set the priority of the cache entry
+            .SetSlidingExpiration(TimeSpan.FromMinutes(30)); // Set a sliding expiration
+        
+        if (absoluteExpirationRelativeToNow.HasValue)
+        {
+            cacheEntryOptions.SetAbsoluteExpiration(absoluteExpirationRelativeToNow.Value);
+        }
+
+        _memoryCache.Set(key, uri, cacheEntryOptions);
     }
 }

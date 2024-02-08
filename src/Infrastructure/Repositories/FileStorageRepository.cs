@@ -40,7 +40,7 @@ public class FileStorageRepositories : IFileStorageRepository
             BlobContainerName = containerClient.Name,
             Resource = "c",
             StartsOn = DateTimeOffset.UtcNow,
-            ExpiresOn = DateTimeOffset.UtcNow.AddDays(1)
+            ExpiresOn = DateTimeOffset.UtcNow.AddDays(1).AddHours(1)
         };
 
         // Specify the necessary permissions

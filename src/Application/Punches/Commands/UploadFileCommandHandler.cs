@@ -28,7 +28,7 @@ public class UploadFileCommandHandler : IRequestHandler<UploadFileCommand, Uri>
         if (containerSAS == null)
         {
             var newContainerSAS = await _fileStorageRepository.GenerateContainerSAS(punch.ParantChecklistSectionId, cancellationToken);
-            _cacheRepository.SetKeyValye(punch.ParantChecklistSectionId, newContainerSAS);
+            _cacheRepository.SetKeyValue(punch.ParantChecklistSectionId, newContainerSAS, TimeSpan.FromHours(1));
         }
         //persist the blobUri with the Punch
         await _punchRepository.AssociatePunchWithUrl(request.PunchId, blobUri, cancellationToken);
