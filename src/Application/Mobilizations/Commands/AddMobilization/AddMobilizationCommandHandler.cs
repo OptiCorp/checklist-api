@@ -20,8 +20,17 @@ public class AddMobilizationCommandHandler : IRequestHandler<AddMobilizationComm
     public async Task<string> Handle(AddMobilizationCommand request, CancellationToken cancellationToken)
     {
         var checklistId = await _checkListRepository.AddChecklist(new Checklist(), cancellationToken);
+        // if in the consctructor of Mobilization you create and assign a new checklist it will automatically add the checklist, so you wont need the logic above
+        // for that to work you need to make sure the configs are correct. Something like:
+        //  modelBuilder.Entity<Mobilization>()
+        //.HasOne(s => s.Checklist)
+        //.WithOne()
+        //.HasForeignKey<Checklist>(x => x.Id);
+
         var mobilization = MapToMobilization(request, checklistId);
+
         await _mobilizationRepository.AddMobilization(mobilization, cancellationToken);
+
         return mobilization.Id;
     }
 

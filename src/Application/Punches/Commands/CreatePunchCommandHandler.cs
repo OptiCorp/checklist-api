@@ -1,7 +1,6 @@
-using Application.Common.Interfaces;
-using MediatR;
+﻿using MediatR;
 using MobDeMob.Application.Common.Interfaces;
-using MobDeMob.Application.Punches;
+using MobDeMob.Domain.Entities.ChecklistAggregate;
 
 namespace MobDeMob.Application.Punches.Commands;
 
@@ -21,6 +20,17 @@ public class CreatePunchCommandHandler : IRequestHandler<CreatePunchCommand, str
 
     public async Task<string> Handle(CreatePunchCommand request, CancellationToken cancellationToken)
     {
-        return await _punchRepository.CreatePunch(request.Title, request.Description, request.ChecklistSectionId, cancellationToken);
+        dynamic checklistrepo = null;// inject IChecklistRepository, I'm just 
+        dynamic request2 = null;// I think the request should have the checklistId and not ChecklistSectionId, but double check
+
+        var checklistSection = await checklistrepo.GetById(request2.checkListId);
+        var newPunch = new Punch
+        {
+            Title = "",//Title,
+            Description = "",//Description,
+            Section = checklistSection
+        };
+
+        return await _punchRepository.CreatePunch(newPunch, cancellationToken);
     }
 }

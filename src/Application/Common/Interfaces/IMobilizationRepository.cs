@@ -13,7 +13,7 @@ public interface IMobilizationRepository
 
     Task DeleteMobilization(string id, CancellationToken cancellationToken = default);
 
-    Task RemovePartFromMobilization(string id, string partId, CancellationToken cancellationToken = default);
+    //Task RemovePartFromMobilization(string id, string partId, CancellationToken cancellationToken = default);
 
     Task<IEnumerable<Part>> GetAllPartsInMobilization(string mobId, bool includeChildren, CancellationToken cancellationToken = default);
 

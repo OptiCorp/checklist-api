@@ -1,6 +1,4 @@
-
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using MobDeMob.Domain.Common;
 using MobDeMob.Domain.ItemAggregate;
 
@@ -11,8 +9,8 @@ public class Checklist : AuditableEntity
 
     // [EnumDataType(typeof(ChecklistStatus))]
     // public ChecklistStatus Status {get; set;}
-    public Mobilization? Mobilization {get; set;}
-    public ICollection<Part> Parts { get; set; } = [];
+    public Mobilization? Mobilization { get; set; }
+    public ICollection<Part> Parts { get; set; } = [];// if parts are on the inventory app, we should turn this into just the ids (ICollection<string>)
 
     public ICollection<ChecklistSection> ChecklistSections { get; set; } = [];
 

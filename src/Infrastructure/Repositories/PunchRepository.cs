@@ -20,6 +20,13 @@ public class PunchRepository : IPunchRepository
         await _modelContextBase.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task<string> CreatePunch(Punch punch, CancellationToken cancellationToken)
+    {
+        await _modelContextBase.Punches.AddAsync(punch, cancellationToken);
+        await _modelContextBase.SaveChangesAsync(cancellationToken);
+        return punch.Id;
+    }
+
     public async Task<string> CreatePunch(string Title, string? Description, string checklistSectionId, CancellationToken cancellationToken)
     {
         var checklistSection = await _modelContextBase.ChecklistSections.SingleAsync(cs => cs.Id == checklistSectionId);

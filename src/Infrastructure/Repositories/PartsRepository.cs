@@ -52,6 +52,6 @@ public class PartsRepository : IPartsRepository
 
     public Task Delete(Part part)
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException();//TODO
     }
 }

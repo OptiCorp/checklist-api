@@ -41,29 +41,29 @@ public class MobilizationRepository : IMobilizationRepository
             .ExecuteDeleteAsync(cancellationToken);
     }
 
-    public async Task RemovePartFromMobilization(string id, string partId, CancellationToken cancellationToken)
-    {
-        var mob = await _modelContextBase.Mobilizations
-            .Include(m => m.Checklist)
-                .ThenInclude(c => c.Parts)
-            // .Include(m => m.Checklist)
-            //     .ThenInclude(c => c.ChecklistSections
-            //         .Where(cs => cs.PartId == partId
-            //     ))
-            .SingleAsync(m => m.Id == id, cancellationToken);
+    //public async Task RemovePartFromMobilization(string id, string partId, CancellationToken cancellationToken)
+    //{
+    //    var mob = await _modelContextBase.Mobilizations
+    //        .Include(m => m.Checklist)
+    //            .ThenInclude(c => c.Parts)
+    //        // .Include(m => m.Checklist)
+    //        //     .ThenInclude(c => c.ChecklistSections
+    //        //         .Where(cs => cs.PartId == partId
+    //        //     ))
+    //        .SingleAsync(m => m.Id == id, cancellationToken);
 
 
-        var part = mob.Checklist.Parts.Single(p => p.Id == partId);
-        mob.Checklist.Parts.Remove(part);
+    //    var part = mob.Checklist.Parts.Single(p => p.Id == partId);
+    //    mob.Checklist.Parts.Remove(part);
 
-        var cs = await _modelContextBase.ChecklistSections
-            .Where(cs => cs.ChecklistId == mob.ChecklistId && cs.PartId == partId)
-            .SingleAsync(cancellationToken);
+    //    var cs = await _modelContextBase.ChecklistSections
+    //        .Where(cs => cs.ChecklistId == mob.ChecklistId && cs.PartId == partId)
+    //        .SingleAsync(cancellationToken);
 
-        _modelContextBase.ChecklistSections.Remove(cs);
+    //    _modelContextBase.ChecklistSections.Remove(cs);
 
-        await _modelContextBase.SaveChangesAsync(cancellationToken);
-    }
+    //    await _modelContextBase.SaveChangesAsync(cancellationToken);
+    //}
 
     public async Task<IEnumerable<Part>> GetAllPartsInMobilization(string mobId, bool includeChildren, CancellationToken cancellationToken)
     {

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Entities.Mobilization.Events;
 using MobDeMob.Domain.Common;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
 using MobDeMob.Domain.ItemAggregate;
@@ -48,6 +49,11 @@ public class Mobilization : AuditableEntity
 
         part.AssignToCheckList(ChecklistId);
         Parts.Add(part);
+    }
+
+    public void DeleteParts()
+    {
+        AddDomainEvent(new MobilizationDeleted(Id));
     }
 
     public void RemovePartToMobilization(Part part)
