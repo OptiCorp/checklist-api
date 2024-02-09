@@ -1,8 +1,9 @@
-
+﻿
 using Application.Common.Interfaces;
 using MediatR;
 using MobDeMob.Application.Common.Interfaces;
 using MobDeMob.Domain.Entities;
+using MobDeMob.Domain.Entities.ChecklistAggregate;
 
 namespace MobDeMob.Application.Mobilizations.Commands;
 
@@ -18,7 +19,7 @@ public class AddMobilizationCommandHandler : IRequestHandler<AddMobilizationComm
     }
     public async Task<string> Handle(AddMobilizationCommand request, CancellationToken cancellationToken)
     {
-        var checklistId = await _checkListRepository.AddChecklist(cancellationToken);
+        var checklistId = await _checkListRepository.AddChecklist(new Checklist(), cancellationToken);
         var mobilization = MapToMobilization(request, checklistId);
         await _mobilizationRepository.AddMobilization(mobilization, cancellationToken);
         return mobilization.Id;

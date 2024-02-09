@@ -1,4 +1,4 @@
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using MediatR;
 
 namespace MobDeMob.Application.Mobilizations.Commands;
@@ -13,6 +13,16 @@ public class UpdateMobilizationCommandHandler : IRequestHandler<UpdateMobilizati
     }
     public async Task Handle(UpdateMobilizationCommand request, CancellationToken cancellationToken)
     {
-        await _mobilizationRepository.UpdateMobilization(request.id, request.Title, request.Description, cancellationToken);
+        var mobilization = await _mobilizationRepository.GetById(request.id);
+
+        if (mobilization == null)
+        {
+            throw new Exception("Not ofund");// TODO: improve this exception
+        }
+
+        mobilization.Title = request.Title;
+        mobilization.Description = request.Description;
+
+        await _mobilizationRepository.SaveChanges();
     }
 }

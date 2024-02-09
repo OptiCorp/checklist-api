@@ -1,40 +1,34 @@
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MobDeMob.Application.Parts;
 using MobDeMob.Application.Parts.Queries;
-using MobDeMob.Domain.ItemAggregate;
-
 namespace Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class PartsController : ControllerBase
 {
-    private readonly ILogger<ChecklistController> _logger;
-
-
+    private readonly ILogger<ChecklistsController> _logger;
     private readonly ISender _sender;
 
-    public PartsController(ILogger<ChecklistController> logger, ISender sender)
+    public PartsController(ILogger<ChecklistsController> logger, ISender sender)
     {
         _logger = logger;
         _sender = sender;
     }
 
-    [HttpGet()]
-    [Route("{partId}/GetItemById")]
+    [HttpGet("{partId}/GetItemById")]
 
-    public async Task<ActionResult<PartDto>> GetItemById(string partId, CancellationToken cancellationToken)
+    public async Task<ActionResult<PartDto>> GetItemById(string partId, CancellationToken cancellationToken = default)
     {
         var part = await _sender.Send(new GetPartByIdQuery { Id = partId }, cancellationToken);
         return part is not null ? Ok(part) : NotFound();
     }
 
-    [HttpGet()]
-    [Route("GetAll")]
-    public async Task<ActionResult<PartDto>> GetAll(CancellationToken cancellationToken, bool includeChildren = false)
+    [HttpGet("GetAll")]
+    public async Task<ActionResult<PartDto>> GetAll(bool includeChildren = false, CancellationToken cancellationToken = default)
     {
-        var parts = await _sender.Send(new GetAllPartsQuery {includeChildren = includeChildren}, cancellationToken);
+        var parts = await _sender.Send(new GetAllPartsQuery { includeChildren = includeChildren }, cancellationToken);
         return Ok(parts);
     }
 }

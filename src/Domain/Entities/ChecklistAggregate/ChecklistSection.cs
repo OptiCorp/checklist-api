@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using MobDeMob.Domain.Common;
 using MobDeMob.Domain.ItemAggregate;
 
@@ -10,22 +10,17 @@ public class ChecklistSection : AuditableEntity
 
     public ChecklistSectionTemplate ChecklistSectionTemplate { get; set; } = null!;
 
-    // the question (and some other fields) can be fetched from the template
-    
     public string PartId { get; set; }
 
     public Part Part { get; set; } = null!;
 
-    // public string? ChecklistSectionId {get; set;}
+    public string ChecklistId { get; set; }
 
-    public string ChecklistId {get; set;}
+    public Checklist Checklist { get; set; } = null!;
 
-    public Checklist Checklist {get; set;} = null!;
+    //public string? ChecklistSectionId {get; set;} //foreign key to parent
 
-    // the name of the item (or other fields) can be fetched from the Part
-    public string? ChecklistSectionId {get; set;} //foreign key to parent
-
-    public ChecklistSection? ParentChecklistSection {get; set;}
+    public ChecklistSection? ParentChecklistSection { get; set; }
 
     public ICollection<ChecklistSection> SubSections { get; set; } = [];
 

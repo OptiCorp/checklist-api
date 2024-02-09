@@ -1,76 +1,71 @@
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MobDeMob.Application.Mobilizations;
 using MobDeMob.Application.Mobilizations.Commands;
 using MobDeMob.Application.Mobilizations.Queries;
 using MobDeMob.Application.Parts;
-using MobDeMob.Domain.Entities;
 
 namespace Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class MobilizationController : ControllerBase
+public class MobilizationsController : ControllerBase
 {
-    private readonly ILogger<ChecklistController> _logger;
-
-
+    private readonly ILogger<ChecklistsController> _logger;
     private readonly ISender _sender;
 
-    public MobilizationController(ILogger<ChecklistController> logger, ISender sender)
+    public MobilizationsController(ILogger<ChecklistsController> logger, ISender sender)
     {
         _logger = logger;
         _sender = sender;
     }
 
-    [HttpGet()]
-    [Route("GetSingle/{mobId}")]
-    public async Task<ActionResult<MobilizationDto?>> GetMobilizationById(string mobId, CancellationToken cancellationToken)
+    [HttpGet("{mobId}")]
+    public async Task<ActionResult<MobilizationDto?>> GetMobilizationById(string mobId, CancellationToken cancellationToken = default)
     {
         var mob = await _sender.Send(new GetMobilizationByIdQuery { id = mobId }, cancellationToken);
         return mob is not null ? Ok(mob) : NotFound();
     }
 
-    [HttpGet()]
-    [Route("GetAll")]
-    public async Task<ActionResult<IEnumerable<MobilizationDto>>> GetAllMobilizations(CancellationToken cancellationToken)
+    [HttpGet("GetAll")]
+    public async Task<ActionResult<IEnumerable<MobilizationDto>>> GetAllMobilizations(CancellationToken cancellationToken = default)
     {
-        var mobs = await _sender.Send(new GetAllMobilizationsQuery { }, cancellationToken);
+        var mobs = await _sender.Send(new GetAllMobilizationsQuery(), cancellationToken);
         return mobs is not null ? Ok(mobs) : NotFound();
     }
 
-    [HttpPut("{mobId}", Name = "UpdateMobilization")]
-    public async Task<ActionResult> UpdateMobilization(string mobId, MobilizationDto mobilizationDto, CancellationToken cancellationToken)
+    [HttpGet("GetAllPartsInMobilization/{mobId}")]
+    public async Task<ActionResult<IEnumerable<PartDto>>> GetAllPartsInMobilization(string mobId, bool includeChildren = false, CancellationToken cancellationToken = default)
     {
-        await _sender.Send(new UpdateMobilizationCommand { id = mobId, Title = mobilizationDto.Title, Description = mobilizationDto.Description }, cancellationToken);
+        var parts = await _sender.Send(new GetAllPartsInMobilizationQuery { id = mobId, includeChildren = includeChildren }, cancellationToken);
+        return Ok(parts);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<MobilizationDto>> CreateMobilization(AddMobilizationCommand addMobilizationCommand, CancellationToken cancellationToken = default)
+    {
+        var id = await _sender.Send(addMobilizationCommand, cancellationToken);
+        return CreatedAtAction(nameof(GetMobilizationById), new { itemId = id });
+    }
+
+    [HttpPut("{mobId}")]
+    public async Task<ActionResult> UpdateMobilization(UpdateMobilizationCommand updateMobilizationCommand, CancellationToken cancellationToken = default)
+    {
+        await _sender.Send(updateMobilizationCommand, cancellationToken);
         return NoContent();
     }
 
-    [HttpPost(Name = "CreateMobilization")]
-    public async Task<ActionResult<MobilizationDto>> CreateMobilization(MobilizationDto mobilizationDto, CancellationToken cancellationToken)
-    {
-        var id = await _sender.Send(new AddMobilizationCommand { Title = mobilizationDto.Title, Description = mobilizationDto.Description, MobilizationType = mobilizationDto.MobilizationType }, cancellationToken);
-        return CreatedAtAction(nameof(GetMobilizationById), new { itemId = id }, mobilizationDto);
-    }
-
     [HttpPut("AddPartToMobilization/{mobId}")]
-    public async Task<ActionResult> AddPartToMoblization(string mobId, string partId, CancellationToken cancellationToken)
+    public async Task<ActionResult> AddPartToMoblization(AddPartToMobilizationCommand addPartToMobilizationCommand, CancellationToken cancellationToken = default)
     {
-        await _sender.Send(new AddPartToMobilizationCommand { id = mobId, partId = partId }, cancellationToken);
+        await _sender.Send(addPartToMobilizationCommand, cancellationToken);
         return NoContent();
     }
 
     [HttpPut("RemovePartFromMobilization/{mobId}")]
-    public async Task<ActionResult> RemovePartFromMoblization(string mobId, string partId, CancellationToken cancellationToken)
+    public async Task<ActionResult> RemovePartFromMoblization(RemovePartFromMobilizationCommand removePartFromMobilizationCommand, CancellationToken cancellationToken)
     {
-        await _sender.Send(new RemovePartFromMobilizationCommand { id = mobId, partId = partId }, cancellationToken);
+        await _sender.Send(removePartFromMobilizationCommand, cancellationToken);
         return NoContent();
-    }
-
-    [HttpGet("GetAllPartsInMobilization/{mobId}")]
-    public async Task<ActionResult<IEnumerable<PartDto>>> GetAllPartsInMobilization(string mobId, CancellationToken cancellationToken, bool includeChildren = false)
-    {
-        var parts = await _sender.Send(new GetAllPartsInMobilizationQuery { id = mobId, includeChildren = includeChildren }, cancellationToken);
-        return Ok(parts);
     }
 }

@@ -1,7 +1,5 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using MobDeMob.Domain.Common;
-using MobDeMob.Domain.Entities.ChecklistAggregate;
 
 namespace MobDeMob.Domain.ItemAggregate;
 
@@ -14,19 +12,19 @@ public abstract class Part : AuditableEntity
 
     public required string Name { get; set; }
 
-    public string? ChecklistId {get; set;} //foreign key to checklist
+    public string? ChecklistId { get; set; } //foreign key to checklist
     public string? PartTemplateId { get; set; } //foreign key to partTemplate
 
-    public string? PartParentId {get; set;} //foreign key to parent part
+    public string? PartParentId { get; set; } //foreign key to parent part
 
-    public Part ParentPart {get; set;} //navigation to parent
+    public Part ParentPart { get; set; } //navigation to parent
 
     public PartTemplate PartTemplate { get; set; } = null!;
 
     public ICollection<Part> Children { get; set; } = [];
 
     [NotMapped]
-    public bool hasChecklistTemplate {get; set;}
+    public bool hasChecklistTemplate => PartTemplate.PartCheckListTemplate is not null;
 
     public Part(PartType partType)
     {
@@ -64,6 +62,11 @@ public abstract class Part : AuditableEntity
         Children.Remove(child);
 
         AddDomainEvent(new PartChildRemoved { ChildId = child.Id, ParentId = Id });
+    }
+
+    public void AssignToCheckList(string checklistId)
+    {
+        ChecklistId = checklistId;
     }
     // [MaxLength(300)]
     // public string? Comment { get; set; }

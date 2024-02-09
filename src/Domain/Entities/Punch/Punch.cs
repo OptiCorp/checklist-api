@@ -1,6 +1,5 @@
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using MobDeMob.Domain.Common;
-using MobDeMob.Domain.Entities.ChecklistAggregate;
 using MobDeMob.Domain.ItemAggregate;
 
 namespace MobDeMob.Domain.Entities.ChecklistAggregate;
@@ -27,19 +26,12 @@ public class Punch : AuditableEntity
 
     public string? Description { get; set; }
 
-    public Uri? ImageBlobUri {get; set;}
-
-    [NotMapped]
-    public string? PartId {get; set;}
+    public Uri? ImageBlobUri { get; set; }
 
     [NotMapped]
     public Part Part => Section.Part;
 
     [NotMapped]
-    public string? ChecklistId {get; set;}
-
-    [NotMapped]
-    public string ParantChecklistSectionId {get; set;}
-
-
+    public string CheckListId => Section.Part.ChecklistId;
+    // consider renaming to just CheckListId, since there is only one (correct me if I'm assumign wrong)
 }

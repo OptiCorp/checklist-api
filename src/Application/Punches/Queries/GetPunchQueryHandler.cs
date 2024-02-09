@@ -1,14 +1,6 @@
-
-
-
-using Application.Common.Interfaces;
-using MediatR;
+﻿using MediatR;
 using MobDeMob.Application.Common.Interfaces;
 using MobDeMob.Application.Mobilizations;
-using MobDeMob.Application.Parts;
-using MobDeMob.Application.Punches;
-using MobDeMob.Application.Punches.Queries;
-using MobDeMob.Domain.Entities;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
 
 namespace MobDeMob.Application.Punches.Queries;
@@ -35,13 +27,13 @@ public class GetPunchQueryHandler : IRequestHandler<GetPunchQuery, PunchDto?>
         if (punch != null)
         {
             var blobUri = punch.ImageBlobUri;
-            if (blobUri != null && punch.ParantChecklistSectionId != null)
+            if (blobUri != null && punch.CheckListId != null)
             {
                 var containerSasUri = _cacheRepository.GetValue(punch.SectionId);
                 if (containerSasUri == null)
                 {
-                    var newContainerSAS = await _fileStorageRepository.GenerateContainerSAS(punch.ParantChecklistSectionId, cancellationToken);
-                    _cacheRepository.SetKeyValue(punch.ParantChecklistSectionId, newContainerSAS);
+                    var newContainerSAS = await _fileStorageRepository.GenerateContainerSAS(punch.CheckListId, cancellationToken);
+                    _cacheRepository.SetKeyValue(punch.CheckListId, newContainerSAS);
                     var blobUriWithSas = _fileStorageRepository.ConcatBlobUriWithContainerSasTokenUri(blobUri, newContainerSAS);
 
                     return punch.AsDto(blobUriWithSas);

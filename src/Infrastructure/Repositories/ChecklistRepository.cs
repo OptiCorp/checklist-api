@@ -1,7 +1,6 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MobDeMob.Application.Common.Interfaces;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
-using MobDeMob.Domain.ItemAggregate;
 
 
 namespace MobDeMob.Infrastructure.Repositories;
@@ -16,14 +15,13 @@ public class CheklistRepository : IChecklistRepository
         _modelContextBase = modelContextBase;
     }
 
-    public async Task<string> AddChecklist(CancellationToken cancellationToken)
+    public async Task<string> AddChecklist(Checklist checklist, CancellationToken cancellationToken = default)
     {
-        var newChecklist = new Checklist() { };
-        await _modelContextBase.Checklists.AddAsync(newChecklist, cancellationToken);
-        return newChecklist.Id;
+        await _modelContextBase.Checklists.AddAsync(checklist, cancellationToken);
+        return checklist.Id;
     }
 
-    public async Task<IEnumerable<ChecklistSectionTemplate>?> GetQuestions(string id, CancellationToken cancellationToken)
+    public async Task<IEnumerable<ChecklistSectionTemplate>?> GetQuestions(string id, CancellationToken cancellationToken = default)
     {
         //var part = await _modelContextBase.Parts.FirstAsync(p => p.Id  == id);
         var sections = await _modelContextBase.Parts
@@ -33,7 +31,6 @@ public class CheklistRepository : IChecklistRepository
             .ThenInclude(ct => ct.SubSections)
             .Select(p => p.PartTemplate.PartCheckListTemplate)
             .ToListAsync(cancellationToken);
-        //.ToListAsync(cancellationToken);
 
         if (sections == null) return null;
 
@@ -49,10 +46,11 @@ public class CheklistRepository : IChecklistRepository
 
     private static List<ChecklistSectionTemplate> GetAllQuestions(ChecklistSectionTemplate section)
     {
-        var questions = new List<ChecklistSectionTemplate>();
-
-        // Add the question from the current section
-        questions.Add(section);
+        var questions = new List<ChecklistSectionTemplate>
+        {
+            // Add the question from the current section
+            section
+        };
 
         // Recursively add the questions from the subsections
         foreach (var subSection in section.SubSections)

@@ -1,8 +1,8 @@
-using MobDeMob.Domain.Common;
+﻿using MobDeMob.Domain.Common;
 
 namespace MobDeMob.Domain.ItemAggregate;
 
-public class PartChildAdded : Event
+public class PartChildAdded : IDomainEvent
 {
     public required string ChildId { get; init; }
 

@@ -1,6 +1,4 @@
-
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MobDeMob.Domain.Common;
 
@@ -8,14 +6,14 @@ public abstract class Entity
 {
     // [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id {get; set;}
+    public string Id { get; set; }
 
-    private readonly List<Event> _domainEvents = new();
+    private readonly List<IDomainEvent> _domainEvents = new();
 
     [NotMapped]
-    public IReadOnlyCollection<Event> DomainEvents => _domainEvents.AsReadOnly();
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
-    public void AddDomainEvent(Event domainEvent)
+    public void AddDomainEvent(IDomainEvent domainEvent)
     {
         _domainEvents.Add(domainEvent);
     }

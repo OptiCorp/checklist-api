@@ -1,8 +1,8 @@
-
+﻿
 using MobDeMob.Application.Parts;
 using MobDeMob.Application.Templates;
-using MobDeMob.Domain.Entities.ChecklistAggregate;
 using MobDeMob.Domain.Entities;
+using MobDeMob.Domain.Entities.ChecklistAggregate;
 using MobDeMob.Domain.ItemAggregate;
 
 namespace MobDeMob.Application.Mobilizations;
@@ -42,14 +42,14 @@ public static class EntityExtenstions
         };
     }
 
-    public static PunchDto AsDto (this Punch punch, string? blobURIWithSAS)
+    public static PunchDto AsDto(this Punch punch, string? blobURIWithSAS)
     {
         return new PunchDto
         {
             Id = punch.Id,
             Title = punch.Title,
-            ChecklistId = punch.ChecklistId,
-            PartId = punch.PartId,
+            ChecklistId = punch.Part.ChecklistId,
+            PartId = punch.Part.Id,
             Description = punch.Description,
             ImageBlobUri = blobURIWithSAS
         };

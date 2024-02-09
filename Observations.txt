@@ -1,0 +1,5 @@
+- since we have the inventory app dealing with the items, parts, assemblies, etc. I think all those models can be removed
+
+- I think the model I originally created and the one you're still using for punch is outdated. It's pointing to a section when perhaps should just point to the checklist
+
+- there is a logic I didn't quite get about being the fist item in a checklist

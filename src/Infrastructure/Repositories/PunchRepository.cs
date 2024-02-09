@@ -1,6 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
-using MobDeMob.Application.Common.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
 using MobDeMob.Application.Punches;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
 
@@ -14,6 +12,7 @@ public class PunchRepository : IPunchRepository
     {
         _modelContextBase = modelContextBase;
     }
+
     public async Task AssociatePunchWithUrl(string id, Uri blobUri, CancellationToken cancellationToken)
     {
         var punch = await _modelContextBase.Punches.SingleAsync(p => p.Id == id, cancellationToken);
@@ -37,16 +36,11 @@ public class PunchRepository : IPunchRepository
 
     public async Task<Punch?> GetPunch(string id, CancellationToken cancellationToken)
     {
-        var punch =  await _modelContextBase.Punches
+        var punch = await _modelContextBase.Punches
             .AsNoTracking()
             .Include(p => p.Section)
-            .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
-        if (punch == null) return null;
-
-        punch.PartId = punch.Section.PartId;
-        punch.ChecklistId = punch.Section.ChecklistId;
-        punch.ParantChecklistSectionId = punch.Section.ChecklistSectionId ?? punch.Section.Id; //The top section which has checklistsection children
         return punch;
     }
 

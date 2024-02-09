@@ -1,8 +1,7 @@
-
+﻿
 using Microsoft.Extensions.Logging;
 using MobDeMob.Domain.Entities;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
-using MobDeMob.Domain.Entities;
 using MobDeMob.Domain.ItemAggregate;
 
 namespace MobDeMob.Infrastructure;
@@ -80,13 +79,13 @@ public class ApplicationDbContextInitializer
     private async Task SeedRestAsync()
 
     {
-        if (_modelContextBase.Parts.Any() 
-        || _modelContextBase.PartTemplates.Any() 
-        || _modelContextBase.Mobilizations.Any() 
-        || _modelContextBase.Checklists.Any() 
-        || _modelContextBase.ChecklistSections.Any() 
+        if (_modelContextBase.Parts.Any()
+        || _modelContextBase.PartTemplates.Any()
+        || _modelContextBase.Mobilizations.Any()
+        || _modelContextBase.Checklists.Any()
+        || _modelContextBase.ChecklistSections.Any()
         || _modelContextBase.ChecklistSectionTemplate.Any()
-        
+
         ) return;
 
         var item = new Item
@@ -195,7 +194,7 @@ public class ApplicationDbContextInitializer
             Part = part,
             ChecklistSectionTemplate = checklistSectionTemp,
             Checklist = checklist,
-            
+
         };
 
         return checklistSection;

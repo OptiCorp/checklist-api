@@ -1,7 +1,5 @@
-using Application.Common.Interfaces;
-using MediatR;
+﻿using MediatR;
 using MobDeMob.Application.Common.Interfaces;
-using MobDeMob.Application.Punches;
 
 namespace MobDeMob.Application.Punches.Commands;
 
@@ -23,12 +21,12 @@ public class UploadFileCommandHandler : IRequestHandler<UploadFileCommand, Uri>
     {
         var punch = await _punchRepository.GetPunch(request.PunchId, cancellationToken) ?? throw new Exception($"Punch with id: '{request.PunchId}' does not exist");
 
-        var blobUri = await _fileStorageRepository.UploadImage(request.Stream, request.FileName, punch.ParantChecklistSectionId, request.ContentType, cancellationToken);
-        var containerSAS = _cacheRepository.GetValue(punch.ParantChecklistSectionId);
+        var blobUri = await _fileStorageRepository.UploadImage(request.Stream, request.FileName, punch.CheckListId, request.ContentType, cancellationToken);
+        var containerSAS = _cacheRepository.GetValue(punch.CheckListId);
         if (containerSAS == null)
         {
-            var newContainerSAS = await _fileStorageRepository.GenerateContainerSAS(punch.ParantChecklistSectionId, cancellationToken);
-            _cacheRepository.SetKeyValue(punch.ParantChecklistSectionId, newContainerSAS, TimeSpan.FromHours(1));
+            var newContainerSAS = await _fileStorageRepository.GenerateContainerSAS(punch.CheckListId, cancellationToken);
+            _cacheRepository.SetKeyValue(punch.CheckListId, newContainerSAS, TimeSpan.FromHours(1));
         }
         //persist the blobUri with the Punch
         await _punchRepository.AssociatePunchWithUrl(request.PunchId, blobUri, cancellationToken);
