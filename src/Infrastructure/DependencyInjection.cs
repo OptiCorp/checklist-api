@@ -1,12 +1,12 @@
-using MobDeMob.Application.Common.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-using MobDeMob.Infrastructure.Repositories;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using Azure.Identity;
+using Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
-using MobDeMob.Application.Punches;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using MobDeMob.Application.Common.Interfaces;
+using MobDeMob.Infrastructure.Repositories;
 
 namespace MobDeMob.Infrastructure;
 public static class DependencyInjection
@@ -22,12 +22,14 @@ public static class DependencyInjection
 
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IPartsRepository, PartsRepository>();
+        services.AddScoped<IFileStorageRepository, FileStorageRepositories>();
         services.AddScoped<IMobilizationRepository, MobilizationRepository>();
         services.AddScoped<IChecklistRepository, CheklistRepository>();
-        services.AddScoped<IFileStorageRepository, FileStorageRepositories>();
+        services.AddScoped<IChecklistItemRepository, ChecklistItemRepository>();
+        services.AddScoped<IChecklistItemQuestionRepository, ChecklistItemQuestionRepository>();
+        services.AddScoped<ITemplateRepository, TemplateRepository>();
         //services.AddScoped<ICacheRepository, CacheRepository>();
-        services.AddScoped<IPunchRepository, PunchRepository>();
+        //services.AddScoped<IPunchRepository, PunchRepository>();
         return services;
     }
 
@@ -47,9 +49,9 @@ public static class DependencyInjection
 
     public static IServiceCollection AddAzureClient(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAzureClients(builder => 
+        services.AddAzureClients(builder =>
         {
-            builder.AddBlobServiceClient(new Uri(configuration.GetConnectionString("BlobServiceClientUri") ?? 
+            builder.AddBlobServiceClient(new Uri(configuration.GetConnectionString("BlobServiceClientUri") ??
                 throw new Exception("Could not find the connectionstring for the storage account uri")));
             builder.UseCredential(new DefaultAzureCredential());
         });
@@ -58,7 +60,7 @@ public static class DependencyInjection
 
     public static IServiceCollection AddMemoryCacheService(this IServiceCollection services)
     {
-        services.AddMemoryCache(options => 
+        services.AddMemoryCache(options =>
         {
             options.SizeLimit = 1024;
             options.ExpirationScanFrequency = TimeSpan.FromMinutes(30);

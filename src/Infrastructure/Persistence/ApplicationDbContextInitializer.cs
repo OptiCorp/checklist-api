@@ -1,8 +1,5 @@
 ﻿
 using Microsoft.Extensions.Logging;
-using MobDeMob.Domain.Entities;
-using MobDeMob.Domain.Entities.ChecklistAggregate;
-using MobDeMob.Domain.ItemAggregate;
 
 namespace MobDeMob.Infrastructure;
 
@@ -16,6 +13,7 @@ public class ApplicationDbContextInitializer
     {
         _logger = logger;
         _modelContextBase = modelContextBase;
+        _modelContextBase.Database.EnsureCreated();
     }
 
     public async Task SeedAsync()
@@ -40,38 +38,38 @@ public class ApplicationDbContextInitializer
 
     private void SeedUsersAsync()
     {
-        if (_modelContextBase.Users.Any()) return;
+        //if (_modelContextBase.Users.Any()) return;
 
-        _modelContextBase.Users.AddRange(
-            new User
-            {
-                AzureAdUserId = "someid",
-                Email = "test@email.com",
-                FirstName = "Frank",
-                LastName = "Gunvorsen",
-                UmId = "Umm",
-                Username = "Beast",
-                Created = DateOnly.FromDateTime(DateTime.Now),
-                CreatedBy = "Robin",
-                UserRole = Domain.Enums.UserRole.Admin,
-                Status = UserStatus.Active,
-                LastModified = DateTime.Now,
-            },
-        new User
-        {
-            AzureAdUserId = "someotherid",
-            Email = "test2@email.com",
-            FirstName = "Kari",
-            LastName = "Gunvorsen",
-            UmId = "Umm",
-            Username = "Beast2",
-            Created = DateOnly.FromDateTime(DateTime.Now),
-            CreatedBy = "Robin",
-            UserRole = Domain.Enums.UserRole.User,
-            Status = UserStatus.Active,
-            LastModified = DateTime.Now,
-        }
-        );
+        //_modelContextBase.Users.AddRange(
+        //    new User
+        //    {
+        //        AzureAdUserId = "someid",
+        //        Email = "test@email.com",
+        //        FirstName = "Frank",
+        //        LastName = "Gunvorsen",
+        //        UmId = "Umm",
+        //        Username = "Beast",
+        //        Created = DateOnly.FromDateTime(DateTime.Now),
+        //        CreatedBy = "Robin",
+        //        UserRole = Domain.Enums.UserRole.Admin,
+        //        Status = UserStatus.Active,
+        //        LastModified = DateTime.Now,
+        //    },
+        //new User
+        //{
+        //    AzureAdUserId = "someotherid",
+        //    Email = "test2@email.com",
+        //    FirstName = "Kari",
+        //    LastName = "Gunvorsen",
+        //    UmId = "Umm",
+        //    Username = "Beast2",
+        //    Created = DateOnly.FromDateTime(DateTime.Now),
+        //    CreatedBy = "Robin",
+        //    UserRole = Domain.Enums.UserRole.User,
+        //    Status = UserStatus.Active,
+        //    LastModified = DateTime.Now,
+        //}
+        //);
 
     }
 
@@ -79,138 +77,138 @@ public class ApplicationDbContextInitializer
     private async Task SeedRestAsync()
 
     {
-        if (_modelContextBase.Parts.Any()
-        || _modelContextBase.PartTemplates.Any()
-        || _modelContextBase.Mobilizations.Any()
-        || _modelContextBase.Checklists.Any()
-        || _modelContextBase.ChecklistSections.Any()
-        || _modelContextBase.ChecklistSectionTemplate.Any()
+        //if (_modelContextBase.Parts.Any()
+        //|| _modelContextBase.PartTemplates.Any()
+        //|| _modelContextBase.Mobilizations.Any()
+        //|| _modelContextBase.Checklists.Any()
+        //|| _modelContextBase.ChecklistSections.Any()
+        //|| _modelContextBase.ChecklistSectionTemplate.Any()
 
-        ) return;
+        //) return;
 
-        var item = new Item
-        {
-            Name = "Robotfinger",
-            PartTemplate = new PartTemplate
-            {
-                Name = "Fingers",
-                Type = "Attributes",
-                Created = DateOnly.FromDateTime(DateTime.Now),
-                LastModified = DateTime.Now,
+        //var item = new Item
+        //{
+        //    Name = "Robotfinger",
+        //    PartTemplate = new PartTemplate
+        //    {
+        //        Name = "Fingers",
+        //        Type = "Attributes",
+        //        Created = DateOnly.FromDateTime(DateTime.Now),
+        //        LastModified = DateTime.Now,
 
-            },
-            SerialNumber = "dddddd-ldasd",
-            WpId = "asdddasd",
-        };
+        //    },
+        //    SerialNumber = "dddddd-ldasd",
+        //    WpId = "asdddasd",
+        //};
 
 
-        var subAssembly = new SubAssembly
-        {
-            Name = "RobotHand",
-            PartTemplate = new PartTemplate
-            {
-                Name = "RobotHands",
-                Type = "Attributes",
-                Created = DateOnly.FromDateTime(DateTime.Now),
-                LastModified = DateTime.Now,
-            },
-            SerialNumber = "llllda-ldasd",
-            WpId = "oodaosd",
-            Children = [item]
-        };
+        //var subAssembly = new SubAssembly
+        //{
+        //    Name = "RobotHand",
+        //    PartTemplate = new PartTemplate
+        //    {
+        //        Name = "RobotHands",
+        //        Type = "Attributes",
+        //        Created = DateOnly.FromDateTime(DateTime.Now),
+        //        LastModified = DateTime.Now,
+        //    },
+        //    SerialNumber = "llllda-ldasd",
+        //    WpId = "oodaosd",
+        //    Children = [item]
+        //};
 
-        var assembly = new Assembly
-        {
-            Name = "RobotArm",
-            PartTemplate = new PartTemplate
-            {
-                Name = "RobotArms",
-                Type = "Attributes",
-                Created = DateOnly.FromDateTime(DateTime.Now),
-                LastModified = DateTime.Now,
-            },
-            SerialNumber = "ssdknaslk-ldasd",
-            WpId = "asølkdm",
-            Children = [subAssembly]
-        };
+        //var assembly = new Assembly
+        //{
+        //    Name = "RobotArm",
+        //    PartTemplate = new PartTemplate
+        //    {
+        //        Name = "RobotArms",
+        //        Type = "Attributes",
+        //        Created = DateOnly.FromDateTime(DateTime.Now),
+        //        LastModified = DateTime.Now,
+        //    },
+        //    SerialNumber = "ssdknaslk-ldasd",
+        //    WpId = "asølkdm",
+        //    Children = [subAssembly]
+        //};
 
-        var unit = new Unit
-        {
-            Name = "Robot",
-            PartTemplate = new PartTemplate
-            {
-                Name = "Skruer",
-                Type = "Attributes",
-                Created = DateOnly.FromDateTime(DateTime.Now),
-                LastModified = DateTime.Now,
-            },
-            SerialNumber = "saf2jn1jk2-123",
-            WpId = "asølkdm",
-            Children = [assembly],
-        };
+        //var unit = new Unit
+        //{
+        //    Name = "Robot",
+        //    PartTemplate = new PartTemplate
+        //    {
+        //        Name = "Skruer",
+        //        Type = "Attributes",
+        //        Created = DateOnly.FromDateTime(DateTime.Now),
+        //        LastModified = DateTime.Now,
+        //    },
+        //    SerialNumber = "saf2jn1jk2-123",
+        //    WpId = "asølkdm",
+        //    Children = [assembly],
+        //};
 
-        await _modelContextBase.Parts.AddAsync(
-            unit
-        );
+        //await _modelContextBase.Parts.AddAsync(
+        //    unit
+        //);
 
-        var checklist = new Checklist
-        {
-            Parts = [item, assembly, subAssembly],
-        };
-        await _modelContextBase.Checklists.AddAsync(checklist);
+        //var checklist = new Checklist
+        //{
+        //    Parts = [item, assembly, subAssembly],
+        //};
+        //await _modelContextBase.Checklists.AddAsync(checklist);
 
-        var checklistSec1 = seedChecklistSection(item, ["Does the finger look ok?", "Does the finger have a nail?"], checklist);
-        var checklistSec2 = seedChecklistSection(subAssembly, ["Does the arms look ok?"], checklist);
-        var checklistSec3 = seedChecklistSection(assembly, ["Does the arm look good?"], checklist);
-        //var checklistSec4 = seedChecklistSection(unit, ["Does the robot look ok?"], checklist);
+        //var checklistSec1 = seedChecklistSection(item, ["Does the finger look ok?", "Does the finger have a nail?"], checklist);
+        //var checklistSec2 = seedChecklistSection(subAssembly, ["Does the arms look ok?"], checklist);
+        //var checklistSec3 = seedChecklistSection(assembly, ["Does the arm look good?"], checklist);
+        ////var checklistSec4 = seedChecklistSection(unit, ["Does the robot look ok?"], checklist);
 
-        checklistSec3.SubSections = [checklistSec2, checklistSec1];
+        //checklistSec3.SubSections = [checklistSec2, checklistSec1];
 
-        await _modelContextBase.ChecklistSections.AddAsync(checklistSec3);
+        //await _modelContextBase.ChecklistSections.AddAsync(checklistSec3);
 
-        await seedMobilization(checklist);
+        //await seedMobilization(checklist);
     }
 
 
 
-    private static ChecklistSection seedChecklistSection(Part part, List<string> questions, Checklist checklist)
-    {
-        var checklistSectionTemp = new ChecklistSectionTemplate
-        {
-            ChecklistQuestion = questions.First(),
-        };
+    //private static ChecklistSection seedChecklistSection(Part part, List<string> questions, Checklist checklist)
+    //{
+    //    var checklistSectionTemp = new ChecklistSectionTemplate
+    //    {
+    //        ChecklistQuestion = questions.First(),
+    //    };
 
-        var restQuestions = questions.Skip(1);
+    //    var restQuestions = questions.Skip(1);
 
-        foreach (var q in restQuestions)
-        {
-            checklistSectionTemp.SubSections.Add(new ChecklistSectionTemplate { ChecklistQuestion = q });
-        }
+    //    foreach (var q in restQuestions)
+    //    {
+    //        checklistSectionTemp.SubSections.Add(new ChecklistSectionTemplate { ChecklistQuestion = q });
+    //    }
 
-        part.PartTemplate.PartCheckListTemplate = checklistSectionTemp;
+    //    part.PartTemplate.PartCheckListTemplate = checklistSectionTemp;
 
-        var checklistSection = new ChecklistSection
-        {
-            Part = part,
-            ChecklistSectionTemplate = checklistSectionTemp,
-            Checklist = checklist,
+    //    var checklistSection = new ChecklistSection
+    //    {
+    //        Part = part,
+    //        ChecklistSectionTemplate = checklistSectionTemp,
+    //        Checklist = checklist,
 
-        };
+    //    };
 
-        return checklistSection;
-    }
+    //    return checklistSection;
+    //}
 
-    private async Task seedMobilization(Checklist checklist)
-    {
-        var mob = new Mobilization
-        {
-            Title = "mobilization to Equinor",
-            Description = "some nice description",
-            Type = MobilizationType.Mobilization,
-            ChecklistId = checklist.Id,
-            Checklist = checklist
-        };
+    //private async Task seedMobilization(Checklist checklist)
+    //{
+    //    var mob = new Mobilization
+    //    {
+    //        Title = "mobilization to Equinor",
+    //        Description = "some nice description",
+    //        Type = MobilizationType.Mobilization,
+    //        ChecklistId = checklist.Id,
+    //        Checklist = checklist
+    //    };
 
-        await _modelContextBase.Mobilizations.AddAsync(mob);
-    }
+    //    await _modelContextBase.Mobilizations.AddAsync(mob);
+    //}
 }

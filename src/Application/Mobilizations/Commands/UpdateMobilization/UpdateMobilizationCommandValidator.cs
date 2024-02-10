@@ -1,4 +1,4 @@
-using FluentValidation;
+﻿using FluentValidation;
 using MobDeMob.Application.Mobilizations.Commands;
 
 namespace MobDeMob.Application.Checklists;
@@ -7,7 +7,7 @@ public class UpdateMobilizationCommandValidator : AbstractValidator<UpdateMobili
 {
     public UpdateMobilizationCommandValidator()
     {
-        RuleFor(v => v.Title)
+        RuleFor(v => v.Title)// jmab: duplicate validation
             .MaximumLength(50)
             .NotEmpty();
 

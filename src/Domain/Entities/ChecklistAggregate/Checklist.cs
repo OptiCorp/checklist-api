@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using MobDeMob.Domain.Common;
-using MobDeMob.Domain.ItemAggregate;
+﻿using MobDeMob.Domain.Common;
 
 namespace MobDeMob.Domain.Entities.ChecklistAggregate;
 
@@ -10,24 +8,24 @@ public class Checklist : AuditableEntity
     // [EnumDataType(typeof(ChecklistStatus))]
     // public ChecklistStatus Status {get; set;}
     public Mobilization? Mobilization { get; set; }
-    public ICollection<Part> Parts { get; set; } = [];// if parts are on the inventory app, we should turn this into just the ids (ICollection<string>)
+    public IList<string> Parts { get; set; } = new List<string>();
 
-    public ICollection<ChecklistSection> ChecklistSections { get; set; } = [];
+    //public ICollection<ChecklistSection> ChecklistSections { get; set; } = new List<ChecklistSection>();
 
-    [NotMapped]
-    public IEnumerable<Punch> Punches => ChecklistSections.SelectMany(section => section.Punches) ?? Enumerable.Empty<Punch>();
+    //[NotMapped]
+    //public IEnumerable<Punch> Punches => ChecklistSections.SelectMany(section => section.Punches) ?? Enumerable.Empty<Punch>();
 
-    [NotMapped]
-    public double CompletionPercentage => GetCompletionPercentage();
+    //[NotMapped]
+    //public double CompletionPercentage => GetCompletionPercentage();
 
-    private double GetCompletionPercentage()
-    {
-        var allSections = ChecklistSections.SelectMany(section => section.GetAllSections());
+    //private double GetCompletionPercentage()
+    //{
+    //    var allSections = ChecklistSections.SelectMany(section => section.GetAllSections());
 
-        var completionProgressionDecimal = allSections.Count(i => i.IsCompleted) / allSections.Count();
-        var completionProgressionPercentage = 100.0 * completionProgressionDecimal;
-        return completionProgressionPercentage;
-    }
+    //    var completionProgressionDecimal = allSections.Count(i => i.IsCompleted) / allSections.Count();
+    //    var completionProgressionPercentage = 100.0 * completionProgressionDecimal;
+    //    return completionProgressionPercentage;
+    //}
 
 
     // public List<Punch> Punch {get; set;} = [];

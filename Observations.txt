@@ -2,4 +2,11 @@
 
 - I think the model I originally created and the one you're still using for punch is outdated. It's pointing to a section when perhaps should just point to the checklist
 
-- there is a logic I didn't quite get about being the fist item in a checklist
+- I think the section/question models I created are over-engineered for what we need, forcing you to flat them out. We should re-think them, perhaps having 2 models: 
+    section and question (or other names if you think of anything better)
+
+- You mentioned parts are part of the scope of the inventory api, given that I think we should not have parts in this microservice
+    - when a user wants to create a new template, we need to send an event to the inventory api to validate if it exists, before creating it
+    - the section knows which part it refers to
+
+- Same for the user, I think we should only use the user's id

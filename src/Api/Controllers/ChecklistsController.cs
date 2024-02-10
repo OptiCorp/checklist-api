@@ -1,12 +1,11 @@
-﻿using MediatR;
+﻿using Application.Checklists.Commands.AddItem;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using MobDeMob.Application.Checklists;
-using MobDeMob.Application.Parts.Queries;
 
 namespace Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/mobilizations/{mobilizationId}")]
 public class ChecklistsController : ControllerBase
 {
     private readonly ILogger<ChecklistsController> _logger;
@@ -18,17 +17,24 @@ public class ChecklistsController : ControllerBase
         _sender = sender;
     }
 
-    [HttpPost("{partId}/CreatePartChecklistQuestions")]
-    public async Task<ActionResult> CreatePartChecklistQuestions(string partId, [FromBody] List<string> questions, CancellationToken cancellationToken)
+    [HttpPost("AddItem/{itemId}")]
+    public async Task<IActionResult> AddNewItem([FromBody] AddItemCommand addItemCommand, CancellationToken cancellationToken = default)
     {
-        await _sender.Send(new CreatePartChecklistQuestionsCommand { partId = partId, questions = questions }, cancellationToken);
-        return NoContent();
+        await _sender.Send(addItemCommand, cancellationToken);
+        return Ok(addItemCommand);
     }
 
-    [HttpGet("{partId}/GetAllQuestions")]
-    public async Task<ActionResult<IEnumerable<string>>> GetAllQuestions(string partId, CancellationToken cancellationToken)
-    {
-        var questions = await _sender.Send(new GetPartQuestionsQuery { Id = partId }, cancellationToken);
-        return Ok(questions);
-    }
+    //[HttpPost("{partId}/CreatePartChecklistQuestions")]
+    //public async Task<ActionResult> CreatePartChecklistQuestions(string partId, [FromBody] List<string> questions, CancellationToken cancellationToken)
+    //{
+    //    await _sender.Send(new CreatePartChecklistQuestionsCommand { partId = partId, questions = questions }, cancellationToken);
+    //    return NoContent();
+    //}
+
+    //[HttpGet("{partId}/GetAllQuestions")]
+    //public async Task<ActionResult<IEnumerable<string>>> GetAllQuestions(string partId, CancellationToken cancellationToken)
+    //{
+    //    var questions = await _sender.Send(new GetPartQuestionsQuery { Id = partId }, cancellationToken);
+    //    return Ok(questions);
+    //}
 }

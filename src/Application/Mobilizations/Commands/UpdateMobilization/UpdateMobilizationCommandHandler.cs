@@ -13,7 +13,7 @@ public class UpdateMobilizationCommandHandler : IRequestHandler<UpdateMobilizati
     }
     public async Task Handle(UpdateMobilizationCommand request, CancellationToken cancellationToken)
     {
-        var mobilization = await _mobilizationRepository.GetById(request.id);
+        var mobilization = await _mobilizationRepository.GetMobilizationById(request.id);
 
         if (mobilization == null)
         {

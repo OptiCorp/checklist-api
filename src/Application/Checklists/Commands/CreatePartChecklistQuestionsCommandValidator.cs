@@ -1,13 +1,13 @@
-using FluentValidation;
+﻿//using FluentValidation;
 
-namespace MobDeMob.Application.Checklists;
+//namespace MobDeMob.Application.Checklists;
 
-public class CreatePartChecklistQuestionsCommandValidator : AbstractValidator<CreatePartChecklistQuestionsCommand>
-{
-    public CreatePartChecklistQuestionsCommandValidator()
-    {
-        RuleForEach(v => v.questions)
-            .MaximumLength(200)
-            .NotEmpty();
-    }
-}
+//public class CreatePartChecklistQuestionsCommandValidator : AbstractValidator<CreatePartChecklistQuestionsCommand>
+//{
+//    public CreatePartChecklistQuestionsCommandValidator()
+//    {
+//        RuleForEach(v => v.questions)
+//            .MaximumLength(200)
+//            .NotEmpty();
+//    }
+//}

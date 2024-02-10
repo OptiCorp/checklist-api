@@ -14,7 +14,7 @@ public class DeleteMobilizationCommandHandler : IRequestHandler<DeleteMobilizati
     }
     public async Task Handle(DeleteMobilizationCommand request, CancellationToken cancellationToken)
     {
-        var mobilization = await _mobilizationRepository.GetById(request.id) ?? throw new Exception("..."); // TODO: improve exception
+        var mobilization = await _mobilizationRepository.GetMobilizationById(request.id) ?? throw new Exception("..."); // TODO: improve exception
 
         mobilization.DeleteParts();
 
