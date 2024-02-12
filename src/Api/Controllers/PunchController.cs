@@ -52,4 +52,13 @@ public class PunchController : ControllerBase
         var punch = await _sender.Send(new GetPunchQuery { punchId = punchId }, cancellationToken);
         return Ok(punch);
     }
+
+    [HttpGet()]
+    [Route("GetAllPunches{partId}")]
+
+    public async Task<ActionResult<PunchDto>> GetAllPunches(string partId, CancellationToken cancellationToken)
+    {
+        var punches = await _sender.Send(new GetAllPartPunchesQuery { partId = partId }, cancellationToken);
+        return Ok(punches);
+    }
 }

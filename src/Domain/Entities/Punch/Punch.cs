@@ -36,7 +36,7 @@ public class Punch : AuditableEntity
     public Part Part => Section.Part;
 
     [NotMapped]
-    public string? ChecklistId {get; set;}
+    public string ChecklistId {get; set;}
 
     [NotMapped]
     public string ParantChecklistSectionId {get; set;}

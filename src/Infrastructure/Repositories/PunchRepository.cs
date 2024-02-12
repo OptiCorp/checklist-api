@@ -35,6 +35,18 @@ public class PunchRepository : IPunchRepository
         return newPunch.Id;
     }
 
+    public async Task<ICollection<Punch>> GetAllPartPunches(string partId, CancellationToken cancellationToken)
+    {
+        var punches = await _modelContextBase.ChecklistSections
+            .AsNoTracking()
+            .Include(p => p.Punches)
+            .Where(cs => cs.PartId == partId)
+            .SelectMany(cs => cs.Punches)
+            .ToListAsync(cancellationToken);
+            
+        return punches;
+    }
+
     public async Task<Punch?> GetPunch(string id, CancellationToken cancellationToken)
     {
         var punch =  await _modelContextBase.Punches

@@ -8,5 +8,8 @@ public interface IPunchRepository
 
     Task<Punch?> GetPunch (string id, CancellationToken cancellationToken);
 
+    Task<ICollection<Punch>> GetAllPartPunches (string partId, CancellationToken cancellationToken);
+
+
     Task<Boolean> PunchExists (string punchId, CancellationToken cancellationToken);
 }
