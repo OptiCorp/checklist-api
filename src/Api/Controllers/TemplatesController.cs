@@ -1,5 +1,6 @@
 ﻿using Application.Templates.AddTemplate;
 using Application.Templates.GetById;
+using Application.Templates.UpdateTemplate;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{templateId}")]
-        public async Task<IActionResult> GetTemplateById([FromRoute] string templateId, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetTemplateById([FromRoute] Guid templateId, CancellationToken cancellationToken = default)
         {
             var id = await _sender.Send(new GetByIdCommand { TemplateId = templateId }, cancellationToken);
             return Ok(id);
@@ -29,13 +30,13 @@ namespace Api.Controllers
         public async Task<IActionResult> CreateTemplateForItem(AddTemplateCommand addTemplateCommand, CancellationToken cancellationToken = default)
         {
             var id = await _sender.Send(addTemplateCommand, cancellationToken);
-            return Ok(id);// TODO change to createdataction
+            return CreatedAtAction(nameof(GetTemplateById), new {templateId = id}, id);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateTemplateForItem(AddTemplateCommand addTemplateCommand, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> UpdateTemplateForItem(UpdateTemplateCommand updateTemplateCommand, CancellationToken cancellationToken = default)
         {
-            await _sender.Send(addTemplateCommand, cancellationToken);
+            await _sender.Send(updateTemplateCommand, cancellationToken);
             return NoContent();
         }
     }

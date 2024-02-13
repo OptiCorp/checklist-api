@@ -1,4 +1,5 @@
-﻿using MobDeMob.Domain.Common;
+﻿using Domain.Entities.ChecklistAggregate;
+using MobDeMob.Domain.Common;
 
 namespace MobDeMob.Domain.Entities.ChecklistAggregate;
 
@@ -9,6 +10,7 @@ public class Checklist : AuditableEntity
     // public ChecklistStatus Status {get; set;}
     public Mobilization? Mobilization { get; set; }
     public IList<string> Parts { get; set; } = new List<string>();
+    public ICollection<ChecklistItem> ChecklistItems = [];
 
     //public ICollection<ChecklistSection> ChecklistSections { get; set; } = new List<ChecklistSection>();
 

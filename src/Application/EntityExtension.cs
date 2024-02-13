@@ -1,6 +1,8 @@
 ﻿
 using Application.Mobilizations.Dtos;
+using Application.Punches.Dtos;
 using MobDeMob.Domain.Entities;
+using MobDeMob.Domain.Entities.ChecklistAggregate;
 
 namespace MobDeMob.Application.Mobilizations;
 
@@ -20,49 +22,17 @@ public static class EntityExtenstions
         };
     }
 
-    //private static PartChildDto AsChildDto(this Part part)
-    //{
-    //    return new PartChildDto(part.Type)
-    //    {
-    //        partChildId = part.Id,
-    //    };
-    //}
-
-    //public static PartDto AsDto(this Part part)
-    //{
-    //    return new PartDto(part.Type)
-    //    {
-    //        PartId = part.Id,
-    //        WpId = part.WpId,
-    //        Name = part.Name,
-    //        SerialNumber = part.SerialNumber,
-    //        hasChecklistTemplate = part.hasChecklistTemplate,
-    //        //Children = part.Children.Select(c => c.AsDto()),
-    //        Children = part.Children.Select(c => c.AsChildDto()),
-    //        PartTemplateId = part.PartTemplateId,
-    //    };
-    //}
-
-    //public static PunchDto AsDto(this Punch punch, string? blobURIWithSAS)
-    //{
-    //    return new PunchDto
-    //    {
-    //        Id = punch.Id,
-    //        Title = punch.Title,
-    //        ChecklistId = punch.Part.ChecklistId,
-    //        PartId = punch.Part.Id,
-    //        Description = punch.Description,
-    //        ImageBlobUri = blobURIWithSAS
-    //    };
-    //}
-
-    //public static ChecklistSectionTemplateDto AsDto(this ChecklistSectionTemplate checklistSectionTemplate)
-    //{
-    //    return new ChecklistSectionTemplateDto
-    //    {
-    //        ChecklistQuestion = checklistSectionTemplate.ChecklistQuestion,
-    //        Id = checklistSectionTemplate.Id
-    //    };
-    //}
-
+    public static PunchDto AsDto(this Punch punch, Uri? SASToken = null)
+    {
+       return new PunchDto
+       {
+           Id = punch.Id,
+           Title = punch.Title,
+           //PartId = punch.ChecklistItem.ItemId,
+           Description = punch.Description,
+           //ChecklistItemId = punch.ChecklistItemId,
+           //ImageBlobUris = punch.ImageBlobUris,
+           //SASToken = SASToken,
+       };
+    }
 }

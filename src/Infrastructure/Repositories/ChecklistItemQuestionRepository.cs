@@ -9,7 +9,7 @@ namespace Infrastructure.Repositories
     {
         public ChecklistItemQuestionRepository(ModelContextBase modelContextBase) : base(modelContextBase) { }
 
-        public async Task<string> AddQuestion(ChecklistItemQuestion question, CancellationToken cancellationToken = default)
+        public async Task<Guid> AddQuestion(ChecklistItemQuestion question, CancellationToken cancellationToken = default)
         {
             await Add(question, cancellationToken);
 

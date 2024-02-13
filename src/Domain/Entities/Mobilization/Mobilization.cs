@@ -14,7 +14,7 @@ public class Mobilization : AuditableEntity
 
     public MobilizationStatus Status { get; set; }
 
-    public string ChecklistId { get; set; }
+    public Guid ChecklistId { get; set; }
 
     public Checklist Checklist { get; set; } = null!;
 

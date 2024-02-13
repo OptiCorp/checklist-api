@@ -1,5 +1,8 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using MediatR;
+using MobDeMob.Application.Common.Interfaces;
+using MobDeMob.Domain.Entities;
 
 namespace MobDeMob.Application.Mobilizations.Commands;
 
@@ -8,16 +11,20 @@ public class DeleteMobilizationCommandHandler : IRequestHandler<DeleteMobilizati
 
     private readonly IMobilizationRepository _mobilizationRepository;
 
-    public DeleteMobilizationCommandHandler(IMobilizationRepository mobilizationRepository)
+    private readonly IChecklistRepository _checklistRepository;
+
+
+    public DeleteMobilizationCommandHandler(IMobilizationRepository mobilizationRepository, IChecklistRepository checklistRepository)
     {
         _mobilizationRepository = mobilizationRepository;
+        _checklistRepository = checklistRepository;
     }
     public async Task Handle(DeleteMobilizationCommand request, CancellationToken cancellationToken)
     {
-        var mobilization = await _mobilizationRepository.GetMobilizationById(request.id) ?? throw new Exception("..."); // TODO: improve exception
+        var mobilization = await _mobilizationRepository.GetMobilizationById(request.id, cancellationToken) ?? throw new NotFoundException(nameof(Mobilization), request.id);
 
         mobilization.DeleteParts();
 
-        await _mobilizationRepository.DeleteMobilization(request.id, cancellationToken);
+        await _checklistRepository.DeleteChecklist(mobilization.ChecklistId, cancellationToken);
     }
 }

@@ -1,9 +1,9 @@
-﻿//using Application.Punches.Dtos;
-//using MediatR;
+﻿using Application.Punches.Dtos;
+using MediatR;
 
-//namespace Application.Punches.Queries.GetById;
+namespace Application.Punches.Queries.GetById;
 
-//public class GetPunchQuery : IRequest<PunchDto?>
-//{
-//    public required string punchId { get; set; }
-//}
+public class GetPunchQuery : IRequest<PunchDto?>
+{
+   public Guid punchId { get; set; }
+}

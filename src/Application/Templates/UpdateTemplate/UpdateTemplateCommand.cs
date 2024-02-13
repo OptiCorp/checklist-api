@@ -4,7 +4,7 @@ namespace Application.Templates.UpdateTemplate;
 
 public class UpdateTemplateCommand : IRequest
 {
-    public string ItemId { get; init; }
+    public Guid Id { get; init; }
 
     public string? ItemName { get; init; }
 

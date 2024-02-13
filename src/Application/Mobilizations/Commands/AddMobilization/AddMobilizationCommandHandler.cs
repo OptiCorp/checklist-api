@@ -7,7 +7,7 @@ using MobDeMob.Domain.Entities.ChecklistAggregate;
 
 namespace MobDeMob.Application.Mobilizations.Commands;
 
-public class AddMobilizationCommandHandler : IRequestHandler<AddMobilizationCommand, string>
+public class AddMobilizationCommandHandler : IRequestHandler<AddMobilizationCommand, Guid>
 {
     private readonly IMobilizationRepository _mobilizationRepository;
     private readonly IChecklistRepository _checkListRepository;
@@ -18,7 +18,7 @@ public class AddMobilizationCommandHandler : IRequestHandler<AddMobilizationComm
         _checkListRepository = checklistRepository;
     }
 
-    public async Task<string> Handle(AddMobilizationCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(AddMobilizationCommand request, CancellationToken cancellationToken)
     {
         var checklistId = await _checkListRepository.AddChecklist(new Checklist(), cancellationToken);
 
@@ -29,14 +29,15 @@ public class AddMobilizationCommandHandler : IRequestHandler<AddMobilizationComm
         return mobilization.Id;
     }
 
-    private static Mobilization MapToMobilization(AddMobilizationCommand request, string checklistId)
+    private static Mobilization MapToMobilization(AddMobilizationCommand request, Guid checklistId)
     {
         return new Mobilization
         {
             Title = request.Title,
             Description = request.Description,
             ChecklistId = checklistId,
-            Type = request.MobilizationType
+            Type = request.MobilizationType,
+            Created = DateOnly.FromDateTime(DateTime.Now)
         };
     }
 }

@@ -1,4 +1,5 @@
-﻿using MobDeMob.Domain.Common;
+﻿using Domain.Entities.ChecklistAggregate;
+using MobDeMob.Domain.Common;
 
 namespace MobDeMob.Domain.Entities.ChecklistAggregate;
 
@@ -16,7 +17,9 @@ public class Punch : AuditableEntity
     // public required string ItemId {get; set;}
 
     // public Item Item {get; set;} = null!;
-    public string SectionId { get; set; }
+    public Guid ChecklistItemId { get; set; }
+
+    public ChecklistItem ChecklistItem {get; set;}
 
     //public ChecklistSection Section { get; set; } = null!;
 
@@ -24,7 +27,7 @@ public class Punch : AuditableEntity
 
     public string? Description { get; set; }
 
-    public Uri? ImageBlobUri { get; set; }
+    public IList<Uri> ImageBlobUris { get; set; } = [];
 
     //[NotMapped]
     //public Part Part => Section.Part;

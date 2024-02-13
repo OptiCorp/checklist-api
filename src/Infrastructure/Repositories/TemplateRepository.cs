@@ -12,13 +12,13 @@ public class TemplateRepository : RepositoryBase<ItemTemplate>, ITemplateReposit
     {
     }
 
-    public async Task<string> AddTemplate(ItemTemplate itemTemplate, CancellationToken cancellationToken = default)
+    public async Task<Guid> AddTemplate(ItemTemplate itemTemplate, CancellationToken cancellationToken = default)
     {
         await Add(itemTemplate, cancellationToken);
         return itemTemplate.Id;
     }
 
-    public async Task<ItemTemplate?> GetTemplateById(string templateId, CancellationToken cancellationToken = default)
+    public async Task<ItemTemplate?> GetTemplateById(Guid templateId, CancellationToken cancellationToken = default)
     {
         return await GetSet()
             .Include(t => t.Questions)

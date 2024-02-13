@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using Domain.Entities.TemplateAggregate;
 using MediatR;
 using MobDeMob.Domain.ItemAggregate;
@@ -17,14 +18,14 @@ public class UpdateTemplateCommandHandler : IRequestHandler<UpdateTemplateComman
 
     public async Task Handle(UpdateTemplateCommand request, CancellationToken cancellationToken)
     {
-        var template = await _templateRepository.GetTemplateById(request.ItemId) ?? throw new Exception("Not found");
+        var template = await _templateRepository.GetTemplateById(request.Id, cancellationToken) ?? throw new NotFoundException(nameof(ItemTemplate), request.Id);
 
         ChangeTemplate(template, request);
 
         await _templateRepository.SaveChanges(cancellationToken);
     }
 
-    private ItemTemplate ChangeTemplate(ItemTemplate template, UpdateTemplateCommand request)
+    private static ItemTemplate ChangeTemplate(ItemTemplate template, UpdateTemplateCommand request)
     {
         template.Name = request.ItemName;
         template.Description = request.ItemDescription;

@@ -11,9 +11,12 @@ public class CheklistRepository : RepositoryBase<Checklist>, IChecklistRepositor
     {
     }
 
-    public async Task<string> AddChecklist(Checklist checklist, CancellationToken cancellationToken = default)
+    public async Task<Guid> AddChecklist(Checklist checklist, CancellationToken cancellationToken = default)
     {
         await Add(checklist, cancellationToken);
         return checklist.Id;
     }
+
+    public async Task DeleteChecklist(Guid id, CancellationToken cancellationToken)
+    => await DeleteById(id, cancellationToken);
 }

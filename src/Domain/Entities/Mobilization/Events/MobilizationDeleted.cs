@@ -2,5 +2,5 @@
 
 namespace Domain.Entities.Mobilization.Events
 {
-    public record MobilizationDeleted(string MobilizationId) : IDomainEvent;
+    public record MobilizationDeleted(Guid MobilizationId) : IDomainEvent;
 }

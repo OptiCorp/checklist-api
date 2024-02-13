@@ -1,20 +1,29 @@
-﻿//using System.ComponentModel.DataAnnotations.Schema;
-//using MobDeMob.Domain.Common;
-//using MobDeMob.Domain.ItemAggregate;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Application.Common;
+using Application.Common.Mappings;
+using AutoMapper;
+using Domain.Entities.ChecklistAggregate;
+using MobDeMob.Domain.Common;
+using MobDeMob.Domain.Entities.ChecklistAggregate;
+using MobDeMob.Domain.ItemAggregate;
 
-//namespace Application.Punches.Dtos;
+namespace Application.Punches.Dtos;
 
-//public class PunchDto
-//{
+public class PunchDto : DtoExtension, IMapFrom<Punch>
+{
+    public required string Title { get; set; }
 
-//    public string? Id { get; set; }
-//    public required string Title { get; set; }
+    public Guid ChecklistItemId { get; set; }
 
-//    public string? Description { get; set; }
+    public string? Description { get; set; }
 
-//    public string? ImageBlobUri { get; set; }
+    public IReadOnlyCollection<Uri> ImageBlobUris { get; set; } = [];
 
-//    public string? PartId { get; set; }
+    public string? SASToken {get; set;}
 
-//    public required string ChecklistId { get; set; }
-//}
+    public void Mapping(Profile profile)
+    {
+        profile.CreateMap<Punch, PunchDto>();
+            //.ForMember(pd => pd.ImageBlobUris, opt => opt.MapFrom(p => p.ImageBlobUris));
+    }
+}

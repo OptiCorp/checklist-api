@@ -2,10 +2,9 @@
 
 namespace Application.Templates.AddTemplate;
 
-public class AddTemplateCommand : IRequest<string>
+public class AddTemplateCommand : IRequest<Guid>
 {
     public string ItemId { get; init; }
-
     public string? ItemName { get; init; }
 
     public string? ItemDescription { get; init; }

@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Punches;
 using Azure.Identity;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -28,8 +29,8 @@ public static class DependencyInjection
         services.AddScoped<IChecklistItemRepository, ChecklistItemRepository>();
         services.AddScoped<IChecklistItemQuestionRepository, ChecklistItemQuestionRepository>();
         services.AddScoped<ITemplateRepository, TemplateRepository>();
-        //services.AddScoped<ICacheRepository, CacheRepository>();
-        //services.AddScoped<IPunchRepository, PunchRepository>();
+        services.AddScoped<ICacheRepository, CacheRepository>();
+        services.AddScoped<IPunchRepository, PunchRepository>();
         return services;
     }
 

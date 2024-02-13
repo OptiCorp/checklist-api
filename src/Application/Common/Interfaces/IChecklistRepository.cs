@@ -6,7 +6,9 @@ namespace MobDeMob.Application.Common.Interfaces;
 
 public interface IChecklistRepository
 {
-    Task<string> AddChecklist(Checklist checklist, CancellationToken cancellationToken = default);
+    Task<Guid> AddChecklist(Checklist checklist, CancellationToken cancellationToken = default);
+
+    Task DeleteChecklist(Guid id, CancellationToken cancellationToken);
 
     //Task CreatePartChecklistQuestions(string id, List<string> questions, CancellationToken cancellationToken = default);
 

@@ -5,7 +5,7 @@ using MobDeMob.Domain.ItemAggregate;
 
 namespace Application.Templates.AddTemplate;
 
-public class AddTemplateCommandHandler : IRequestHandler<AddTemplateCommand, string>
+public class AddTemplateCommandHandler : IRequestHandler<AddTemplateCommand, Guid>
 {
     private readonly ITemplateRepository _templateRepository;
 
@@ -14,7 +14,7 @@ public class AddTemplateCommandHandler : IRequestHandler<AddTemplateCommand, str
         _templateRepository = templateRepository;
     }
 
-    public async Task<string> Handle(AddTemplateCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(AddTemplateCommand request, CancellationToken cancellationToken)
     {
         var template = MapToItemTemplate(request);
 

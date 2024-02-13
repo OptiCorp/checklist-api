@@ -1,60 +1,65 @@
-﻿//using Microsoft.EntityFrameworkCore;
-//using MobDeMob.Application.Punches;
-//using MobDeMob.Domain.Entities.ChecklistAggregate;
+﻿using Microsoft.EntityFrameworkCore;
+using Application.Punches;
+using MobDeMob.Domain.Entities.ChecklistAggregate;
+using AutoMapper.QueryableExtensions;
+using Application.Punches.Dtos;
 
-//namespace MobDeMob.Infrastructure.Repositories;
+namespace MobDeMob.Infrastructure.Repositories;
 
-//public class PunchRepository : IPunchRepository
-//{
-//    private readonly ModelContextBase _modelContextBase;
+public class PunchRepository : IPunchRepository
+{
+    private readonly ModelContextBase _modelContextBase;
 
-//    public PunchRepository(ModelContextBase modelContextBase)
-//    {
-//        _modelContextBase = modelContextBase;
-//    }
+    public PunchRepository(ModelContextBase modelContextBase)
+    {
+        _modelContextBase = modelContextBase;
+    }
 
-//    public async Task AssociatePunchWithUrl(string id, Uri blobUri, CancellationToken cancellationToken)
-//    {
-//        var punch = await _modelContextBase.Punches.SingleAsync(p => p.Id == id, cancellationToken);
-//        punch.ImageBlobUri = blobUri;
-//        await _modelContextBase.SaveChangesAsync(cancellationToken);
-//    }
+    //    public async Task AssociatePunchWithUrl(Guid id, Uri blobUri, CancellationToken cancellationToken)
+    //    {
+    //        var punch = await _modelContextBase.Punches.SingleAsync(p => p.Id == id, cancellationToken);
+    //        punch.ImageBlobUri = blobUri;
+    //        await _modelContextBase.SaveChangesAsync(cancellationToken);
+    //    }
 
-//    public async Task<string> CreatePunch(Punch punch, CancellationToken cancellationToken)
-//    {
-//        await _modelContextBase.Punches.AddAsync(punch, cancellationToken);
-//        await _modelContextBase.SaveChangesAsync(cancellationToken);
-//        return punch.Id;
-//    }
+    public async Task<Guid> CreatePunch(Punch punch, CancellationToken cancellationToken)
+    {
+        await _modelContextBase.Punches.AddAsync(punch, cancellationToken);
+        return punch.Id;
+    }
 
-//    public async Task<string> CreatePunch(string Title, string? Description, string checklistSectionId, CancellationToken cancellationToken)
-//    {
-//        var checklistSection = await _modelContextBase.ChecklistSections.SingleAsync(cs => cs.Id == checklistSectionId);
-//        var newPunch = new Punch
-//        {
-//            Title = Title,
-//            Description = Description,
-//            Section = checklistSection
-//        };
-//        await _modelContextBase.Punches.AddAsync(newPunch, cancellationToken);
-//        await _modelContextBase.SaveChangesAsync(cancellationToken);
-//        return newPunch.Id;
-//    }
+    //    public async Task<string> CreatePunch(string Title, string? Description, string checklistSectionId, CancellationToken cancellationToken)
+    //    {
+    //        var checklistSection = await _modelContextBase.ChecklistSections.SingleAsync(cs => cs.Id == checklistSectionId);
+    //        var newPunch = new Punch
+    //        {
+    //            Title = Title,
+    //            Description = Description,
+    //            Section = checklistSection
+    //        };
+    //        await _modelContextBase.Punches.AddAsync(newPunch, cancellationToken);
+    //        await _modelContextBase.SaveChangesAsync(cancellationToken);
+    //        return newPunch.Id;
+    //    }
 
-//    public async Task<Punch?> GetPunch(string id, CancellationToken cancellationToken)
-//    {
-//        var punch = await _modelContextBase.Punches
-//            .AsNoTracking()
-//            .Include(p => p.Section)
-//            .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+    public async Task<Punch?> GetPunch(Guid id, CancellationToken cancellationToken)
+    {
+        var punch = await _modelContextBase.Punches
+            .Include(p => p.ChecklistItem)
+            .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
-//        return punch;
-//    }
+        return punch;
+    }
 
-//    public async Task<bool> PunchExists(string punchId, CancellationToken cancellationToken)
-//    {
-//        return await _modelContextBase.Punches
-//            .AsNoTracking()
-//            .AnyAsync(p => p.Id == punchId, cancellationToken);
-//    }
-//}
+    public async Task SaveChanges(CancellationToken cancellationToken = default)
+    {
+        await _modelContextBase.SaveChangesAsync(cancellationToken);
+    }
+
+    //    public async Task<bool> PunchExists(string punchId, CancellationToken cancellationToken)
+    //    {
+    //        return await _modelContextBase.Punches
+    //            .AsNoTracking()
+    //            .AnyAsync(p => p.Id == punchId, cancellationToken);
+    //    }
+}

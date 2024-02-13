@@ -49,6 +49,16 @@ public class ModelContextBase : DbContext
             .HasForeignKey(q => q.ChecklistItemId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<ChecklistItem>()
+            .HasMany(c => c.Punches)
+            .WithOne(p => p.ChecklistItem)
+            .HasForeignKey(p => p.ChecklistItemId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ChecklistItem>()
+            .HasIndex(ci => new {ci.ItemId, ci.ChecklistId})
+            .IsUnique();
+
         modelBuilder.Entity<ChecklistItemQuestion>();
 
         //modelBuilder.Entity<Part>()
@@ -104,5 +114,7 @@ public class ModelContextBase : DbContext
     public DbSet<ChecklistItemQuestion> ChecklistItemQuestions { get; set; } = null!;
     public DbSet<Mobilization> Mobilizations { get; set; } = null!;
     public DbSet<ItemTemplate> ItemTemplates { get; set; } = null!;
+
+    public DbSet<Punch> Punches {get; set;} = null!;
     //public DbSet<Punch> Punches { get; set; } = null!;
 }

@@ -4,7 +4,7 @@ using MobDeMob.Domain.ItemAggregate;
 
 namespace Application.Templates.GetById;
 
-public class GetByIdCommandHandler : IRequestHandler<GetByIdCommand, ItemTemplate>
+public class GetByIdCommandHandler : IRequestHandler<GetByIdCommand, ItemTemplate?>
 {
     private readonly ITemplateRepository _templateRepository;
 
@@ -13,7 +13,7 @@ public class GetByIdCommandHandler : IRequestHandler<GetByIdCommand, ItemTemplat
         _templateRepository = templateRepository;
     }
 
-    public async Task<ItemTemplate> Handle(GetByIdCommand request, CancellationToken cancellationToken)
+    public async Task<ItemTemplate?> Handle(GetByIdCommand request, CancellationToken cancellationToken)
     {
         return await _templateRepository.GetTemplateById(request.TemplateId, cancellationToken);
     }

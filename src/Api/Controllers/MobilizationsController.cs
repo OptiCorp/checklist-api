@@ -23,11 +23,11 @@ public class MobilizationsController : ControllerBase
     public async Task<IActionResult> CreateMobilization(AddMobilizationCommand addMobilizationCommand, CancellationToken cancellationToken = default)
     {
         var id = await _sender.Send(addMobilizationCommand, cancellationToken);
-        return Ok(id);// TODO change to createdataction
+        return CreatedAtAction(nameof(GetMobilizationById), new {mobId = id}, id);
     }
 
     [HttpGet("{mobId}")]
-    public async Task<IActionResult> GetMobilizationById([FromRoute] string mobId, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetMobilizationById([FromRoute] Guid mobId, CancellationToken cancellationToken = default)
     {
         var mob = await _sender.Send(new GetMobilizationByIdQuery { id = mobId }, cancellationToken);
         return mob is not null ? Ok(mob) : NotFound();
@@ -45,5 +45,12 @@ public class MobilizationsController : ControllerBase
     {
         await _sender.Send(updateMobilizationCommand, cancellationToken);
         return NoContent();
+    }
+
+    [HttpDelete("{mobId}")]
+    public async Task<IActionResult> DeleteMobilization(DeleteMobilizationCommand deleteMobilizationCommand,CancellationToken cancellationToken = default)
+    {
+        await _sender.Send(deleteMobilizationCommand, cancellationToken);
+        return Ok();
     }
 }

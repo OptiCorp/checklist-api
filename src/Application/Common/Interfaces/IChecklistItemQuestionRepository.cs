@@ -4,6 +4,6 @@ namespace Application.Common.Interfaces
 {
     public interface IChecklistItemQuestionRepository
     {
-        Task<string> AddQuestion(ChecklistItemQuestion question, CancellationToken cancellationToken = default);
+        Task<Guid> AddQuestion(ChecklistItemQuestion question, CancellationToken cancellationToken = default);
     }
 }

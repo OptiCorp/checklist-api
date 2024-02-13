@@ -7,11 +7,7 @@ public class UpdateMobilizationCommandValidator : AbstractValidator<UpdateMobili
 {
     public UpdateMobilizationCommandValidator()
     {
-        RuleFor(v => v.Title)// jmab: duplicate validation
-            .MaximumLength(50)
-            .NotEmpty();
-
         RuleFor(v => v.Title)
-            .MaximumLength(200);
+            .MaximumLength(50);
     }
 }

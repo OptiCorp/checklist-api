@@ -4,8 +4,8 @@ namespace MobDeMob.Domain.Common;
 
 public abstract class Entity
 {
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; }
+    //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid Id { get; set; }
 
     [NotMapped]
     private readonly List<IDomainEvent> _domainEvents = new();

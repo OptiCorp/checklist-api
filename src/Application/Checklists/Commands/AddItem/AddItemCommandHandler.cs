@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using Domain.Entities.ChecklistAggregate;
 using MediatR;
 using MobDeMob.Domain.Entities;
@@ -6,7 +7,7 @@ using MobDeMob.Domain.ItemAggregate;
 
 namespace Application.Checklists.Commands.AddItem;
 
-public class AddItemCommandHandler : IRequestHandler<AddItemCommand, string>
+public class AddItemCommandHandler : IRequestHandler<AddItemCommand, Guid>
 {
     private readonly IMobilizationRepository _mobilizationRepository;
     private readonly ITemplateRepository _templateRepository;
@@ -25,13 +26,13 @@ public class AddItemCommandHandler : IRequestHandler<AddItemCommand, string>
         _checklistItemQuestionRepository = checklistItemQuestionRepository;
     }
 
-    public async Task<string> Handle(AddItemCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(AddItemCommand request, CancellationToken cancellationToken)
     {
         var mobilization = await _mobilizationRepository.GetMobilizationById(request.MobilizationId)
-            ?? throw new Exception("not found");
+            ?? throw new NotFoundException(nameof(Mobilization), request.MobilizationId);
 
         var itemTemplate = await _templateRepository.GetTemplateByItemId(request.ItemId, cancellationToken)
-            ?? throw new Exception("not found");
+            ?? throw new NotFoundException("Item", request.ItemId);
 
         var checklistItem = await AddCheckListItem(mobilization, itemTemplate, cancellationToken);
 

@@ -5,13 +5,13 @@ namespace Domain.Entities.ChecklistAggregate;
 
 public class ChecklistItemQuestion : AuditableEntity
 {
-    public string ChecklistItemId { get; set; }
+    public Guid ChecklistItemId { get; set; }
 
-    public string QuestionTemplateId { get; set; }
+    public Guid QuestionTemplateId { get; set; }
 
-    public string Value { get; set; }
+    public string? Value { get; set; }
 
-    public ChecklistItemQuestion(QuestionTemplate questionTemplate, string checklistItemId)
+    public ChecklistItemQuestion(QuestionTemplate questionTemplate, Guid checklistItemId)
     {
         ChecklistItemId = checklistItemId;
         QuestionTemplateId = questionTemplate.Id;

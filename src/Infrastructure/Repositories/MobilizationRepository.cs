@@ -11,19 +11,19 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
     {
     }
 
-    public async Task<string> AddMobilization(Mobilization mobilization, CancellationToken cancellationToken)
+    public async Task<Guid> AddMobilization(Mobilization mobilization, CancellationToken cancellationToken)
     {
         await Add(mobilization, cancellationToken);
         return mobilization.Id;
     }
 
-    public async Task<Mobilization?> GetMobilizationById(string mobilizationId, CancellationToken cancellationToken)
+    public async Task<Mobilization?> GetMobilizationById(Guid mobilizationId, CancellationToken cancellationToken)
         => await GetSet().Include(m => m.Checklist).FirstOrDefaultAsync(x => x.Id == mobilizationId, cancellationToken);
 
     public async Task<IEnumerable<Mobilization>> GetAllMobilizations(CancellationToken cancellationToken)
         => await GetAll(cancellationToken);
 
-    public async Task DeleteMobilization(string id, CancellationToken cancellationToken)
+    public async Task DeleteMobilization(Guid id, CancellationToken cancellationToken)
         => await DeleteById(id, cancellationToken);
 
     //public async Task RemovePartFromMobilization(string id, string partId, CancellationToken cancellationToken)

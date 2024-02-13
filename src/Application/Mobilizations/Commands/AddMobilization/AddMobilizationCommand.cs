@@ -3,7 +3,7 @@ using MobDeMob.Domain.Entities;
 
 namespace MobDeMob.Application.Mobilizations.Commands;
 
-public class AddMobilizationCommand : IRequest<string>
+public class AddMobilizationCommand : IRequest<Guid>
 {
     public required string Title {get; init;}
 

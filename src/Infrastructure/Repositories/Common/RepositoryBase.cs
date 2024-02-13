@@ -26,12 +26,13 @@ public abstract class RepositoryBase<T> where T : Entity
         return entity;
     }
 
-    protected async Task<T?> GetById(string id, CancellationToken cancellationToken = default)
+    protected async Task<T?> GetById(Guid id, CancellationToken cancellationToken = default)
         => await GetSet().FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     protected async Task<IEnumerable<T>> GetAll(CancellationToken cancellationToken = default)
         => await GetSet().AsNoTracking().ToListAsync(cancellationToken);
 
-    protected async Task DeleteById(string id, CancellationToken cancellationToken = default)
+    protected async Task DeleteById(Guid id, CancellationToken cancellationToken = default)
         => await GetSet().Where(m => m.Id == id).ExecuteDeleteAsync(cancellationToken);
+    
 }
