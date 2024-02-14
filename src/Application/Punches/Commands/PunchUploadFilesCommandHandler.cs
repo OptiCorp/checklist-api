@@ -4,7 +4,7 @@ using MobDeMob.Application.Common.Interfaces;
 
 namespace Application.Upload;
 
-public class PunchUploadFileCommandHandler : IRequestHandler<PunchUploadFileCommand>
+public class PunchUploadFileCommandHandler : IRequestHandler<PunchUploadFilesCommand>
 {
     private readonly IFileStorageRepository _fileStorageRepository;
     private readonly ICacheRepository _cacheRepository;
@@ -18,21 +18,26 @@ public class PunchUploadFileCommandHandler : IRequestHandler<PunchUploadFileComm
         _punchRepository = punchRepository;
     }
 
-    public async Task Handle(PunchUploadFileCommand request, CancellationToken cancellationToken)
+    public async Task Handle(PunchUploadFilesCommand request, CancellationToken cancellationToken)
     {
         var punch = await _punchRepository.GetPunch(request.Id, cancellationToken) ?? throw new Exception($"Punch with id: '{request.Id}' does not exist");
 
         var checklistId = punch.ChecklistItem.ChecklistId.ToString();
 
-        var blobUri = await _fileStorageRepository.UploadImage(request.Stream, request.FileName, checklistId, request.ContentType, cancellationToken);
+
+        foreach(var file in request.Files)
+        {
+            var blobUri = await _fileStorageRepository.UploadImage(file.Stream, file.FileName, checklistId, file.ContentType, cancellationToken);
+            file.Stream.Close();
+            punch.ImageBlobUris.Add(blobUri);
+        }
+
         var containerSAS = _cacheRepository.GetValue(punch.ChecklistItem.ChecklistId.ToString());
         if (containerSAS == null)
         {
             var newContainerSAS = await _fileStorageRepository.GenerateContainerSAS(checklistId, cancellationToken);
             _cacheRepository.SetKeyValue(checklistId, newContainerSAS, TimeSpan.FromHours(1));
         }
-        //persist the blobUri with the Punch
-        punch.ImageBlobUris.Add(blobUri);
 
         await _punchRepository.SaveChanges(cancellationToken);
 

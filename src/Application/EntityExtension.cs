@@ -14,11 +14,12 @@ public static class EntityExtenstions
 {
     public static MobilizationDto AsDto(this Mobilization mobilization)
     {
-        return new MobilizationDto(mobilization.Type)
+        return new MobilizationDto
         {
             Title = mobilization.Title,
             Id = mobilization.Id,
             Description = mobilization.Description,
+            Type = mobilization.Type
         };
     }
 

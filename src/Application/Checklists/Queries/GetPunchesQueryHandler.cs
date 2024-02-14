@@ -2,6 +2,7 @@
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Punches.Dtos;
+using AutoMapper;
 using MediatR;
 using MobDeMob.Application.Common.Interfaces;
 using MobDeMob.Application.Mobilizations;
@@ -21,12 +22,15 @@ public class GetPunchesQueryHandler : IRequestHandler<GetPunchesQuery, PunchList
 
     private readonly IFileStorageRepository _fileStorageRepository;
 
-    public GetPunchesQueryHandler(IMobilizationRepository mobilizationRepository, IChecklistItemRepository checklistItemRepository, ICacheRepository cacheRepository, IFileStorageRepository fileStorageRepository)
+    private readonly IMapper _mapper;
+
+    public GetPunchesQueryHandler(IMobilizationRepository mobilizationRepository, IChecklistItemRepository checklistItemRepository, ICacheRepository cacheRepository, IFileStorageRepository fileStorageRepository, IMapper mapper)
     {
         _mobilizationRepository = mobilizationRepository;
         _checklistItemRepository = checklistItemRepository;
         _cacheRepository = cacheRepository;
         _fileStorageRepository = fileStorageRepository;
+        _mapper = mapper;
     }
     public async Task<PunchListDto> Handle(GetPunchesQuery request, CancellationToken cancellationToken)
     {
@@ -34,7 +38,7 @@ public class GetPunchesQueryHandler : IRequestHandler<GetPunchesQuery, PunchList
             ?? throw new NotFoundException(nameof(Mobilization), request.MobilizationId); ;
 
         var punches = await _checklistItemRepository.GetChecklistItemsWithPunches(mobilization.ChecklistId, cancellationToken);
-
+        var punchesDto = punches.Select(p => _mapper.Map<PunchDto>(p));
         if (!punches.Any())
         {
             return MapToPunchDtoList([]);
@@ -42,10 +46,10 @@ public class GetPunchesQueryHandler : IRequestHandler<GetPunchesQuery, PunchList
         else
         {
             var anyBlobUrisInPunches = punches.Any(p => p.ImageBlobUris.Any());
-            if (!anyBlobUrisInPunches) return MapToPunchDtoList(punches.Select(p => p.AsDto()));
+            if (!anyBlobUrisInPunches) return MapToPunchDtoList(punchesDto);
         }
 
-        IEnumerable<PunchDto> punchDtos = [];
+     
 
         var checklistId = mobilization.ChecklistId;
         var containerSAS = _cacheRepository.GetValue(checklistId.ToString());
@@ -53,11 +57,11 @@ public class GetPunchesQueryHandler : IRequestHandler<GetPunchesQuery, PunchList
         {
             var newContainerSAS = await _fileStorageRepository.GenerateContainerSAS(checklistId.ToString(), cancellationToken);
             _cacheRepository.SetKeyValue(checklistId.ToString(), newContainerSAS, TimeSpan.FromHours(1));
-            punchDtos = punches.Select(p => p.AsDto());
-            return MapToPunchDtoList(punchDtos, newContainerSAS.Query);
+            //punchDtos = punches.Select(p => p.AsDto());
+            return MapToPunchDtoList(punchesDto, newContainerSAS.Query);
         }
-        punchDtos = punches.Select(p => p.AsDto());
-        return MapToPunchDtoList(punchDtos, containerSAS.Query);
+        //punchDtos = punches.Select(p => p.AsDto());
+        return MapToPunchDtoList(punchesDto, containerSAS.Query);
         // return punches.Select(p => p.AsDto(containerSAS));
     }
 
@@ -66,7 +70,7 @@ public class GetPunchesQueryHandler : IRequestHandler<GetPunchesQuery, PunchList
         return new PunchListDto()
         {
             SASToken = SASToken,
-            Items = punchDtos
+            Punches = punchDtos
         };
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MobDeMob.Domain.Common;
 using MobDeMob.Infrastructure;
 
@@ -8,9 +9,13 @@ public abstract class RepositoryBase<T> where T : Entity
 {
     protected readonly ModelContextBase _modelContextBase;
 
+   
+
+
     public RepositoryBase(ModelContextBase modelContextBase)
     {
-        _modelContextBase = modelContextBase;
+        _modelContextBase = modelContextBase;   
+
     }
 
     public async Task SaveChanges(CancellationToken cancellationToken = default)

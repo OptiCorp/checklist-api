@@ -9,10 +9,11 @@ public class PunchListDto : IMapFrom<IEnumerable<PunchDto>>
 
     public string? SASToken {get; set;}
 
-    public IEnumerable<PunchDto> Items {get; init;} = [];
+    public IEnumerable<PunchDto> Punches {get; init;} = []; 
 
     public void Mapping(Profile profile)
     {
         profile.CreateMap<IEnumerable<PunchDto>, PunchListDto>();
+            //.ForMember(pl => pl.Punches, opt => opt.MapFrom(p => p))
     }
 }

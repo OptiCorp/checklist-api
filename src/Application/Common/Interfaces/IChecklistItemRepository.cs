@@ -1,4 +1,5 @@
-﻿using Domain.Entities.ChecklistAggregate;
+﻿using Application.Punches.Dtos;
+using Domain.Entities.ChecklistAggregate;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
 
 namespace Application.Common.Interfaces

@@ -3,6 +3,7 @@
 
 using Application.Common.Interfaces;
 using Application.Mobilizations.Dtos;
+using AutoMapper;
 using MediatR;
 using MobDeMob.Application.Mobilizations;
 
@@ -13,15 +14,18 @@ public class GetMobilizationByIdQueryHandler : IRequestHandler<GetMobilizationBy
 {
     private readonly IMobilizationRepository _mobilizationRepository;
 
-    public GetMobilizationByIdQueryHandler(IMobilizationRepository mobilizationRepository)
+    private readonly IMapper _mapper;
+
+    public GetMobilizationByIdQueryHandler(IMobilizationRepository mobilizationRepository, IMapper mapper)
     {
         _mobilizationRepository = mobilizationRepository;
+        _mapper = mapper;
     }
 
     public async Task<MobilizationDto?> Handle(GetMobilizationByIdQuery request, CancellationToken cancellationToken)
     {
         var mob = await _mobilizationRepository.GetMobilizationById(request.id, cancellationToken);
-        return mob?.AsDto();
+        return  _mapper.Map<MobilizationDto>(mob);
     }
 
 }

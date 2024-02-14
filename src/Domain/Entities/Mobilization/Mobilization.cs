@@ -1,4 +1,5 @@
-﻿using Domain.Entities.Mobilization.Events;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Entities.Mobilization.Events;
 using MobDeMob.Domain.Common;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
 
@@ -18,7 +19,11 @@ public class Mobilization : AuditableEntity
 
     public Checklist Checklist { get; set; } = null!;
 
-    public IList<string> PartIds { get; set; } = new List<string>();
+    [NotMapped]
+    public IList<string> PartIds { 
+        get => Checklist?.Parts ?? []; 
+    }
+
 
     //[NotMapped]
     //public IEnumerable<Punch> Punches => Checklist?.Punches ?? Enumerable.Empty<Punch>();

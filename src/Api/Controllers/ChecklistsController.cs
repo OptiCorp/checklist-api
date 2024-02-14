@@ -55,7 +55,19 @@ public class ChecklistsController : ControllerBase
     [HttpPost("UploadFile/{punchId}")]
     public async Task<ActionResult<string>> UploadPunchFile(Guid punchId, [FromForm] FileModel fileModel, CancellationToken cancellationToken)
     {
-        await _sender.Send(new PunchUploadFileCommand { Id = punchId, ContentType = fileModel.file.ContentType, FileName = fileModel.file.FileName, Stream = fileModel.file.OpenReadStream() }, cancellationToken);
+        ICollection<PunchUploadFile> files = [];
+        foreach(var file in fileModel.files)
+        {
+            files.Add(new PunchUploadFile()
+            {
+                ContentType = file.ContentType,
+                FileName = file.FileName,
+                Stream = file.OpenReadStream()
+            });
+        }
+        // await _sender.Send(new PunchUploadFilesCommand { Id = punchId, ContentType = fileModel.file.ContentType, FileName = fileModel.file.FileName, Stream = fileModel.file.OpenReadStream() }, cancellationToken);
+        await _sender.Send(new PunchUploadFilesCommand { Id = punchId, Files = files }, cancellationToken);
+
         return NoContent();
     }
 

@@ -1,17 +1,23 @@
-﻿using MobDeMob.Domain.Entities;
+﻿using Application.Common;
+using Application.Common.Mappings;
+using AutoMapper;
+using MobDeMob.Domain.Entities;
 
 namespace Application.Mobilizations.Dtos;
 
-public record MobilizationDto
+public class MobilizationDto : DtoExtension, IMapFrom<Mobilization>
 {
-    public Guid Id { get; init; }
     public required string Title { get; init; }
     public string? Description { get; init; }
 
-    public MobilizationType MobilizationType { get; init; }
+    public MobilizationType Type { get; init; }
 
-    public MobilizationDto(MobilizationType mobilizationType)
+    public MobilizationStatus Status { get; set; }
+
+    public IList<string> PartIds {get; set;} = [];
+
+    public void Mapping(Profile profile)
     {
-        MobilizationType = mobilizationType;
+        profile.CreateMap<Mobilization, MobilizationDto>();
     }
 }
