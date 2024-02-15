@@ -74,10 +74,10 @@ public class ChecklistsController : ControllerBase
         return NoContent();
     }
 
-    [HttpPatch("SetCheckeValue/{checklistItemQuestionId}")]
-    public async Task<IActionResult> SetCheckedValue(Guid checklistItemQuestionId, SetChecklistCheckedValueCommand setChecklistCheckedValueCommand, CancellationToken cancellationToken)
+    [HttpPatch("SetCheckedValue/{checklistItemQuestionId}")]
+    public async Task<IActionResult> SetCheckedValue(SetChecklistItemQuestionPatchCommand setChecklistItemQuestionPatchCommand, CancellationToken cancellationToken)
     {
-        await _sender.Send(setChecklistCheckedValueCommand, cancellationToken);
+        await _sender.Send(setChecklistItemQuestionPatchCommand, cancellationToken);
         return NoContent();
     }
 

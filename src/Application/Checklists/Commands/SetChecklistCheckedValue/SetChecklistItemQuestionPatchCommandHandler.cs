@@ -4,11 +4,12 @@ using Application.Common.Interfaces;
 using AutoMapper;
 using Domain.Entities.ChecklistAggregate;
 using MediatR;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Application.Checklists.Commands.SetChecklistCheckedValue;
 
-public class SetChecklistCheckedValueCommandHandler : IRequestHandler<SetChecklistCheckedValueCommand>
+public class SetChecklistCheckedValueCommandHandler : IRequestHandler<SetChecklistItemQuestionPatchCommand>
 {
 
     private readonly IMobilizationRepository _mobilizationRepository;
@@ -32,20 +33,16 @@ public class SetChecklistCheckedValueCommandHandler : IRequestHandler<SetCheckli
         _checklistItemQuestionRepository = checklistItemQuestionRepository;
         _mapper = mapper;
     }
-    public async Task Handle(SetChecklistCheckedValueCommand request, CancellationToken cancellationToken)
+    public async Task Handle(SetChecklistItemQuestionPatchCommand request, CancellationToken cancellationToken)
     {
         var checklistItemQuestion = await _checklistItemQuestionRepository.GetQuestion(request.Id, cancellationToken) ?? throw new NotFoundException(nameof(ChecklistItemQuestion), request.Id);
-        ChangeChecklistItem(_mapper.Map<ChecklistItemQuestionDto>(checklistItemQuestion), checklistItemQuestion, request);
+        ChangeChecklistItem(checklistItemQuestion, request.Patches);
+        request.Patches.ApplyTo(checklistItemQuestion);
         await _checklistItemQuestionRepository.SaveChanges(cancellationToken);
     }
 
-    public void ChangeChecklistItem(ChecklistItemQuestionDto qDto, ChecklistItemQuestion q, SetChecklistCheckedValueCommand request)
+    public void ChangeChecklistItem(ChecklistItemQuestion q, JsonPatchDocument<ChecklistItemQuestion> patches)
     {
-        //q.Checked = request.CheckedValue;
-        request.Patch.ApplyTo(qDto);
-        // q.Id = qDto.Id;
-        // q.ChecklistItemId = qDto.ChecklistItemId;
-        // q.QuestionTemplateId = qDto.QuestionTemplateId;
-        // q.Checked = qDto.Checked;
+        patches.ApplyTo(q);
     }
 }
