@@ -19,11 +19,9 @@ public class PunchDto : DtoExtension, IMapFrom<Punch>
 
     public IReadOnlyCollection<Uri> ImageBlobUris { get; set; } = [];
 
-    public string? SASToken {get; set;}
-
     public void Mapping(Profile profile)
     {
-        profile.CreateMap<Punch, PunchDto>();
-            //.ForMember(pd => pd.ImageBlobUris, opt => opt.MapFrom(p => p.ImageBlobUris));
+        profile.CreateMap<Punch, PunchDto>()
+            .ForMember(pd => pd.ImageBlobUris, opt => opt.MapFrom(p => p.ImageBlobUris));
     }
 }

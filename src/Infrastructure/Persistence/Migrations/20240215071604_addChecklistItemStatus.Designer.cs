@@ -12,8 +12,8 @@ using MobDeMob.Infrastructure;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ModelContextBase))]
-    [Migration("20240213123559_initCreate")]
-    partial class initCreate
+    [Migration("20240215071604_addChecklistItemStatus")]
+    partial class addChecklistItemStatus
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("TemplateId")
                         .HasColumnType("uniqueidentifier");
 
@@ -71,6 +74,9 @@ namespace Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("Checked")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("ChecklistItemId")
                         .HasColumnType("uniqueidentifier");
 
@@ -88,9 +94,6 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<Guid>("QuestionTemplateId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -222,10 +225,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PartIds")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -288,7 +287,7 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entities.ChecklistAggregate.ChecklistItem", b =>
                 {
                     b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.Checklist", "Checklist")
-                        .WithMany()
+                        .WithMany("ChecklistItems")
                         .HasForeignKey("ChecklistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -353,6 +352,8 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("MobDeMob.Domain.Entities.ChecklistAggregate.Checklist", b =>
                 {
+                    b.Navigation("ChecklistItems");
+
                     b.Navigation("Mobilization");
                 });
 

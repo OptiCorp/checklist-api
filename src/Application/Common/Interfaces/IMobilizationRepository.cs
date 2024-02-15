@@ -8,6 +8,8 @@ public interface IMobilizationRepository
 
     Task<Mobilization?> GetMobilizationById(Guid id, CancellationToken cancellationToken = default);
 
+    Task<Mobilization?> GetMobilizationByIdWithChecklistItems(Guid id, CancellationToken cancellationToken = default);
+
     Task<IEnumerable<Mobilization>> GetAllMobilizations(CancellationToken cancellationToken = default);
 
     Task DeleteMobilization(Guid id, CancellationToken cancellationToken = default);

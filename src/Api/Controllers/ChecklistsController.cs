@@ -1,10 +1,13 @@
 ﻿using Api.Utilities;
+using Application.Checklists.Commands;
 using Application.Checklists.Commands.AddItem;
 using Application.Checklists.Commands.AddPunch;
+using Application.Checklists.Dtos;
 using Application.Checklists.Queries;
 using Application.Punches.Dtos;
 using Application.Punches.Queries.GetById;
 using Application.Upload;
+using Azure;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,12 +34,12 @@ public class ChecklistsController : ControllerBase
         return Ok(punches);
     }
 
-    [HttpGet("GetPunch/{punchId}")]
-    public async Task<ActionResult<PunchDto>> GetPunch(Guid punchId, CancellationToken cancellationToken)
-    {
-        var punch = await _sender.Send(new GetPunchQuery { punchId = punchId }, cancellationToken);
-        return Ok(punch);
-    }
+    // [HttpGet("GetPunch/{punchId}")]
+    // public async Task<ActionResult<PunchDto>> GetPunch(Guid punchId, CancellationToken cancellationToken)
+    // {
+    //     var punch = await _sender.Send(new GetPunchQuery { punchId = punchId }, cancellationToken);
+    //     return Ok(punch);
+    // }
 
     [HttpPost("AddItem/{itemId}")]
     public async Task<IActionResult> AddNewItem([FromBody] AddItemCommand addItemCommand, CancellationToken cancellationToken = default)
@@ -68,6 +71,13 @@ public class ChecklistsController : ControllerBase
         // await _sender.Send(new PunchUploadFilesCommand { Id = punchId, ContentType = fileModel.file.ContentType, FileName = fileModel.file.FileName, Stream = fileModel.file.OpenReadStream() }, cancellationToken);
         await _sender.Send(new PunchUploadFilesCommand { Id = punchId, Files = files }, cancellationToken);
 
+        return NoContent();
+    }
+
+    [HttpPatch("SetCheckeValue/{checklistItemQuestionId}")]
+    public async Task<IActionResult> SetCheckedValue(Guid checklistItemQuestionId, SetChecklistCheckedValueCommand setChecklistCheckedValueCommand, CancellationToken cancellationToken)
+    {
+        await _sender.Send(setChecklistCheckedValueCommand, cancellationToken);
         return NoContent();
     }
 

@@ -1,8 +1,10 @@
 ﻿using MobDeMob.Domain.Common;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
+using MobDeMob.Domain.Enums;
 using MobDeMob.Domain.ItemAggregate;
 
 namespace Domain.Entities.ChecklistAggregate;
+
 
 public class ChecklistItem : AuditableEntity
 {
@@ -19,6 +21,8 @@ public class ChecklistItem : AuditableEntity
     public ICollection<ChecklistItemQuestion> Questions { get; set; } = [];
 
     public ICollection<Punch> Punches {get; set;} = [];
+
+    public ChecklistItemStatus Status {get; set;}
 
     public ChecklistItem(ItemTemplate itemTemplate, Guid checklistId)
     {

@@ -15,5 +15,8 @@ namespace Infrastructure.Repositories
 
             return question.Id;
         }
+
+        public async Task<ChecklistItemQuestion?> GetQuestion(Guid Id, CancellationToken cancellationToken = default)
+        => await GetById(Id, cancellationToken);
     }
 }

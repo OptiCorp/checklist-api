@@ -12,9 +12,17 @@ public class MobilizationDto : DtoExtension, IMapFrom<Mobilization>
 
     public MobilizationType Type { get; init; }
 
-    public MobilizationStatus Status { get; set; }
+    public MobilizationStatus Status { get; init; }
 
-    public IList<string> PartIds {get; set;} = [];
+    public int PartsCount {get; init;}
+
+    public int ChecklistCountDone {get; init;}
+
+    public int ChecklistCount {get; init;}
+
+    //public double CompletionPercentage {get; init;}
+
+    // public IList<string> PartIds {get; set;} = [];
 
     public void Mapping(Profile profile)
     {

@@ -24,7 +24,7 @@ public class GetMobilizationByIdQueryHandler : IRequestHandler<GetMobilizationBy
 
     public async Task<MobilizationDto?> Handle(GetMobilizationByIdQuery request, CancellationToken cancellationToken)
     {
-        var mob = await _mobilizationRepository.GetMobilizationById(request.id, cancellationToken);
+        var mob = await _mobilizationRepository.GetMobilizationByIdWithChecklistItems(request.id, cancellationToken);
         return  _mapper.Map<MobilizationDto>(mob);
     }
 

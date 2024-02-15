@@ -1,4 +1,5 @@
-﻿using Domain.Entities.ChecklistAggregate;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Entities.ChecklistAggregate;
 using MobDeMob.Domain.Common;
 
 namespace MobDeMob.Domain.Entities.ChecklistAggregate;
@@ -10,7 +11,32 @@ public class Checklist : AuditableEntity
     // public ChecklistStatus Status {get; set;}
     public Mobilization? Mobilization { get; set; }
     public IList<string> Parts { get; set; } = new List<string>();
-    public ICollection<ChecklistItem> ChecklistItems = [];
+    public ICollection<ChecklistItem> ChecklistItems {get; set;} = [];
+
+    public double GetCompletionPercentage()
+    {
+        var questions = ChecklistItems.SelectMany(ci => ci.Questions);
+        if (!questions.Any()) return 0;
+        var completionProgressionDecimal = (double)questions.Count(i => i.Checked) / questions.Count();
+        var completionPercentage = 100 * completionProgressionDecimal;
+        return completionPercentage;
+    }
+
+    [NotMapped]
+    public int ChecklistCountDone => ChecklistItems.Count(ci => ci.Status == Enums.ChecklistItemStatus.Completed);
+
+    [NotMapped]
+    public int ChecklistCount => ChecklistItems.Count;
+
+    // public int GetChecklistCountDont ()
+    // {
+    //     return ChecklistItems.Count(ci => ci.Status == Enums.ChecklistItemStatus.Completed);
+    // }
+
+    // public int GetChecklistCountDo ()
+    // {
+    //     return ChecklistItems.Count(ci => ci.Status == Enums.ChecklistItemStatus.Completed);
+    // }
 
     //public ICollection<ChecklistSection> ChecklistSections { get; set; } = new List<ChecklistSection>();
 

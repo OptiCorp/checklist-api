@@ -26,6 +26,15 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
     public async Task DeleteMobilization(Guid id, CancellationToken cancellationToken)
         => await DeleteById(id, cancellationToken);
 
+    //TODO: this was created for getting completion percent, may be a better way of doing it without including everything
+    public async Task<Mobilization?> GetMobilizationByIdWithChecklistItems(Guid mobilizationId, CancellationToken cancellationToken = default)
+
+        => await GetSet().Include(m => m.Checklist)
+                            .ThenInclude(c => c.ChecklistItems)
+                                .ThenInclude(ci => ci.Questions)
+                                .SingleOrDefaultAsync(x => x.Id == mobilizationId, cancellationToken);
+
+
     //public async Task RemovePartFromMobilization(string id, string partId, CancellationToken cancellationToken)
     //{
     //    var mob = await _modelContextBase.Mobilizations

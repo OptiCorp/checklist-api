@@ -2,10 +2,13 @@
 using Application.Punches;
 using Azure.Identity;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using MobDeMob.Application.Common.Interfaces;
 using MobDeMob.Infrastructure.Repositories;
 
@@ -70,3 +73,4 @@ public static class DependencyInjection
         return services;
     }
 }
+

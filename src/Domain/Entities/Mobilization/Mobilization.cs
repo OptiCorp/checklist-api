@@ -19,10 +19,30 @@ public class Mobilization : AuditableEntity
 
     public Checklist Checklist { get; set; } = null!;
 
+    // [NotMapped]
+    // public IList<string> PartIds { 
+    //     get => Checklist?.Parts ?? []; 
+    // }
     [NotMapped]
-    public IList<string> PartIds { 
-        get => Checklist?.Parts ?? []; 
-    }
+    public int PartsCount => Checklist.Parts.Count;
+
+    // [NotMapped]
+    // public double CompletionPercentage => Checklist.GetCompletionPercentage();
+
+    [NotMapped]
+    public int ChecklistCountDone => Checklist.ChecklistCountDone;
+
+    [NotMapped]
+    public int ChecklistCount => Checklist.ChecklistCount;
+
+    // private double GetCompletionPercentage()
+    // {
+    //     var questions = Checklist.ChecklistItems.SelectMany(ci => ci.Questions);
+    //     if (!questions.Any()) return 0;
+    //     var completionProgressionDecimal = (double)questions.Count(i => i.Checked) / questions.Count();
+    //     var completionPercentage = 100 * completionProgressionDecimal;
+    //     return completionPercentage;
+    // }
 
 
     //[NotMapped]

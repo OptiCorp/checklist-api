@@ -34,7 +34,7 @@ public class GetPunchesQueryHandler : IRequestHandler<GetPunchesQuery, PunchList
     }
     public async Task<PunchListDto> Handle(GetPunchesQuery request, CancellationToken cancellationToken)
     {
-        var mobilization = await _mobilizationRepository.GetMobilizationById(request.MobilizationId)
+        var mobilization = await _mobilizationRepository.GetMobilizationById(request.MobilizationId, cancellationToken)
             ?? throw new NotFoundException(nameof(Mobilization), request.MobilizationId); ;
 
         var punches = await _checklistItemRepository.GetChecklistItemsWithPunches(mobilization.ChecklistId, cancellationToken);
@@ -65,12 +65,11 @@ public class GetPunchesQueryHandler : IRequestHandler<GetPunchesQuery, PunchList
         // return punches.Select(p => p.AsDto(containerSAS));
     }
 
-    private static PunchListDto MapToPunchDtoList(IEnumerable<PunchDto> punchDtos, string? SASToken = null)
+    private static PunchListDto MapToPunchDtoList(IEnumerable<PunchDto> punchesDtos, string? SASToken = null)
     {
-        return new PunchListDto()
+        return new PunchListDto(punchesDtos)
         {
-            SASToken = SASToken,
-            Punches = punchDtos
+            SASToken = SASToken
         };
     }
 }
