@@ -40,8 +40,5 @@ public class PunchUploadFileCommandHandler : IRequestHandler<PunchUploadFilesCom
         }
 
         await _punchRepository.SaveChanges(cancellationToken);
-
-        //get the sas token from cache
-        //return blobUri;
     }
 }

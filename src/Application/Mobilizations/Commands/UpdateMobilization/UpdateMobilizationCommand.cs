@@ -6,7 +6,7 @@ namespace MobDeMob.Application.Mobilizations.Commands;
 public class UpdateMobilizationCommand : IRequest
 {
     public Guid id {get; init;}
-    public string? Title {get; init;}
+    public required string Title {get; init;}
     public string? Description {get; init;}
     public MobilizationType Type {get; set;}
 

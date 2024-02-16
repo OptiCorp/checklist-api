@@ -4,6 +4,7 @@ using Application.Checklists.Commands.AddItem;
 using Application.Checklists.Commands.AddPunch;
 using Application.Checklists.Dtos;
 using Application.Checklists.Queries;
+using Application.Punches.Commands;
 using Application.Punches.Dtos;
 using Application.Punches.Queries.GetById;
 using Application.Upload;
@@ -107,6 +108,13 @@ public class ChecklistsController : ControllerBase
     public async Task<IActionResult> DeletePartFromMobilization(RemovePartFromMobilizationCommand removePartFromMobilizationCommand, CancellationToken cancellationToken)
     {
         await _sender.Send(removePartFromMobilizationCommand, cancellationToken);
+        return NoContent();
+    }
+    
+    [HttpPut("UpdatePunch/{punchId}")]
+    public async Task<IActionResult> UpdatePunch(UpdatePunchCommand updatePunchCommand, CancellationToken cancellationToken = default)
+    {
+        await _sender.Send(updatePunchCommand, cancellationToken);
         return NoContent();
     }
 

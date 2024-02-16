@@ -35,6 +35,7 @@ namespace Infrastructure.Repositories
         public async Task<IEnumerable<ChecklistItem>> GetChecklistItems(Guid checklistId, CancellationToken cancellationToken = default)
         {
             return await GetSet()
+                .Include(ci => ci.Questions)
                 .Where(ci => ci.ChecklistId == checklistId)
                 .ToListAsync(cancellationToken);
         }
@@ -52,7 +53,6 @@ namespace Infrastructure.Repositories
                 .Include(ci => ci.Punches)
                 .Where(ci => ci.ChecklistId == checklistId && ci.Punches.Count > 0)
                 .SelectMany(ci => ci.Punches)
-                .Include(p => p.ChecklistItem)
                 //.Select(p => _mapper.Map<Pun)
                 //.ProjectTo<PunchDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);

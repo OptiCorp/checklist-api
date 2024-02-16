@@ -1,7 +1,7 @@
 using MediatR;
 using MobDeMob.Domain.Entities;
 
-namespace MobDeMob.Application.Mobilizations.Commands;
+namespace Application.Mobilizations.Commands;
 
 public class AddMobilizationCommand : IRequest<Guid>
 {

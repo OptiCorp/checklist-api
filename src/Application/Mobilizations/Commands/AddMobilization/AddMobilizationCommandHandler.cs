@@ -1,5 +1,6 @@
 ﻿
 using Application.Common.Interfaces;
+using Application.Mobilizations.Commands;
 using MediatR;
 using MobDeMob.Application.Common.Interfaces;
 using MobDeMob.Domain.Entities;

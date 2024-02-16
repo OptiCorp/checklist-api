@@ -19,7 +19,7 @@ public class Punch : AuditableEntity
     // public Item Item {get; set;} = null!;
     public Guid ChecklistItemId { get; set; }
 
-    public ChecklistItem ChecklistItem {get; set;}
+    public ChecklistItem ChecklistItem {get; set;} = null!;
 
     //public ChecklistSection Section { get; set; } = null!;
 

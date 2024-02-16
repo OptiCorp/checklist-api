@@ -4,5 +4,5 @@ namespace Domain.Entities.TemplateAggregate;
 
 public class QuestionTemplate : AuditableEntity
 {
-    public string Question { get; set; }
+    public required string Question { get; set; }
 }

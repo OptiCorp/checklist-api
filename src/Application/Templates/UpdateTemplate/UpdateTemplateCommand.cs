@@ -2,6 +2,7 @@
 
 namespace Application.Templates.UpdateTemplate;
 
+//TODO: should maybe be ItemId instead of templateId
 public class UpdateTemplateCommand : IRequest
 {
     public Guid Id { get; init; }

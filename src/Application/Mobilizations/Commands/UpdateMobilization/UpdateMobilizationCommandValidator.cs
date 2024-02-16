@@ -8,6 +8,10 @@ public class UpdateMobilizationCommandValidator : AbstractValidator<UpdateMobili
     public UpdateMobilizationCommandValidator()
     {
         RuleFor(v => v.Title)
+            .NotEmpty()
             .MaximumLength(50);
+
+        RuleFor(v => v.Description)
+           .MaximumLength(200);
     }
 }

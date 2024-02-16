@@ -6,5 +6,5 @@ public class AddItemCommand : IRequest<Guid>
 {
     public Guid MobilizationId { get; set; }
 
-    public string ItemId { get; set; }
+    public required string ItemId { get; set; }
 }

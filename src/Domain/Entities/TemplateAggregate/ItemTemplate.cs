@@ -5,7 +5,7 @@ namespace MobDeMob.Domain.ItemAggregate;
 
 public class ItemTemplate : AuditableEntity
 {
-    public string ItemId { get; set; }
+    public required string ItemId { get; set; }
 
     public required string Name { get; set; }
 

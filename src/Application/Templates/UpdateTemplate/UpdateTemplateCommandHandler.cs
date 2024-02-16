@@ -27,9 +27,9 @@ public class UpdateTemplateCommandHandler : IRequestHandler<UpdateTemplateComman
 
     private static ItemTemplate ChangeTemplate(ItemTemplate template, UpdateTemplateCommand request)
     {
-        template.Name = request.ItemName;
+        template.Name = request.ItemName ?? template.Name;
         template.Description = request.ItemDescription;
-        template.Type = request.Type;
+        template.Type = request.Type ?? template.Type;
         template.Revision = request.Revision;
         template.Questions = request?.Questions
             ?.Select(q => new QuestionTemplate { Question = q })

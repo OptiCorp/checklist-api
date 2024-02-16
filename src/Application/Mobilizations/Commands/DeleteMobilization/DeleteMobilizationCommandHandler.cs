@@ -21,7 +21,7 @@ public class DeleteMobilizationCommandHandler : IRequestHandler<DeleteMobilizati
     }
     public async Task Handle(DeleteMobilizationCommand request, CancellationToken cancellationToken)
     {
-        var mobilization = await _mobilizationRepository.GetMobilizationById(request.id, cancellationToken) ?? throw new NotFoundException(nameof(Mobilization), request.id);
+        var mobilization = await _mobilizationRepository.GetMobilizationById(request.Id, cancellationToken) ?? throw new NotFoundException(nameof(Mobilization), request.Id);
 
         mobilization.DeleteParts();
 

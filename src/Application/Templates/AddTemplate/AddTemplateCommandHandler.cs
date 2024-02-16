@@ -18,7 +18,7 @@ public class AddTemplateCommandHandler : IRequestHandler<AddTemplateCommand, Gui
     {
         var template = MapToItemTemplate(request);
 
-        await _templateRepository.AddTemplate(template);
+        await _templateRepository.AddTemplate(template, cancellationToken);
 
         template.Questions = request?.Questions
             ?.Select(q => new QuestionTemplate { Question = q })
