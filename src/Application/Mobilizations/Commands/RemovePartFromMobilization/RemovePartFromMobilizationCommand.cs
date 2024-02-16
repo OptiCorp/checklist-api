@@ -4,7 +4,7 @@ namespace MobDeMob.Application.Mobilizations.Commands;
 
 public class RemovePartFromMobilizationCommand : IRequest
 {
-    public required string id {get; init;}
-    public required string partId {get; init;}
+    public Guid Id {get; init;}
+    public required string PartId {get; init;}
 
 }

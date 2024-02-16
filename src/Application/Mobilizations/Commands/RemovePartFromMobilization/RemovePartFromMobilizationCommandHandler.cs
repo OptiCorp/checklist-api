@@ -1,29 +1,51 @@
-﻿//using Application.Common.Interfaces;
-//using MediatR;
-//using MobDeMob.Application.Common.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Common.Interfaces;
+using Domain.Entities.ChecklistAggregate;
+using MediatR;
+using MobDeMob.Application.Common.Interfaces;
+using MobDeMob.Domain.Entities;
+using MobDeMob.Domain.Entities.ChecklistAggregate;
+using MobDeMob.Domain.ItemAggregate;
 
-//namespace MobDeMob.Application.Mobilizations.Commands;
+namespace MobDeMob.Application.Mobilizations.Commands;
 
-//public class RemovePartFromMobilizationCommandHandler : IRequestHandler<RemovePartFromMobilizationCommand>
-//{
-//    private readonly IMobilizationRepository _mobilizationRepository;
-//    private readonly IPartsRepository _partsRepository;
+public class RemovePartFromMobilizationCommandHandler : IRequestHandler<RemovePartFromMobilizationCommand>
+{
+    private readonly IMobilizationRepository _mobilizationRepository;
+    private readonly IChecklistRepository _checklistRepository;
 
-//    public RemovePartFromMobilizationCommandHandler(IMobilizationRepository mobilizationRepository, IPartsRepository partsRepository)
-//    {
-//        _mobilizationRepository = mobilizationRepository;
-//        _partsRepository = partsRepository;
-//    }
+    private readonly IChecklistItemRepository _checklistItemRepository;
+    public RemovePartFromMobilizationCommandHandler(IMobilizationRepository mobilizationRepository, IChecklistRepository checklistRepository, IChecklistItemRepository checklistItemRepository)
+    {
+        _mobilizationRepository = mobilizationRepository;
+        _checklistRepository = checklistRepository;
+        _checklistItemRepository = checklistItemRepository;
+        
+    }
 
-//    public async Task Handle(RemovePartFromMobilizationCommand request, CancellationToken cancellationToken)
-//    {
-//        var part = await _partsRepository.GetById(request.partId, cancellationToken)
-//            ?? throw new Exception("Part not found"); // TODO: improve exception
-//        var mobilization = await _mobilizationRepository.GetById(request.id, cancellationToken)
-//            ?? throw new Exception($"Mobilizaiton with id: {request.id} does not have any Checklist associated"); // same as above
+    public async Task Handle(RemovePartFromMobilizationCommand request, CancellationToken cancellationToken)
+    {
+        var mobilization = await _mobilizationRepository.GetMobilizationById(request.Id, cancellationToken)
+            ?? throw new NotFoundException(nameof(Mobilization), request.Id); // same as above
 
-//        mobilization.RemovePartToMobilization(part);
+        if(!mobilization.Checklist.Parts.Any(id => request.PartId == id )) throw new NotFoundException("Part", request.PartId);
 
-//        await _partsRepository.Delete(part);
-//    }
-//}
+        var checklistItem = await _checklistItemRepository.GetChecklistItemByItemId(request.PartId, mobilization.ChecklistId, cancellationToken) ?? throw new NotFoundException(nameof(ChecklistItem), request.PartId);
+       
+        RemovePartFromMobilization(mobilization.Checklist, request.PartId);
+    
+        await RemovePartFromChecklistItems(checklistItem.Id);
+
+        await _checklistRepository.SaveChanges(cancellationToken);
+    }
+
+    private void RemovePartFromMobilization(Checklist checklist, string Id)
+    {
+        _checklistRepository.RemovePartFromChecklist(checklist, Id);
+    }
+
+    private async Task RemovePartFromChecklistItems(Guid Id)
+    {
+        await _checklistItemRepository.DeleteChecklistItem(Id);
+    }
+}

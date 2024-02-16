@@ -12,7 +12,7 @@ public class ChecklistItem : AuditableEntity
 
     public Guid ChecklistId { get; set; }
 
-    public Checklist Checklist {get; set;}
+    //public Checklist Checklist {get; set;}
 
     public Guid TemplateId { get; set; }
 
@@ -24,6 +24,8 @@ public class ChecklistItem : AuditableEntity
 
     public ChecklistItemStatus Status {get; set;}
 
+    public double CompletionPercentage => GetCompletionPercentage();
+
     public ChecklistItem(ItemTemplate itemTemplate, Guid checklistId)
     {
         ItemId = itemTemplate.ItemId;
@@ -34,5 +36,14 @@ public class ChecklistItem : AuditableEntity
     protected ChecklistItem()
     {
 
+    }
+
+    private double GetCompletionPercentage()
+    {
+        //var questions = ChecklistItems.SelectMany(ci => ci.Questions);
+        if (!Questions.Any()) return 0;
+        var completionProgressionDecimal = (double)Questions.Count(i => i.Checked) / Questions.Count();
+        var completionPercentage = 100 * completionProgressionDecimal;
+        return completionPercentage;
     }
 }

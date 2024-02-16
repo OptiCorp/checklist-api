@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MobDeMob.Infrastructure;
 
@@ -11,9 +12,11 @@ using MobDeMob.Infrastructure;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ModelContextBase))]
-    partial class ModelContextBaseModelSnapshot : ModelSnapshot
+    [Migration("20240215145558_checklistItemNotApplicable")]
+    partial class checklistItemNotApplicable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,6 +49,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("NotApplicable")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -88,9 +94,6 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("NotApplicable")
-                        .HasColumnType("bit");
 
                     b.Property<Guid>("QuestionTemplateId")
                         .HasColumnType("uniqueidentifier");

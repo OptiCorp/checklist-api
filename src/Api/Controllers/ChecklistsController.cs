@@ -10,6 +10,7 @@ using Application.Upload;
 using Azure;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MobDeMob.Application.Mobilizations.Commands;
 
 namespace Api.Controllers;
 
@@ -74,12 +75,42 @@ public class ChecklistsController : ControllerBase
         return NoContent();
     }
 
-    [HttpPatch("SetCheckedValue/{checklistItemQuestionId}")]
-    public async Task<IActionResult> SetCheckedValue(SetChecklistItemQuestionPatchCommand setChecklistItemQuestionPatchCommand, CancellationToken cancellationToken)
+    [HttpPatch("ChecklistQuestionUpdate/{checklistItemQuestionId}")]
+    public async Task<IActionResult> ChecklistQuestionUpdate(SetChecklistItemQuestionPatchCommand setChecklistItemQuestionPatchCommand, CancellationToken cancellationToken)
     {
         await _sender.Send(setChecklistItemQuestionPatchCommand, cancellationToken);
         return NoContent();
     }
+
+    [HttpPatch("ChecklistItemUpdate/{checklistItemId}")]
+    public async Task<IActionResult> ChecklistItemUpdate(SetChecklistItemPatchCommand setChecklistItemPatchCommand, CancellationToken cancellationToken)
+    {
+        await _sender.Send(setChecklistItemPatchCommand, cancellationToken);
+        return NoContent();
+    }
+
+    [HttpGet("GetChecklists")]
+    public async Task<IActionResult> GetChecklists(Guid mobilizationId, CancellationToken cancellationToken)
+    {
+        var checklistItems = await _sender.Send(new GetChecklistItemsQuery{MobilizationId = mobilizationId}, cancellationToken);
+        return Ok(checklistItems);
+    }
+
+    [HttpGet("GetChecklistItem/{checklistItemId}")]
+    public async Task<IActionResult> GetChecklistItems(Guid mobilizationId, Guid checklistItemId,CancellationToken cancellationToken)
+    {
+        var checklistItem = await _sender.Send(new GetChecklistItemQuery{ChecklistItemId = checklistItemId}, cancellationToken);
+        return Ok(checklistItem);
+    }
+
+    [HttpDelete("DeletePartFromMobilization/{partId}")]
+    public async Task<IActionResult> DeletePartFromMobilization(RemovePartFromMobilizationCommand removePartFromMobilizationCommand, CancellationToken cancellationToken)
+    {
+        await _sender.Send(removePartFromMobilizationCommand, cancellationToken);
+        return NoContent();
+    }
+
+
 
     //[HttpPost("{partId}/CreatePartChecklistQuestions")]
     //public async Task<ActionResult> CreatePartChecklistQuestions(string partId, [FromBody] List<string> questions, CancellationToken cancellationToken)

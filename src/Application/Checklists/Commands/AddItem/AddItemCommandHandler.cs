@@ -63,7 +63,7 @@ public class AddItemCommandHandler : IRequestHandler<AddItemCommand, Guid>
             await _checklistItemQuestionRepository.AddQuestion(question, cancellationToken);
         }
     }
-
+    //TODO: validate ItemId string
     private async Task AddPartToChecklist(AddItemCommand request, Mobilization mobilization, CancellationToken cancellationToken)
     {
         mobilization.Checklist.Parts.Add(request.ItemId);

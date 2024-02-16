@@ -18,6 +18,9 @@ public class TemplateRepository : RepositoryBase<ItemTemplate>, ITemplateReposit
         return itemTemplate.Id;
     }
 
+    public async Task DeletePartTemplate(Guid Id, CancellationToken cancellationToken = default)
+    => await DeleteById(Id, cancellationToken);
+
     public async Task<ItemTemplate?> GetTemplateById(Guid templateId, CancellationToken cancellationToken = default)
     {
         return await GetSet()
@@ -31,4 +34,6 @@ public class TemplateRepository : RepositoryBase<ItemTemplate>, ITemplateReposit
             .Include(t => t.Questions)
             .FirstOrDefaultAsync(x => x.ItemId == itemId, cancellationToken);
     }
+
+    
 }

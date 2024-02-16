@@ -11,6 +11,14 @@ namespace Application.Common.Interfaces
         Task<ChecklistItem?> GetChecklistItemByItemId (string itemId, Guid checklistId, CancellationToken cancellationToken = default);
 
         Task<IEnumerable<Punch>> GetChecklistItemsWithPunches(Guid checklistId, CancellationToken cancellationToken = default);
+
+        Task<IEnumerable<ChecklistItem>> GetChecklistItems(Guid checklistId, CancellationToken cancellationToken = default);
+
+        Task<ChecklistItem?> GetChecklistItem(Guid checklistItemId, CancellationToken cancellationToken = default);
+
+        Task DeleteChecklistItem(Guid Id, CancellationToken cancellationToken = default);
+
+
         Task SaveChanges(CancellationToken cancellationToken);
     }
 }

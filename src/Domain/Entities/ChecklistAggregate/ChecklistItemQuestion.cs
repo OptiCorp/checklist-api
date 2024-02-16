@@ -11,6 +11,8 @@ public class ChecklistItemQuestion : AuditableEntity
 
     public bool Checked { get; set; } 
 
+    public bool NotApplicable {get; set;}
+
     public ChecklistItemQuestion(QuestionTemplate questionTemplate, Guid checklistItemId)
     {
         ChecklistItemId = checklistItemId;

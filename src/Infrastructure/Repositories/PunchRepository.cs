@@ -3,16 +3,17 @@ using Application.Punches;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
 using AutoMapper.QueryableExtensions;
 using Application.Punches.Dtos;
+using Infrastructure.Repositories.Common;
 
 namespace MobDeMob.Infrastructure.Repositories;
 
-public class PunchRepository : IPunchRepository
+public class PunchRepository : RepositoryBase<Punch>, IPunchRepository 
 {
-    private readonly ModelContextBase _modelContextBase;
 
-    public PunchRepository(ModelContextBase modelContextBase)
+
+    public PunchRepository(ModelContextBase modelContextBase) : base(modelContextBase)
     {
-        _modelContextBase = modelContextBase;
+        
     }
 
     //    public async Task AssociatePunchWithUrl(Guid id, Uri blobUri, CancellationToken cancellationToken)
@@ -22,9 +23,9 @@ public class PunchRepository : IPunchRepository
     //        await _modelContextBase.SaveChangesAsync(cancellationToken);
     //    }
 
-    public async Task<Guid> CreatePunch(Punch punch, CancellationToken cancellationToken)
+    public async Task<Guid> AddPunch(Punch punch, CancellationToken cancellationToken)
     {
-        await _modelContextBase.Punches.AddAsync(punch, cancellationToken);
+        await Add(punch, cancellationToken);
         return punch.Id;
     }
 
@@ -44,16 +45,11 @@ public class PunchRepository : IPunchRepository
 
     public async Task<Punch?> GetPunch(Guid id, CancellationToken cancellationToken)
     {
-        var punch = await _modelContextBase.Punches
+        var punch = await GetSet()
             .Include(p => p.ChecklistItem)
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
         return punch;
-    }
-
-    public async Task SaveChanges(CancellationToken cancellationToken = default)
-    {
-        await _modelContextBase.SaveChangesAsync(cancellationToken);
     }
 
     //    public async Task<bool> PunchExists(string punchId, CancellationToken cancellationToken)

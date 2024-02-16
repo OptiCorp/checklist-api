@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Domain.Entities.ChecklistAggregate;
 using Infrastructure.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
 using MobDeMob.Domain.Entities;
@@ -20,8 +21,17 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
     public async Task<Mobilization?> GetMobilizationById(Guid mobilizationId, CancellationToken cancellationToken)
         => await GetSet().Include(m => m.Checklist).FirstOrDefaultAsync(x => x.Id == mobilizationId, cancellationToken);
 
+    // public async Task<IEnumerable<Mobilization>> GetAllMobilizations(CancellationToken cancellationToken)
+    //     => await GetAll(cancellationToken);
+
     public async Task<IEnumerable<Mobilization>> GetAllMobilizations(CancellationToken cancellationToken)
-        => await GetAll(cancellationToken);
+    {
+        return await GetSet()
+            .AsNoTracking()
+            .Include(m => m.Checklist)
+            .ThenInclude(c => c.ChecklistItems)
+            .ToListAsync(cancellationToken);
+    }
 
     public async Task DeleteMobilization(Guid id, CancellationToken cancellationToken)
         => await DeleteById(id, cancellationToken);
@@ -34,7 +44,16 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
                                 .ThenInclude(ci => ci.Questions)
                                 .SingleOrDefaultAsync(x => x.Id == mobilizationId, cancellationToken);
 
-
+    //TODO: simplify this:
+    public async Task<IEnumerable<ChecklistItem>> GetChecklistItemsByMobId(Guid Id, CancellationToken cancellationToken = default)
+    {
+        return await GetSet()
+                        .Where(m => m.Id == Id)
+                        .SelectMany(m => m.Checklist.ChecklistItems)
+                            .Include(ci => ci.Questions)
+                            .ToListAsync(cancellationToken);
+        //.SingleOrDefaultAsync(ci => ci.ItemId == itemId, cancellationToken);
+    }
     //public async Task RemovePartFromMobilization(string id, string partId, CancellationToken cancellationToken)
     //{
     //    var mob = await _modelContextBase.Mobilizations

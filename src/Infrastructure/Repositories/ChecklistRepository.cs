@@ -17,6 +17,12 @@ public class CheklistRepository : RepositoryBase<Checklist>, IChecklistRepositor
         return checklist.Id;
     }
 
+
     public async Task DeleteChecklist(Guid id, CancellationToken cancellationToken)
     => await DeleteById(id, cancellationToken);
+
+    public void RemovePartFromChecklist(Checklist checklist, string partId)
+    {
+        checklist.Parts.Remove(partId);
+    }
 }

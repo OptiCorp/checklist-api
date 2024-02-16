@@ -13,15 +13,6 @@ public class Checklist : AuditableEntity
     public IList<string> Parts { get; set; } = new List<string>();
     public ICollection<ChecklistItem> ChecklistItems {get; set;} = [];
 
-    public double GetCompletionPercentage()
-    {
-        var questions = ChecklistItems.SelectMany(ci => ci.Questions);
-        if (!questions.Any()) return 0;
-        var completionProgressionDecimal = (double)questions.Count(i => i.Checked) / questions.Count();
-        var completionPercentage = 100 * completionProgressionDecimal;
-        return completionPercentage;
-    }
-
     [NotMapped]
     public int ChecklistCountDone => ChecklistItems.Count(ci => ci.Status == Enums.ChecklistItemStatus.Completed);
 
