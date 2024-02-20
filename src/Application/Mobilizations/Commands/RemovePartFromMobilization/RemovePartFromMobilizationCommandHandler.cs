@@ -26,11 +26,12 @@ public class RemovePartFromMobilizationCommandHandler : IRequestHandler<RemovePa
     public async Task Handle(RemovePartFromMobilizationCommand request, CancellationToken cancellationToken)
     {
         var mobilization = await _mobilizationRepository.GetMobilizationById(request.Id, cancellationToken)
-            ?? throw new NotFoundException(nameof(Mobilization), request.Id); // same as above
+            ?? throw new NotFoundException(nameof(Mobilization), request.Id);
 
         if(!mobilization.Checklist.Parts.Any(id => request.PartId == id )) throw new NotFoundException("Part", request.PartId);
 
-        var checklistItem = await _checklistItemRepository.GetChecklistItemByItemId(request.PartId, mobilization.ChecklistId, cancellationToken) ?? throw new NotFoundException(nameof(ChecklistItem), request.PartId);
+        var checklistItem = await _checklistItemRepository.GetChecklistItemByItemId(request.PartId, mobilization.ChecklistId, cancellationToken) 
+            ?? throw new NotFoundException(nameof(ChecklistItem), request.PartId);
        
         RemovePartFromMobilization(mobilization.Checklist, request.PartId);
     

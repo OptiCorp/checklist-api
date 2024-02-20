@@ -28,11 +28,11 @@ public class ChecklistsController : ControllerBase
         _sender = sender;
     }
 
-    [HttpGet("GetPunches")]
+    [HttpGet("GetPunches/{checklistItemId}")]
 
-    public async Task<ActionResult<IEnumerable<PunchDto>>> GetPunches(Guid mobilizationId, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<PunchDto>>> GetPunches(Guid checklistItemId, CancellationToken cancellationToken)
     {
-        var punches = await _sender.Send(new GetPunchesQuery { MobilizationId = mobilizationId }, cancellationToken);
+        var punches = await _sender.Send(new GetPunchesQuery { ChecklistItemId = checklistItemId}, cancellationToken);
         return Ok(punches);
     }
 
@@ -61,7 +61,7 @@ public class ChecklistsController : ControllerBase
     public async Task<ActionResult<string>> UploadPunchFile(Guid punchId, [FromForm] FileModel fileModel, CancellationToken cancellationToken)
     {
         ICollection<PunchUploadFile> files = [];
-        foreach(var file in fileModel.files)
+        foreach (var file in fileModel.files)
         {
             files.Add(new PunchUploadFile()
             {
@@ -93,14 +93,14 @@ public class ChecklistsController : ControllerBase
     [HttpGet("GetChecklists")]
     public async Task<IActionResult> GetChecklists(Guid mobilizationId, CancellationToken cancellationToken)
     {
-        var checklistItems = await _sender.Send(new GetChecklistItemsQuery{MobilizationId = mobilizationId}, cancellationToken);
+        var checklistItems = await _sender.Send(new GetChecklistItemsQuery { MobilizationId = mobilizationId }, cancellationToken);
         return Ok(checklistItems);
     }
 
     [HttpGet("GetChecklistItem/{checklistItemId}")]
-    public async Task<IActionResult> GetChecklistItems(Guid mobilizationId, Guid checklistItemId,CancellationToken cancellationToken)
+    public async Task<IActionResult> GetChecklistItems(Guid mobilizationId, Guid checklistItemId, CancellationToken cancellationToken)
     {
-        var checklistItem = await _sender.Send(new GetChecklistItemQuery{ChecklistItemId = checklistItemId}, cancellationToken);
+        var checklistItem = await _sender.Send(new GetChecklistItemQuery { ChecklistItemId = checklistItemId }, cancellationToken);
         return Ok(checklistItem);
     }
 
@@ -110,7 +110,7 @@ public class ChecklistsController : ControllerBase
         await _sender.Send(removePartFromMobilizationCommand, cancellationToken);
         return NoContent();
     }
-    
+
     [HttpPut("UpdatePunch/{punchId}")]
     public async Task<IActionResult> UpdatePunch(UpdatePunchCommand updatePunchCommand, CancellationToken cancellationToken = default)
     {

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MobDeMob.Infrastructure;
 
@@ -11,9 +12,11 @@ using MobDeMob.Infrastructure;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ModelContextBase))]
-    partial class ModelContextBaseModelSnapshot : ModelSnapshot
+    [Migration("20240220083416_navigationItemTemplate")]
+    partial class navigationItemTemplate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,6 +275,9 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("ParentItemTemplateId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Revision")
                         .HasColumnType("nvarchar(max)");
 
@@ -280,6 +286,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentItemTemplateId");
 
                     b.ToTable("ItemTemplates");
                 });
@@ -341,6 +349,15 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Checklist");
                 });
 
+            modelBuilder.Entity("MobDeMob.Domain.ItemAggregate.ItemTemplate", b =>
+                {
+                    b.HasOne("MobDeMob.Domain.ItemAggregate.ItemTemplate", "ParentItemTemplate")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentItemTemplateId");
+
+                    b.Navigation("ParentItemTemplate");
+                });
+
             modelBuilder.Entity("Domain.Entities.ChecklistAggregate.ChecklistItem", b =>
                 {
                     b.Navigation("Punches");
@@ -357,6 +374,8 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("MobDeMob.Domain.ItemAggregate.ItemTemplate", b =>
                 {
+                    b.Navigation("Children");
+
                     b.Navigation("Questions");
                 });
 #pragma warning restore 612, 618

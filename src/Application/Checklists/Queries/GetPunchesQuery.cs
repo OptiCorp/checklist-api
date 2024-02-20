@@ -7,5 +7,5 @@ namespace Application.Checklists.Queries;
 
 public class GetPunchesQuery : IRequest<PunchListDto>
 {
-    public Guid MobilizationId {get; init;}
+    public Guid ChecklistItemId {get; init;}
 }

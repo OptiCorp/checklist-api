@@ -10,5 +10,7 @@ public interface IPunchRepository
     //    Task<bool> PunchExists(string punchId, CancellationToken cancellationToken);
     Task<Guid> AddPunch(Punch newPunch, CancellationToken cancellationToken = default);
 
-    Task SaveChanges (CancellationToken cancellationToken = default);
+    Task<IEnumerable<Punch>> GetPunchesForChecklistItem(Guid checklistItemId, CancellationToken cancellationToken = default);
+
+    Task SaveChanges(CancellationToken cancellationToken = default);
 }

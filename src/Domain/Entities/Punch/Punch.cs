@@ -22,7 +22,6 @@ public class Punch : AuditableEntity
     public ChecklistItem ChecklistItem {get; set;} = null!;
 
     //public ChecklistSection Section { get; set; } = null!;
-
     public required string Title { get; set; }
 
     public string? Description { get; set; }

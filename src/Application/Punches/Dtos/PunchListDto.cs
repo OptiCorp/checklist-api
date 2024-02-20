@@ -1,6 +1,7 @@
 using Application.Common.Mappings;
 using AutoMapper;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
+using MobDeMob.Domain.ItemAggregate;
 
 namespace Application.Punches.Dtos;
 
@@ -11,9 +12,12 @@ public class PunchListDto
 
     public IEnumerable<PunchDto> Punches {get; init;} = [];
 
-    public PunchListDto(IEnumerable<PunchDto> punches)
+    public ItemTemplate ItemTemplate {get; init;}
+
+    public PunchListDto(IEnumerable<PunchDto> punches, ItemTemplate itemTemplate)
     {
         Punches = punches;
+        ItemTemplate = itemTemplate;
     }
 
     // public void Mapping(Profile profile)
