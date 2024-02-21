@@ -35,12 +35,14 @@ public class SetChecklistCheckedValueCommandHandler : IRequestHandler<SetCheckli
     }
     public async Task Handle(SetChecklistItemQuestionPatchCommand request, CancellationToken cancellationToken)
     {
-        var checklistItemQuestion = await _checklistItemQuestionRepository.GetQuestion(request.Id, cancellationToken) ?? throw new NotFoundException(nameof(ChecklistItemQuestion), request.Id);
+        var checklistItemQuestion = await _checklistItemQuestionRepository.GetQuestion(request.Id, cancellationToken) 
+            ?? throw new NotFoundException(nameof(ChecklistItemQuestion), request.Id);
         ChangeChecklistItem(checklistItemQuestion, request.Patches);
         request.Patches.ApplyTo(checklistItemQuestion);
         await _checklistItemQuestionRepository.SaveChanges(cancellationToken);
     }
 
+    //TODO: should not be able to change "checked" to true if NotApplicable is also true, not sure how to validate this with Patch
     public void ChangeChecklistItem(ChecklistItemQuestion q, JsonPatchDocument<ChecklistItemQuestion> patches)
     {
         patches.ApplyTo(q);

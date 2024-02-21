@@ -28,6 +28,7 @@ public class RemovePartFromMobilizationCommandHandler : IRequestHandler<RemovePa
         var mobilization = await _mobilizationRepository.GetMobilizationById(request.Id, cancellationToken)
             ?? throw new NotFoundException(nameof(Mobilization), request.Id);
 
+        //TODO: needs to be handled differently if Items/Parts are to be moved to a separate table
         if(!mobilization.Checklist.Parts.Any(id => request.PartId == id )) throw new NotFoundException("Part", request.PartId);
 
         var checklistItem = await _checklistItemRepository.GetChecklistItemByItemId(request.PartId, mobilization.ChecklistId, cancellationToken) 

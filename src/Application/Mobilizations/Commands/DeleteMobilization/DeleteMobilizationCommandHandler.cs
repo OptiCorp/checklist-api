@@ -24,7 +24,7 @@ public class DeleteMobilizationCommandHandler : IRequestHandler<DeleteMobilizati
         var mobilization = await _mobilizationRepository.GetMobilizationById(request.Id, cancellationToken) 
             ?? throw new NotFoundException(nameof(Mobilization), request.Id);
 
-        mobilization.DeleteParts();
+        //mobilization.DeleteParts(); //TODO this shouldt be neccessasy since the dabase handles cascade delete
 
         await _checklistRepository.DeleteChecklist(mobilization.ChecklistId, cancellationToken);
     }

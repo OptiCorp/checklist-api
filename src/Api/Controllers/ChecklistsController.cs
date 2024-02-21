@@ -67,7 +67,7 @@ public class ChecklistsController : ControllerBase
             {
                 ContentType = file.ContentType,
                 FileName = file.FileName,
-                Stream = file.OpenReadStream()
+                Stream = file.OpenReadStream() //TODO: might slow down the system because of large memory allocation, especially with high solution images, should be asynchrounous as well maybe?
             });
         }
         // await _sender.Send(new PunchUploadFilesCommand { Id = punchId, ContentType = fileModel.file.ContentType, FileName = fileModel.file.FileName, Stream = fileModel.file.OpenReadStream() }, cancellationToken);

@@ -17,7 +17,7 @@ public class PunchUploadFileValidator : AbstractValidator<PunchUploadFile>
            .Must(x => x.Equals("image/jpeg") || x.Equals("image/jpg") || x.Equals("image/png"))
            .WithMessage("Only image files (JPEG, JPG, PNG) are allowed");
 
-        //TODO: add validator for stream?
+        //TODO: add validator for the stream?
     }
 }
 

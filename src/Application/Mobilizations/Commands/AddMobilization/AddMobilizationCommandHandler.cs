@@ -29,7 +29,7 @@ public class AddMobilizationCommandHandler : IRequestHandler<AddMobilizationComm
 
         return mobilization.Id;
     }
-
+   
     private static Mobilization MapToMobilization(AddMobilizationCommand request, Guid checklistId)
     {
         return new Mobilization

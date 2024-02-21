@@ -24,7 +24,7 @@ public class TemplateRepository : RepositoryBase<ItemTemplate>, ITemplateReposit
     public async Task<ItemTemplate?> GetTemplateById(Guid templateId, CancellationToken cancellationToken = default)
     {
         return await GetSet()
-            .Include(t => t.Questions)
+            .Include(t => t.Questions) //TODO: should getting questions be a separate repository call?
             .FirstOrDefaultAsync(x => x.Id == templateId, cancellationToken);
     }
 

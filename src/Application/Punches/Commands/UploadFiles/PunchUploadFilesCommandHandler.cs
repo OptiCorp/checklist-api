@@ -20,11 +20,12 @@ public class PunchUploadFileCommandHandler : IRequestHandler<PunchUploadFilesCom
 
     public async Task Handle(PunchUploadFilesCommand request, CancellationToken cancellationToken)
     {
-        var punch = await _punchRepository.GetPunch(request.Id, cancellationToken) ?? throw new Exception($"Punch with id: '{request.Id}' does not exist");
+        var punch = await _punchRepository.GetPunch(request.Id, cancellationToken) 
+            ?? throw new Exception($"Punch with id: '{request.Id}' does not exist");
 
         var checklistId = punch.ChecklistItem.ChecklistId.ToString();
 
-
+        //upload file, close file, add image uri to ImageBlobUris
         foreach(var file in request.Files)
         {
             var blobUri = await _fileStorageRepository.UploadImage(file.Stream, file.FileName, checklistId, file.ContentType, cancellationToken);
@@ -32,6 +33,7 @@ public class PunchUploadFileCommandHandler : IRequestHandler<PunchUploadFilesCom
             punch.ImageBlobUris.Add(blobUri);
         }
 
+        //generate SASToke and set the key-value (checklistId: SAStoken)
         var containerSAS = _cacheRepository.GetValue(punch.ChecklistItem.ChecklistId.ToString());
         if (containerSAS == null)
         {

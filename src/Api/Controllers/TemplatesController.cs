@@ -22,7 +22,7 @@ namespace Api.Controllers
         [HttpGet("{templateId}")]
         public async Task<IActionResult> GetTemplateById([FromRoute] Guid templateId, CancellationToken cancellationToken = default)
         {
-            var id = await _sender.Send(new GetByIdCommand { TemplateId = templateId }, cancellationToken);
+            var id = await _sender.Send(new GetByIdQuery { TemplateId = templateId }, cancellationToken);
             return Ok(id);
         }
 

@@ -44,16 +44,6 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
                                 .ThenInclude(ci => ci.Questions)
                                 .SingleOrDefaultAsync(x => x.Id == mobilizationId, cancellationToken);
 
-    //TODO: simplify this:
-    public async Task<IEnumerable<ChecklistItem>> GetChecklistItemsByMobId(Guid Id, CancellationToken cancellationToken = default)
-    {
-        return await GetSet()
-                        .Where(m => m.Id == Id)
-                        .SelectMany(m => m.Checklist.ChecklistItems)
-                            .Include(ci => ci.Questions)
-                            .ToListAsync(cancellationToken);
-        //.SingleOrDefaultAsync(ci => ci.ItemId == itemId, cancellationToken);
-    }
     //public async Task RemovePartFromMobilization(string id, string partId, CancellationToken cancellationToken)
     //{
     //    var mob = await _modelContextBase.Mobilizations

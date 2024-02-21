@@ -22,6 +22,7 @@ public class UpdateMobilizationCommandHandler : IRequestHandler<UpdateMobilizati
         await _mobilizationRepository.SaveChanges(cancellationToken);
     }
 
+    //TODO: Not sure if the frontend should be allowed to send Description for example, as null. If so should the description be updated or not?
     private static Mobilization ChangeMobilization(Mobilization mobilization, UpdateMobilizationCommand request)
     {
         mobilization.Title = request.Title;
