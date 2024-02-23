@@ -11,13 +11,15 @@ namespace Application.Punches.Dtos;
 
 public class PunchDto : DtoExtension
 {
-    public required string Title { get; set; }
+    public required string Title { get; init; }
 
-    public Guid ChecklistItemId { get; set; }
+    public Guid ChecklistItemId { get; init; }
 
-    public string? Description { get; set; }
+    public string? Description { get; init; }
 
-    public IReadOnlyCollection<Uri> ImageBlobUris { get; set; } = [];
+    public string? SasToken {get; init;}
+
+    public IReadOnlyCollection<Uri> ImageBlobUris { get; init; } = [];
 
     // public void Mapping(Profile profile)
     // {

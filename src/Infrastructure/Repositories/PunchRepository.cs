@@ -65,6 +65,13 @@ public class PunchRepository : RepositoryBase<Punch>, IPunchRepository
             .ToListAsync(cancellationToken: cancellationToken);
     }
 
+    public async Task<IEnumerable<Guid>> GetPunchIds(Guid checklistItemId, CancellationToken cancellationToken = default)
+    {
+        return await GetSet()
+            .Where(p => p.ChecklistItemId == checklistItemId)
+            .Select(p => p.Id).ToListAsync(cancellationToken);
+    }
+
     //    public async Task<bool> PunchExists(string punchId, CancellationToken cancellationToken)
     //    {
     //        return await _modelContextBase.Punches

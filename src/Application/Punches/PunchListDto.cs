@@ -1,3 +1,4 @@
+using Application.Templates;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
 using MobDeMob.Domain.ItemAggregate;
 
@@ -8,14 +9,18 @@ public class PunchListDto
 
     public string? SASToken {get; set;}
 
-    public IEnumerable<PunchDto> Punches {get; init;} = [];
+    public Guid ChecklistItemId {get; init;}
 
-    public ItemTemplate ItemTemplate {get; init;}
+    public IEnumerable<Guid> PunchIds {get; init;} = [];
 
-    public PunchListDto(IEnumerable<PunchDto> punches, ItemTemplate itemTemplate)
+    public ItemTemplateDto ItemTemplate {get; init;}
+
+    public PunchListDto(IEnumerable<Guid> punchIds, ItemTemplateDto itemTemplate, Guid checklistItemId, string? sasToken)
     {
-        Punches = punches;
+        PunchIds = punchIds;
         ItemTemplate = itemTemplate;
+        ChecklistItemId = checklistItemId;
+        SASToken = sasToken;
     }
 
     // public void Mapping(Profile profile)

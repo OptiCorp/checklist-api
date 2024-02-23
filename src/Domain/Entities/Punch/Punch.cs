@@ -1,4 +1,5 @@
-﻿using Domain.Entities.ChecklistAggregate;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Entities.ChecklistAggregate;
 using MobDeMob.Domain.Common;
 
 namespace MobDeMob.Domain.Entities.ChecklistAggregate;
@@ -27,6 +28,9 @@ public class Punch : AuditableEntity
     public string? Description { get; set; }
 
     public IList<Uri> ImageBlobUris { get; set; } = [];
+
+    [NotMapped]
+    public string? SasToken {get; set;}
 
     //[NotMapped]
     //public Part Part => Section.Part;

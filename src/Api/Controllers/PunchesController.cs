@@ -1,26 +1,25 @@
-﻿//using Api.Utilities;
-//using Application.Punches.Dtos;
-//using Application.Punches.Queries.GetById;
-//using MediatR;
-//using Microsoft.AspNetCore.Mvc;
-//using MobDeMob.Application.Punches.Commands;
+﻿using Api.Utilities;
+using Application.Punches.Dtos;
+using Application.Punches.Queries.GetById;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
-//namespace Api.Controllers;
+namespace Api.Controllers;
 
-//[ApiController]
-//[Route("api/[controller]")]
-//public class PunchesController : ControllerBase
-//{
-//    private readonly ILogger<PunchesController> _logger;
-//    private readonly ISender _sender;
+[ApiController]
+[Route("api/[controller]")]
+public class PunchesController : ControllerBase
+{
+   private readonly ILogger<PunchesController> _logger;
+   private readonly ISender _sender;
 
-//    public PunchesController(ILogger<PunchesController> logger, ISender sender)
-//    {
-//        _logger = logger;
-//        _sender = sender;
-//    }
+   public PunchesController(ILogger<PunchesController> logger, ISender sender)
+   {
+       _logger = logger;
+       _sender = sender;
+   }
 
-//    [HttpPost("CreatePunch")]
+//   [HttpPost("CreatePunch")]
 
 //    public async Task<ActionResult<string>> CreatePunch(CreatePunchCommand createPunchCommand, CancellationToken cancellationToken = default)
 //    {
@@ -36,11 +35,11 @@
 //        return Ok(absUri);
 //    }
 
-//    [HttpGet("GetSinglePunch{punchId}")]
+    [HttpGet("GetSinglePunch{punchId}")]
 
-//    public async Task<ActionResult<PunchDto>> GetSinglePunch(string punchId, CancellationToken cancellationToken)
-//    {
-//        var punch = await _sender.Send(new GetPunchQuery { punchId = punchId }, cancellationToken);
-//        return Ok(punch);
-//    }
-//}
+   public async Task<ActionResult<PunchDto>> GetSinglePunch(Guid punchId, CancellationToken cancellationToken)
+   {
+       var punch = await _sender.Send(new GetPunchQuery { punchId = punchId }, cancellationToken);
+       return Ok(punch);
+   }
+}

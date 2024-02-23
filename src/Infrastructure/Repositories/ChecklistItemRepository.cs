@@ -12,7 +12,7 @@ namespace Infrastructure.Repositories
     {
         public ChecklistItemRepository(ModelContextBase modelContextBase) : base(modelContextBase)
         {
-           
+
         }
 
         public async Task<Guid> AddChecklistItem(ChecklistItem checklistItem, CancellationToken cancellationToken = default)
@@ -63,6 +63,14 @@ namespace Infrastructure.Repositories
         public async Task DeleteChecklistItem(Guid Id, CancellationToken cancellationToken = default)
         {
             await DeleteById(Id, cancellationToken);
+        }
+
+        public async Task<ChecklistItem?> GetChecklistItemWithTemplate(Guid checklistItemId, CancellationToken cancellationToken = default)
+        {
+            return await GetSet()
+                 .Include(c => c.Template)
+                 //.Include(c => c.Template)
+                 .SingleOrDefaultAsync(c => c.Id == checklistItemId, cancellationToken);
         }
     }
 }

@@ -18,6 +18,8 @@ namespace Application.Common.Interfaces
 
         Task DeleteChecklistItem(Guid Id, CancellationToken cancellationToken = default);
 
+        Task<ChecklistItem?> GetChecklistItemWithTemplate(Guid checklistItemId, CancellationToken cancellationToken = default);
+
 
         Task SaveChanges(CancellationToken cancellationToken);
     }
