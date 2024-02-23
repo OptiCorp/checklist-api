@@ -7,7 +7,7 @@ namespace Application.Punches.Dtos;
 public class PunchListDto
 {
 
-    public string? SASToken {get; set;}
+    public string? SASToken {get; init;}
 
     public Guid ChecklistItemId {get; init;}
 

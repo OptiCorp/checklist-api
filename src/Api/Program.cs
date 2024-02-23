@@ -14,15 +14,12 @@ builder.Services
     .AddAzureClient(builder.Configuration)
     .AddMemoryCacheService();
 
-// Add services to the container.
-
 builder.Services.AddControllers(options =>
 {
     options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter());
 }).AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-    //options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -31,10 +28,6 @@ builder.Services.AddSwaggerGen(opt => opt.DocumentFilter<JsonPatchDocumentFilter
 //builder.Services.AddSwaggerGen();
 
 builder.Services.AddSwaggerGenNewtonsoftSupport();
-
-// builder.Services.AddDbContext<ModelContextBase>(opt => opt.UseSqlServer(
-//     builder.Configuration.GetConnectionString("SqlDatabase"), x => x.MigrationsAssembly("Infrastructure"))
-// );
 
 var app = builder.Build();
 
