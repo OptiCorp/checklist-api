@@ -1,5 +1,3 @@
-using Application.Common.Mappings;
-using AutoMapper;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
 using MobDeMob.Domain.ItemAggregate;
 

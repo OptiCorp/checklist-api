@@ -1,7 +1,5 @@
 ﻿using Application.Common.Interfaces;
 using Application.Punches.Dtos;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Domain.Entities.ChecklistAggregate;
 using Infrastructure.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +33,7 @@ namespace Infrastructure.Repositories
         public async Task<IEnumerable<ChecklistItem>> GetChecklistItems(Guid checklistId, CancellationToken cancellationToken = default)
         {
             return await GetSet()
-                .Include(ci => ci.Questions)
+                .Include(ci => ci.Template)
                 .Where(ci => ci.ChecklistId == checklistId)
                 .ToListAsync(cancellationToken);
         }
@@ -44,7 +42,7 @@ namespace Infrastructure.Repositories
         {
             return await GetSet()
                 .Include(c => c.Questions)
-                .Include(c => c.Template)
+                //.Include(c => c.Template)
                 .SingleOrDefaultAsync(c => c.Id == checklistItemId, cancellationToken);
         }
 

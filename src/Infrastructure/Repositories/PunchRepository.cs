@@ -1,19 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Application.Punches;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
-using AutoMapper.QueryableExtensions;
 using Application.Punches.Dtos;
 using Infrastructure.Repositories.Common;
 
 namespace MobDeMob.Infrastructure.Repositories;
 
-public class PunchRepository : RepositoryBase<Punch>, IPunchRepository 
+public class PunchRepository : RepositoryBase<Punch>, IPunchRepository
 {
 
 
     public PunchRepository(ModelContextBase modelContextBase) : base(modelContextBase)
     {
-        
+
     }
 
     //    public async Task AssociatePunchWithUrl(Guid id, Uri blobUri, CancellationToken cancellationToken)
@@ -50,6 +49,13 @@ public class PunchRepository : RepositoryBase<Punch>, IPunchRepository
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
         return punch;
+    }
+
+    public async Task<int> GetPunchesCount(Guid checklistItemId, CancellationToken cancellationToken = default)
+    {
+        return await GetSet()
+            .Where(p => p.ChecklistItemId == checklistItemId)
+            .CountAsync(cancellationToken);
     }
 
     public async Task<IEnumerable<Punch>> GetPunchesForChecklistItem(Guid checklistItemId, CancellationToken cancellationToken = default)

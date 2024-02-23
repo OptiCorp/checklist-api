@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Domain.Entities.TemplateAggregate;
+using Mapster;
 using MediatR;
 using MobDeMob.Domain.ItemAggregate;
 
@@ -19,23 +20,6 @@ public class GetByIdQueryHandler : IRequestHandler<GetByIdQuery, ItemTemplateDto
     {
         var itemTemplate =  await _templateRepository.GetTemplateById(request.TemplateId, cancellationToken) 
             ?? throw new NotFoundException(nameof(ItemTemplate), request.TemplateId);;
-        return MapToTemplateDto(itemTemplate, itemTemplate.Questions);
-    }
-
-    private static ItemTemplateDto MapToTemplateDto(ItemTemplate itemTemplate, IEnumerable<QuestionTemplate> questions)
-    {
-        return new ItemTemplateDto(questions)
-        {
-            Id = itemTemplate.Id,
-            ItemId = itemTemplate.ItemId,
-            Name = itemTemplate.Name,
-            Type = itemTemplate.Type,
-            Created = itemTemplate.Created,
-            CreatedBy = itemTemplate.CreatedBy,
-            Description = itemTemplate.Description,
-            LastModified = itemTemplate.LastModified,
-            LastModifiedBy = itemTemplate.LastModifiedBy,
-            Revision = itemTemplate.Revision,
-        };
+        return itemTemplate.Adapt<ItemTemplateDto>();
     }
 }

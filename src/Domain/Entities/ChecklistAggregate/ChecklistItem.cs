@@ -1,4 +1,5 @@
-﻿using MobDeMob.Domain.Common;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using MobDeMob.Domain.Common;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
 using MobDeMob.Domain.Enums;
 using MobDeMob.Domain.ItemAggregate;
@@ -16,13 +17,17 @@ public class ChecklistItem : AuditableEntity
 
     public Guid TemplateId { get; set; }
 
-    public ItemTemplate Template { get; set; }
+    public ItemTemplate Template { get; set; } = null!;
 
     public ICollection<ChecklistItemQuestion> Questions { get; set; } = [];
 
-    public ICollection<Punch> Punches {get; set;} = [];
+    public ICollection<Punch> Punches { get; set; } = [];
 
-    public ChecklistItemStatus Status {get; set;}
+
+    [NotMapped]
+    public int? PunchesCount {get; set;}
+
+    public ChecklistItemStatus Status { get; set; }
 
     public double CompletionPercentage => GetCompletionPercentage();
 
@@ -47,4 +52,6 @@ public class ChecklistItem : AuditableEntity
         var completionPercentage = 100 * completionProgressionDecimal;
         return completionPercentage;
     }
+
+
 }

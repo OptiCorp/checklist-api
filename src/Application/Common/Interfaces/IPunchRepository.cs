@@ -12,5 +12,9 @@ public interface IPunchRepository
 
     Task<IEnumerable<Punch>> GetPunchesForChecklistItem(Guid checklistItemId, CancellationToken cancellationToken = default);
 
+    Task<int> GetPunchesCount (Guid checklistItemId, CancellationToken cancellationToken = default);
+
     Task SaveChanges(CancellationToken cancellationToken = default);
+
+    
 }

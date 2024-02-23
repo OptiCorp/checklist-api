@@ -1,6 +1,6 @@
 using Application.Common.Interfaces;
 using Application.Mobilizations.Dtos;
-using AutoMapper;
+using Mapster;
 using MediatR;
 using MobDeMob.Application.Mobilizations;
 using MobDeMob.Domain.Entities;
@@ -12,18 +12,20 @@ public class GetAllMobilizationsQueryHandler : IRequestHandler<GetAllMobilizatio
 {
     private readonly IMobilizationRepository _mobilizationRepository;
 
-     private readonly IMapper _mapper;
+    //private readonly IMapper _mapper;
 
-    public GetAllMobilizationsQueryHandler(IMobilizationRepository mobilizationRepository, IMapper mapper)
+    public GetAllMobilizationsQueryHandler(IMobilizationRepository mobilizationRepository)
     {
         _mobilizationRepository = mobilizationRepository;
-        _mapper = mapper;
+
     }
     public async Task<IEnumerable<MobilizationDto>> Handle(GetAllMobilizationsQuery request, CancellationToken cancellationToken)
     {
         var mobilizations = await _mobilizationRepository.GetAllMobilizations(cancellationToken);
         //var mobilizationsDto = mobilizations.Select(mob => mob.AsDto());
-        var mobilizationDtos = mobilizations.Select(m => _mapper.Map<MobilizationDto>(m));
+        // var mobilizationDtos = mobilizations.Select(m => _mapper.Map<MobilizationDto>(m));
+        var mobilizationDtos = mobilizations.AsQueryable().ProjectToType<MobilizationDto>();
+
         return mobilizationDtos;
 
     }

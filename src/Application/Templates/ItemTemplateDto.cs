@@ -1,11 +1,13 @@
 using System.Text.Json.Serialization;
 using Application.Common;
 using Domain.Entities.TemplateAggregate;
+using Mapster;
 using MobDeMob.Domain.Common;
+using MobDeMob.Domain.ItemAggregate;
 
 namespace Application.Templates;
 
-public class ItemTemplateDto : DtoExtension
+public class ItemTemplateDto : DtoExtension, IRegister
 {
     public required string ItemId { get; set; }
 
@@ -22,8 +24,13 @@ public class ItemTemplateDto : DtoExtension
 
     public IEnumerable<QuestionTemplate> Questions { get; set; } = [];
 
-    public ItemTemplateDto(IEnumerable<QuestionTemplate> questions)
+    // public ItemTemplateDto(IEnumerable<QuestionTemplate> questions)
+    // {
+    //     Questions = questions;
+    // }
+
+    public void Register(TypeAdapterConfig config)
     {
-        Questions = questions;
+        config.NewConfig<ItemTemplate, ItemTemplateDto>();
     }
 }

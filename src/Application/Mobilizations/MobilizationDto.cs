@@ -1,11 +1,10 @@
 ﻿using Application.Common;
-using Application.Common.Mappings;
-using AutoMapper;
+using Mapster;
 using MobDeMob.Domain.Entities;
 
 namespace Application.Mobilizations.Dtos;
 
-public class MobilizationDto : DtoExtension, IMapFrom<Mobilization>
+public class MobilizationDto : DtoExtension
 {
     public required string Title { get; init; }
     public string? Description { get; init; }
@@ -23,9 +22,8 @@ public class MobilizationDto : DtoExtension, IMapFrom<Mobilization>
     //public double CompletionPercentage {get; init;}
 
     // public IList<string> PartIds {get; set;} = [];
-
-    public void Mapping(Profile profile)
+    public void Register(TypeAdapterConfig config)
     {
-        profile.CreateMap<Mobilization, MobilizationDto>();
+        config.NewConfig<Mobilization, MobilizationDto>();
     }
 }

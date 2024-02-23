@@ -3,8 +3,8 @@ using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Punches;
 using Application.Punches.Dtos;
-using AutoMapper;
 using Domain.Entities.ChecklistAggregate;
+using Mapster;
 using MediatR;
 using MobDeMob.Application.Common.Interfaces;
 using MobDeMob.Application.Mobilizations;
@@ -27,16 +27,16 @@ public class GetPunchesQueryHandler : IRequestHandler<GetPunchesQuery, PunchList
 
     private readonly IFileStorageRepository _fileStorageRepository;
 
-    private readonly IMapper _mapper;
 
-    public GetPunchesQueryHandler(IMobilizationRepository mobilizationRepository, IChecklistItemRepository checklistItemRepository, ICacheRepository cacheRepository, IFileStorageRepository fileStorageRepository, IPunchRepository punchRepository, IMapper mapper)
+
+    public GetPunchesQueryHandler(IMobilizationRepository mobilizationRepository, IChecklistItemRepository checklistItemRepository, ICacheRepository cacheRepository, IFileStorageRepository fileStorageRepository, IPunchRepository punchRepository)
     {
         _mobilizationRepository = mobilizationRepository;
         _checklistItemRepository = checklistItemRepository;
         _cacheRepository = cacheRepository;
         _fileStorageRepository = fileStorageRepository;
         _punchRepository = punchRepository;
-        _mapper = mapper;
+
     }
     public async Task<PunchListDto> Handle(GetPunchesQuery request, CancellationToken cancellationToken)
     {
@@ -47,7 +47,9 @@ public class GetPunchesQueryHandler : IRequestHandler<GetPunchesQuery, PunchList
             ?? throw new NotFoundException(nameof(ChecklistItem), request.ChecklistItemId);
 
         var punches = await _punchRepository.GetPunchesForChecklistItem(request.ChecklistItemId, cancellationToken);
-        var punchesDto = punches.Select(p => _mapper.Map<PunchDto>(p));
+        //var punchesDto = punches.Select(p => _mapper.Map<PunchDto>(p));
+        var punchesDto = punches.AsQueryable().ProjectToType<PunchDto>();
+
         if (!punches.Any())
         {
             return MapToPunchDtoList([], checklistItem.Template);
