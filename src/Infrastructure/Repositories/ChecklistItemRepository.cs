@@ -25,7 +25,6 @@ namespace Infrastructure.Repositories
         public async Task<ChecklistItem?> GetChecklistItemByItemId(string itemId, Guid checklistId, CancellationToken cancellationToken = default)
         {
             return await GetSet()
-                .Include(ci => ci.Punches)
                 .Where(ci => ci.ChecklistId == checklistId)
                 .SingleOrDefaultAsync(ci => ci.ItemId == itemId, cancellationToken);
         }
@@ -46,23 +45,14 @@ namespace Infrastructure.Repositories
                 .SingleOrDefaultAsync(c => c.Id == checklistItemId, cancellationToken);
         }
 
-        // public async Task<IEnumerable<Punch>> GetChecklistItemsWithPunches(Guid checklistItemId, CancellationToken cancellationToken = default)
-        // {
-        //     var punches = await GetSet()
-        //         .Include(ci => ci.Punches)
-        //         .Where(ci => ci.ChecklistId == checklistId && ci.Punches.Count > 0)
-        //         .SelectMany(ci => ci.Punches)
-        //         //.Select(p => _mapper.Map<Pun)
-        //         //.ProjectTo<PunchDto>(_mapper.ConfigurationProvider)
-        //         .ToListAsync(cancellationToken);
-
-        //     return punches;
-        //     //.ToListAsync(cancellationToken)
-        // }
-
         public async Task DeleteChecklistItem(Guid Id, CancellationToken cancellationToken = default)
         {
             await DeleteById(Id, cancellationToken);
+        }
+
+        public void RemoveChecklistItem(ChecklistItem checklistItem, CancellationToken cancellationToken = default)
+        {
+            Remove(checklistItem);
         }
 
         public async Task<ChecklistItem?> GetChecklistItemWithTemplate(Guid checklistItemId, CancellationToken cancellationToken = default)

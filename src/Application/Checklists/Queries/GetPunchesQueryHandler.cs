@@ -41,40 +41,30 @@ public class GetPunchesQueryHandler : IRequestHandler<GetPunchesQuery, PunchList
     }
     public async Task<PunchListDto> Handle(GetPunchesQuery request, CancellationToken cancellationToken)
     {
-        // var mobilization = await _mobilizationRepository.GetMobilizationById(request.MobilizationId, cancellationToken)
-        //     ?? throw new NotFoundException(nameof(Mobilization), request.MobilizationId); 
-
         var checklistItem = await _checklistItemRepository.GetChecklistItemWithTemplate(request.ChecklistItemId, cancellationToken)
-            ?? throw new NotFoundException(nameof(ChecklistItem), request.ChecklistItemId);
+             ?? throw new NotFoundException(nameof(ChecklistItem), request.ChecklistItemId);
 
         var punches = await _punchRepository.GetPunchesForChecklistItem(request.ChecklistItemId, cancellationToken);
-        //var punchesDto = punches.Select(p => _mapper.Map<PunchDto>(p));
+        
         var punchesIds = punches.Select(p => p.Id);
         var itemTemplateDto = checklistItem.Template.Adapt<ItemTemplateDto>();
-        if (!punches.Any())
-        {
-            return MapToPunchDtoList([], itemTemplateDto, checklistItem.Id, null);
-        }
-        else
-        {
-            var anyBlobUrisInPunches = punches.Any(p => p.ImageBlobUris.Any());
-            if (!anyBlobUrisInPunches) return MapToPunchDtoList(punchesIds, itemTemplateDto, checklistItem.Id, null);
-        }
 
-
+        if (!punches.Any() || !punches.Any(p => p.ImageBlobUris.Any()))
+        {
+            return MapToPunchDtoList(punchesIds, itemTemplateDto, checklistItem.Id, null);
+        }
 
         var checklistId = checklistItem.ChecklistId;
         var containerSAS = _cacheRepository.GetValue(checklistId.ToString());
+
         if (containerSAS == null)
         {
             var newContainerSAS = await _fileStorageRepository.GenerateContainerSAS(checklistId.ToString(), cancellationToken);
             _cacheRepository.SetKeyValue(checklistId.ToString(), newContainerSAS, TimeSpan.FromHours(1));
-            //punchDtos = punches.Select(p => p.AsDto());
             return MapToPunchDtoList(punchesIds, itemTemplateDto, checklistId, newContainerSAS.Query);
         }
-        //punchDtos = punches.Select(p => p.AsDto());
+
         return MapToPunchDtoList(punchesIds, itemTemplateDto, checklistId, containerSAS.Query);
-        // return punches.Select(p => p.AsDto(containerSAS));
     }
 
     private static PunchListDto MapToPunchDtoList(IEnumerable<Guid> punchesIds, ItemTemplateDto itemTemplate, Guid checklistItemId, string? SASToken = null)

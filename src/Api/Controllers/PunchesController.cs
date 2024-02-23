@@ -35,7 +35,7 @@ public class PunchesController : ControllerBase
 //        return Ok(absUri);
 //    }
 
-    [HttpGet("GetSinglePunch{punchId}")]
+    [HttpGet("GetSinglePunch/{punchId}")]
 
    public async Task<ActionResult<PunchDto>> GetSinglePunch(Guid punchId, CancellationToken cancellationToken)
    {

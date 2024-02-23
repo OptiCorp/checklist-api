@@ -20,6 +20,8 @@ namespace Application.Common.Interfaces
 
         Task<ChecklistItem?> GetChecklistItemWithTemplate(Guid checklistItemId, CancellationToken cancellationToken = default);
 
+        void RemoveChecklistItem(ChecklistItem checklistItem, CancellationToken cancellationToken = default);
+
 
         Task SaveChanges(CancellationToken cancellationToken);
     }

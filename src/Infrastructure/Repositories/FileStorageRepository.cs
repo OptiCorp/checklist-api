@@ -65,21 +65,6 @@ public class FileStorageRepositories : IFileStorageRepository
         await container.CreateIfNotExistsAsync(PublicAccessType.None, cancellationToken: cancellationToken);
         return container;
     }
-    // private async Task<Uri> GetContainer(string containerName, CancellationToken cancellationToken)
-    // {
-
-    //     BlobContainerClient container = await _blobServiceClient.CreateBlobContainerAsync(containerName, cancellationToken: cancellationToken);
-
-    //     if (await container.ExistsAsync(cancellationToken))
-    //     {
-    //         return container.Uri;
-    //     }
-
-    //     else
-    //     {
-    //         throw new Exception("Error creating the container");
-    //     }
-    // }
 
 
     private static string CreateBlobName(Guid fileId, string fileName)
@@ -103,17 +88,7 @@ public class FileStorageRepositories : IFileStorageRepository
                 ContentType = contentType,
             }
         });
-        //var userDelegationKey = await RequestUserDelegationKey();
-        //Uri containerSASURI = CreateUserDelegationSASContainer(container, userDelegationKey);
 
-        //BlobUriBuilder sasUriBuilder = CreateUserDelegationSASContainer(container, userDelegationKey);
-
-
-        //blobInstance.GenerateSasUri(sasBuilder)
-        //var absUrl = string.Concat(blobInstance.Uri.AbsoluteUri, "?", containerSASURI.AbsoluteUri);
-
-        //sasUriBuilder.BlobName = blobInstance.Name;
-        //return sasUriBuilder.ToString();
         return blobInstance.Uri;
     }
 

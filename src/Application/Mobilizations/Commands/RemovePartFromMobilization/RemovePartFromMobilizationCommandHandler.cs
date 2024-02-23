@@ -36,7 +36,7 @@ public class RemovePartFromMobilizationCommandHandler : IRequestHandler<RemovePa
        
         RemovePartFromMobilization(mobilization.Checklist, request.PartId);
     
-        await RemovePartFromChecklistItems(checklistItem.Id);
+        RemovePartFromChecklistItems(checklistItem);
 
         await _checklistRepository.SaveChanges(cancellationToken);
     }
@@ -46,8 +46,9 @@ public class RemovePartFromMobilizationCommandHandler : IRequestHandler<RemovePa
         _checklistRepository.RemovePartFromChecklist(checklist, Id);
     }
 
-    private async Task RemovePartFromChecklistItems(Guid Id)
+    private void RemovePartFromChecklistItems(ChecklistItem checklistItem)
     {
-        await _checklistItemRepository.DeleteChecklistItem(Id);
+        //await _checklistItemRepository.DeleteChecklistItem(Id);
+        _checklistItemRepository.RemoveChecklistItem(checklistItem);
     }
 }

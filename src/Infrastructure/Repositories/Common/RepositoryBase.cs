@@ -8,12 +8,12 @@ public abstract class RepositoryBase<T> where T : Entity
 {
     protected readonly ModelContextBase _modelContextBase;
 
-   
+
 
 
     public RepositoryBase(ModelContextBase modelContextBase)
     {
-        _modelContextBase = modelContextBase;   
+        _modelContextBase = modelContextBase;
 
     }
 
@@ -38,5 +38,9 @@ public abstract class RepositoryBase<T> where T : Entity
 
     protected async Task DeleteById(Guid id, CancellationToken cancellationToken = default)
         => await GetSet().Where(m => m.Id == id).ExecuteDeleteAsync(cancellationToken);
-    
+
+    protected void Remove(T entity)
+        => _modelContextBase.Remove(entity);
+
+
 }
