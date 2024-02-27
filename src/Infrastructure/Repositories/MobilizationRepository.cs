@@ -1,6 +1,10 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Mappings;
+using Application.Common.Models;
+using Application.Mobilizations.Dtos;
 using Domain.Entities.ChecklistAggregate;
 using Infrastructure.Repositories.Common;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using MobDeMob.Domain.Entities;
 
@@ -8,6 +12,9 @@ namespace MobDeMob.Infrastructure.Repositories;
 
 public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizationRepository
 {
+
+
+
     public MobilizationRepository(ModelContextBase modelContextBase) : base(modelContextBase)
     {
     }
@@ -41,6 +48,18 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
 
         => await GetSet().Include(m => m.Checklist)
                             .ThenInclude(c => c.ChecklistItems)
-                                .ThenInclude(ci => ci.Questions)
+                                //.ThenInclude(ci => ci.Questions)
                                 .SingleOrDefaultAsync(x => x.Id == mobilizationId, cancellationToken);
+
+    public async Task<PaginatedList<MobilizationDto>> GetAllMobilizationsWithPagination(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+    {
+        return await GetSet()
+            .OrderBy(x => x.Title)
+            .Include(m => m.Checklist)
+            .ThenInclude(c => c.ChecklistItems)
+            .ProjectToType<MobilizationDto>()
+            .PaginatedListAsync(pageNumber, pageSize);
+            
+            //.PaginatedListAsync(pageNumber, pageSize);
+    }
 }

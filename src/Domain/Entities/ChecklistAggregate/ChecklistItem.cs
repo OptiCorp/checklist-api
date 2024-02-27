@@ -46,8 +46,10 @@ public class ChecklistItem : AuditableEntity
     private double GetCompletionPercentage()
     {
         //var questions = ChecklistItems.SelectMany(ci => ci.Questions);
-        if (!Questions.Any()) return 0;
+        if (Questions.Count == 0) return 0;
         var questionsApplicable = Questions.Where(q => q.NotApplicable == false);
+        if (!questionsApplicable.Any()) return 0;
+        
         var completionProgressionDecimal = (double)questionsApplicable.Count(i => i.Checked) / questionsApplicable.Count();
         var completionPercentage = 100 * completionProgressionDecimal;
         return completionPercentage;

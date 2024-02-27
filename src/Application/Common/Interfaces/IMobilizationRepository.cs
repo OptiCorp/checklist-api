@@ -1,4 +1,6 @@
-﻿using MobDeMob.Domain.Entities;
+﻿using Application.Common.Models;
+using Application.Mobilizations.Dtos;
+using MobDeMob.Domain.Entities;
 
 namespace Application.Common.Interfaces;
 
@@ -11,6 +13,9 @@ public interface IMobilizationRepository
     Task<Mobilization?> GetMobilizationByIdWithChecklistItems(Guid id, CancellationToken cancellationToken = default);
 
     Task<IEnumerable<Mobilization>> GetAllMobilizations(CancellationToken cancellationToken = default);
+
+    Task<PaginatedList<MobilizationDto>> GetAllMobilizationsWithPagination(int pageNumber, int pageSize, CancellationToken cancellationToken = default);
+
 
     Task DeleteMobilization(Guid id, CancellationToken cancellationToken = default);
 

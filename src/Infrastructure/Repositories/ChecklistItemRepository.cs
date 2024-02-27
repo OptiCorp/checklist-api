@@ -1,10 +1,15 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Checklists.Dtos;
+using Application.Common.Interfaces;
+using Application.Common.Models;
 using Application.Punches.Dtos;
 using Domain.Entities.ChecklistAggregate;
 using Infrastructure.Repositories.Common;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
 using MobDeMob.Infrastructure;
+using Application.Common.Mappings;
+
 
 namespace Infrastructure.Repositories
 {
@@ -61,6 +66,15 @@ namespace Infrastructure.Repositories
                  .Include(c => c.Template)
                  //.Include(c => c.Template)
                  .SingleOrDefaultAsync(c => c.Id == checklistItemId, cancellationToken);
+        }
+
+        public async Task<PaginatedList<ChecklistItemBriefDto>> GetChecklistItemsWithPagination(Guid checklistId, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+        {
+            return await GetSet()
+                .Where(ci => ci.ChecklistId == checklistId)
+                .OrderBy(x => x.Created)
+                .ProjectToType<ChecklistItemBriefDto>()
+                .PaginatedListAsync(pageNumber, pageSize);
         }
     }
 }

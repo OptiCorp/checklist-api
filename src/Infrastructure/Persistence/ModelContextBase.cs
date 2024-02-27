@@ -56,10 +56,12 @@ public class ModelContextBase : DbContext
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<ChecklistItem>()
-            .HasIndex(ci => new {ci.ItemId, ci.ChecklistId})
+            .HasIndex(ci => new { ci.ItemId, ci.ChecklistId })
             .IsUnique();
 
-        modelBuilder.Entity<ChecklistItemQuestion>();
+        modelBuilder.Entity<ChecklistItemQuestion>()
+            .ToTable(t => t.HasCheckConstraint("CK_ChecklistItemQuestions_CheckedNotApplicable",
+                    "([Checked] = 1 AND [NotApplicable] = 0) OR ([Checked] = 0 AND [NotApplicable] = 1) OR ([Checked] = 0 AND [NotApplicable] = 0)"));
 
         //modelBuilder.Entity<Part>()
         //    .HasDiscriminator<PartType>("Type")
@@ -115,6 +117,6 @@ public class ModelContextBase : DbContext
     public DbSet<Mobilization> Mobilizations { get; set; } = null!;
     public DbSet<ItemTemplate> ItemTemplates { get; set; } = null!;
 
-    public DbSet<Punch> Punches {get; set;} = null!;
+    public DbSet<Punch> Punches { get; set; } = null!;
     //public DbSet<Punch> Punches { get; set; } = null!;
 }

@@ -8,13 +8,9 @@ using MobDeMob.Domain.ItemAggregate;
 
 namespace Application.Checklists.Queries;
 
-public class GetChecklistItemsQuery : IRequest<PaginatedList<ChecklistItemBriefDto>> 
+public abstract class PaginationQuery<T> : IRequest<T>
 {
-    public Guid MobilizationId {get; init;}
-
     public int PageNumber {get; init;} = 1;
 
     public int PageSize {get; init;} = 10;
 }
-
-

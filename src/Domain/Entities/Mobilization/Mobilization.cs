@@ -7,7 +7,7 @@ namespace MobDeMob.Domain.Entities;
 
 public class Mobilization : AuditableEntity
 {
-    public required string Title { get; set; }
+    public string Title { get; set; }
 
     public string? Description { get; set; }
 
@@ -43,7 +43,12 @@ public class Mobilization : AuditableEntity
     //     var completionPercentage = 100 * completionProgressionDecimal;
     //     return completionPercentage;
     // }
-
+    public Mobilization(string title, Guid checklistId, string description = "")
+    {
+        Title = title;
+        ChecklistId = checklistId;
+        Description = description ?? string.Empty;
+    }
 
     //[NotMapped]
     //public IEnumerable<Punch> Punches => Checklist?.Punches ?? Enumerable.Empty<Punch>();

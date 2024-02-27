@@ -42,7 +42,8 @@ public class GetPunchQueryHandler : IRequestHandler<GetPunchQuery, PunchDto>
         if (blobUris.Count == 0)
             return punch.Adapt<PunchDto>();
 
-        var checklistId = checklistItem.ChecklistId; //TODO:
+    
+        var checklistId = checklistItem.ChecklistId;
         var containerSasUri = _cacheRepository.GetValue(checklistId.ToString());
 
         if (containerSasUri == null)

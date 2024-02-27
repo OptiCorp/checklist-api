@@ -41,6 +41,4 @@ public abstract class RepositoryBase<T> where T : Entity
 
     protected void Remove(T entity)
         => _modelContextBase.Remove(entity);
-
-
 }

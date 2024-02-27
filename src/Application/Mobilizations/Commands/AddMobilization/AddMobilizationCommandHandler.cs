@@ -29,16 +29,20 @@ public class AddMobilizationCommandHandler : IRequestHandler<AddMobilizationComm
 
         return mobilization.Id;
     }
-   
+
     private static Mobilization MapToMobilization(AddMobilizationCommand request, Guid checklistId)
     {
         return new Mobilization
+        (
+            request.Title,
+            checklistId,
+            request.Description ?? string.Empty
+        )
         {
-            Title = request.Title,
-            Description = request.Description,
-            ChecklistId = checklistId,
             Created = DateOnly.FromDateTime(DateTime.Now),
+            Status = MobilizationStatus.NotReady,
             Type = request.MobilizationType
+            //MobilizationType mobilizationType, MobilizationStatus mobilizationStatus
         };
     }
 }

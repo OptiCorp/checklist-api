@@ -1,4 +1,6 @@
-﻿using Application.Punches.Dtos;
+﻿using Application.Checklists.Dtos;
+using Application.Common.Models;
+using Application.Punches.Dtos;
 using Domain.Entities.ChecklistAggregate;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
 
@@ -13,6 +15,9 @@ namespace Application.Common.Interfaces
         // Task<IEnumerable<Punch>> GetChecklistItemsWithPunches(Guid checklistItemId, CancellationToken cancellationToken = default);
 
         Task<IEnumerable<ChecklistItem>> GetChecklistItems(Guid checklistId, CancellationToken cancellationToken = default);
+
+        Task<PaginatedList<ChecklistItemBriefDto>> GetChecklistItemsWithPagination(Guid checklistId, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
+
 
         Task<ChecklistItem?> GetChecklistItem(Guid checklistItemId, CancellationToken cancellationToken = default);
 

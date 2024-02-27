@@ -35,10 +35,10 @@ public class MobilizationsController : ControllerBase
     }
 
     [HttpGet("GetAll")]
-    public async Task<IActionResult> GetAllMobilizations(CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetAllMobilizations([FromQuery] GetAllMobilizationsQuery query,CancellationToken cancellationToken = default)
     {
         //TODO: pagination for all requests that responds lists?
-        var mobs = await _sender.Send(new GetAllMobilizationsQuery(), cancellationToken);
+        var mobs = await _sender.Send(query, cancellationToken);
         return Ok(mobs);
     }
 

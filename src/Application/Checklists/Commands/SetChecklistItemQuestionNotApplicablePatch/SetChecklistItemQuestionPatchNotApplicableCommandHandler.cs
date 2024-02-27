@@ -5,10 +5,11 @@ using Domain.Entities.ChecklistAggregate;
 using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Application.Checklists.Commands.SetChecklistCheckedValue;
 
-public class SetChecklistCheckedValueCommandHandler : IRequestHandler<SetChecklistItemQuestionPatchCommand>
+public class SetChecklistNotApplicableValueCommandHandler : IRequestHandler<SetChecklistItemQuestionPatchNotApplicableCommand>
 {
 
     private readonly IMobilizationRepository _mobilizationRepository;
@@ -17,7 +18,7 @@ public class SetChecklistCheckedValueCommandHandler : IRequestHandler<SetCheckli
     private readonly IChecklistItemQuestionRepository _checklistItemQuestionRepository;
 
 
-    public SetChecklistCheckedValueCommandHandler(
+    public SetChecklistNotApplicableValueCommandHandler(
         IMobilizationRepository mobilizationRepository,
         ITemplateRepository templateRepository,
         IChecklistItemRepository checklistItemRepository,
@@ -29,18 +30,21 @@ public class SetChecklistCheckedValueCommandHandler : IRequestHandler<SetCheckli
         _checklistItemRepository = checklistItemRepository;
         _checklistItemQuestionRepository = checklistItemQuestionRepository;
     }
-    public async Task Handle(SetChecklistItemQuestionPatchCommand request, CancellationToken cancellationToken)
+    public async Task Handle(SetChecklistItemQuestionPatchNotApplicableCommand request, CancellationToken cancellationToken)
     {
-        var checklistItemQuestion = await _checklistItemQuestionRepository.GetQuestion(request.Id, cancellationToken) 
+        var checklistItemQuestion = await _checklistItemQuestionRepository.GetQuestion(request.Id, cancellationToken)
             ?? throw new NotFoundException(nameof(ChecklistItemQuestion), request.Id);
-        ChangeChecklistItem(checklistItemQuestion, request.Patches);
-        request.Patches.ApplyTo(checklistItemQuestion);
+
+        request.Patches.ApplyTo(checklistItemQuestion, request.ModelState);
+        if (!request.ModelState.IsValid) return;
+        ValidateChecklistItemCheckedQuestion(checklistItemQuestion, request.Patches, request.ModelState);
+        //request.Patches.ApplyTo(checklistItemQuestion);
         await _checklistItemQuestionRepository.SaveChanges(cancellationToken);
     }
 
     //TODO: should not be able to change "checked" to true if NotApplicable is also true, not sure how to validate this with Patch
-    public void ChangeChecklistItem(ChecklistItemQuestion q, JsonPatchDocument<ChecklistItemQuestion> patches)
+    public void ValidateChecklistItemCheckedQuestion(ChecklistItemQuestion q, JsonPatchDocument<ChecklistItemQuestion> patches, ModelStateDictionary modelState)
     {
-        patches.ApplyTo(q);
+        if (q.Checked && q.NotApplicable) throw new Exception("Both Checked and NotApplicable can be true");
     }
 }

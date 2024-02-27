@@ -7,6 +7,6 @@ public enum MobilizationType
     [Display(Name = "Mobilization")]
     Mobilization,
     [Display(Name = "DeMobilization")]
-    DeMobilization, //TODO: change to Demobilization
+    Demobilization, //TODO: change to Demobilization
 
 }

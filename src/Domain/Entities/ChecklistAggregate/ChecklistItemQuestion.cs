@@ -19,6 +19,17 @@ public class ChecklistItemQuestion : AuditableEntity
         QuestionTemplateId = questionTemplate.Id;
     }
 
+    public bool IsQuestionCheckable() => !NotApplicable;
+
+    public void MarkQuestionAsChecked()
+    {
+        if(!IsQuestionCheckable())
+        {
+            throw new Exception("Tried to mark question as checked when it is not chechable");
+        }
+        Checked = true;
+    }
+
     protected ChecklistItemQuestion()
     {
 

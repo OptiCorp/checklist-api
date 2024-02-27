@@ -44,7 +44,7 @@ public class ChecklistsController : ControllerBase
     // }
 
     [HttpPost("AddItem/{itemId}")]
-    public async Task<IActionResult> AddNewItem([FromBody] AddItemCommand addItemCommand, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> AddNewItem(Guid mobilizationId, [FromBody] AddItemCommand addItemCommand, CancellationToken cancellationToken = default)
     {
         await _sender.Send(addItemCommand, cancellationToken);
         return Ok(addItemCommand);
@@ -63,11 +63,13 @@ public class ChecklistsController : ControllerBase
         ICollection<PunchUploadFile> files = [];
         foreach (var file in fileModel.files)
         {
+            using var stream = new MemoryStream();
+            await file.CopyToAsync(stream);
             files.Add(new PunchUploadFile()
             {
                 ContentType = file.ContentType,
                 FileName = file.FileName,
-                Stream = file.OpenReadStream() //TODO: might slow down the system because of large memory allocation, especially with high solution images, should be asynchrounous as well maybe?
+                Stream = stream
             });
         }
         // await _sender.Send(new PunchUploadFilesCommand { Id = punchId, ContentType = fileModel.file.ContentType, FileName = fileModel.file.FileName, Stream = fileModel.file.OpenReadStream() }, cancellationToken);
@@ -76,10 +78,25 @@ public class ChecklistsController : ControllerBase
         return NoContent();
     }
 
-    [HttpPatch("ChecklistQuestionUpdate/{checklistItemQuestionId}")]
-    public async Task<IActionResult> ChecklistQuestionUpdate(SetChecklistItemQuestionPatchCommand setChecklistItemQuestionPatchCommand, CancellationToken cancellationToken)
+    [HttpPatch("ChecklistQuestionCheckedUpdate/{checklistItemQuestionId}")]
+    public async Task<IActionResult> ChecklistQuestionCheckedUpdate(SetChecklistItemQuestionPatchCheckedCommandRequest c, CancellationToken cancellationToken)
     {
-        await _sender.Send(setChecklistItemQuestionPatchCommand, cancellationToken);
+        await _sender.Send(new SetChecklistItemQuestionPatchCheckedCommand{Id = c.Id, Patches = c.Patches, ModelState = ModelState}, cancellationToken);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        return NoContent();
+    }
+
+    [HttpPatch("ChecklistQuestionNotApplicableUpdate/{checklistItemQuestionId}")]
+    public async Task<IActionResult> ChecklistQuestionNotApplicableUpdate(SetChecklistItemQuestionPatchNotApplicableCommandRequest c, CancellationToken cancellationToken)
+    {
+        await _sender.Send(new SetChecklistItemQuestionPatchNotApplicableCommand{Id = c.Id, Patches = c.Patches, ModelState = ModelState}, cancellationToken);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         return NoContent();
     }
 
@@ -91,14 +108,14 @@ public class ChecklistsController : ControllerBase
     }
 
     [HttpGet("GetChecklists")]
-    public async Task<IActionResult> GetChecklists(Guid mobilizationId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetChecklists(Guid mobilizationId, int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
-        var checklistItems = await _sender.Send(new GetChecklistItemsQuery { MobilizationId = mobilizationId }, cancellationToken);
+        var checklistItems = await _sender.Send(new GetChecklistItemsQuery{MobilizationId = mobilizationId, PageNumber = pageNumber, PageSize = pageSize}, cancellationToken);
         return Ok(checklistItems);
     }
 
     [HttpGet("GetChecklistItem/{checklistItemId}")]
-    public async Task<IActionResult> GetChecklistItems(Guid mobilizationId, Guid checklistItemId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetChecklistItem(Guid checklistItemId, CancellationToken cancellationToken)
     {
         var checklistItem = await _sender.Send(new GetChecklistItemQuery { ChecklistItemId = checklistItemId }, cancellationToken);
         return Ok(checklistItem);
