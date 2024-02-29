@@ -12,7 +12,7 @@ builder.Services
     .AddInfrastructure(builder.Configuration)
     .AddApplicationDbContextInitializer()
     .AddAzureClient(builder.Configuration)
-    .AddMemoryCacheService();
+    .AddMemoryCacheService(); //TODO:
 
 builder.Services.AddControllers(options =>
 {

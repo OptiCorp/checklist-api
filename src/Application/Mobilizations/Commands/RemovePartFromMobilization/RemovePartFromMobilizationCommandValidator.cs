@@ -3,13 +3,12 @@ using MobDeMob.Application.Mobilizations.Commands;
 
 namespace Application.Mobilizations.Commands;
 
-public class RemovePartFromMobilizationCommandValidator : AbstractValidator<RemovePartFromMobilizationCommand>
+public class RemovePartFromMobilizationCommandValidator : AbstractValidator<RemoveItemFromMobilizationCommand>
 {
     public RemovePartFromMobilizationCommandValidator()
     {
-        RuleFor(v => v.PartId)
+        RuleFor(v => v.ItemId)
             .NotEmpty()
-            .MaximumLength(40);
-
+            .MaximumLength(50);
     }
 }

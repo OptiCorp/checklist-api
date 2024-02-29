@@ -17,19 +17,16 @@ public class UpdateMobilizationCommandHandler : IRequestHandler<UpdateMobilizati
     {
         var mobilization = await _mobilizationRepository.GetMobilizationById(request.id, cancellationToken) ?? throw new NotFoundException(nameof(Mobilization), request.id);
 
-        ChangeMobilization(mobilization, request);
+        UpdateMobilization(mobilization, request);
 
         await _mobilizationRepository.SaveChanges(cancellationToken);
     }
 
-    //TODO: Not sure if the frontend should be allowed to send Description for example, as null. If so should the description be updated or not?
-    private static Mobilization ChangeMobilization(Mobilization mobilization, UpdateMobilizationCommand request)
+    private static Mobilization UpdateMobilization(Mobilization mobilization, UpdateMobilizationCommand request)
     {
-        mobilization.Title = request.Title;
-        mobilization.Description = request.Description;
-        mobilization.Type = request.Type;
-        mobilization.Status = request.Status;
-        mobilization.LastModified = DateTime.Now;
+        mobilization.SetTitle(request.Title);
+        mobilization.SetDescription(request.Description ?? string.Empty);
+        mobilization.SetStatus(request.Status);
 
         return mobilization;
     }

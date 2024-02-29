@@ -11,14 +11,6 @@ public class ItemTemplateBriefDto : DtoExtension, IRegister
 {
     public required string ItemId { get; set; }
 
-    public required string Name { get; set; }
-
-    public required string Type { get; set; }
-
-    public string? Revision { get; set; }
-
-    public string? Description { get; set; }
-
     public void Register(TypeAdapterConfig config)
     {
         config.NewConfig<ItemTemplate, ItemTemplateBriefDto>();

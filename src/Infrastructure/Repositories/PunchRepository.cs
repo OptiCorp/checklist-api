@@ -3,6 +3,7 @@ using Application.Punches;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
 using Application.Punches.Dtos;
 using Infrastructure.Repositories.Common;
+using Domain.Entities;
 
 namespace MobDeMob.Infrastructure.Repositories;
 
@@ -24,29 +25,30 @@ public class PunchRepository : RepositoryBase<Punch>, IPunchRepository
     {
         var punch = await GetSet()
             .AsNoTracking()
+            .Include(p => p.PunchFiles)
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
         return punch;
     }
 
-    public async Task<int> GetPunchesCount(Guid checklistItemId, CancellationToken cancellationToken = default)
+    public async Task<int> GetPunchesCount(Guid checklistId, CancellationToken cancellationToken = default)
     {
         return await GetSet()
-            .Where(p => p.ChecklistItemId == checklistItemId)
+            .Where(p => p.ChecklistId == checklistId)
             .CountAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<Punch>> GetPunchesForChecklistItem(Guid checklistItemId, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Punch>> GetPunchesForChecklist(Guid checklistId, CancellationToken cancellationToken = default)
     {
         return await _modelContextBase.Punches
-            .Where(p => p.ChecklistItemId == checklistItemId)
+            .Where(p => p.ChecklistId == checklistId)
             .ToListAsync(cancellationToken: cancellationToken);
     }
 
-    public async Task<IEnumerable<Guid>> GetPunchIds(Guid checklistItemId, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Guid>> GetPunchIds(Guid checklistId, CancellationToken cancellationToken = default)
     {
         return await GetSet()
-            .Where(p => p.ChecklistItemId == checklistItemId)
+            .Where(p => p.ChecklistId == checklistId)
             .Select(p => p.Id).ToListAsync(cancellationToken);
     }
 

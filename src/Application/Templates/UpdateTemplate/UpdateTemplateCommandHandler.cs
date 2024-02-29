@@ -18,22 +18,17 @@ public class UpdateTemplateCommandHandler : IRequestHandler<UpdateTemplateComman
 
     public async Task Handle(UpdateTemplateCommand request, CancellationToken cancellationToken)
     {
-        var template = await _templateRepository.GetTemplateById(request.Id, cancellationToken) ?? throw new NotFoundException(nameof(ItemTemplate), request.Id);
+        var template = await _templateRepository.GetTemplateByItemId(request.ItemId, cancellationToken) 
+            ?? throw new NotFoundException(nameof(ItemTemplate), request.ItemId);
 
-        ChangeTemplate(template, request);
+        UpdateTemplate(template, request);
 
         await _templateRepository.SaveChanges(cancellationToken);
     }
 
-    private static ItemTemplate ChangeTemplate(ItemTemplate template, UpdateTemplateCommand request)
+    private static ItemTemplate UpdateTemplate(ItemTemplate template, UpdateTemplateCommand request)
     {
-        template.Name = request.ItemName ?? template.Name;
-        template.Description = request.ItemDescription;
-        template.Type = request.Type ?? template.Type;
-        template.Revision = request.Revision;
-        template.Questions = request?.Questions
-            ?.Select(q => new QuestionTemplate { Question = q })
-            ?.ToList() ?? [];
+        template.UpdateQuestions(request.Questions);
 
         return template;
     }

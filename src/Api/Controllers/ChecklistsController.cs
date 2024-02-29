@@ -30,9 +30,9 @@ public class ChecklistsController : ControllerBase
 
     [HttpGet("GetPunches/{checklistItemId}")]
 
-    public async Task<ActionResult<IEnumerable<PunchDto>>> GetPunches(Guid checklistItemId, CancellationToken cancellationToken)
+    public async Task<ActionResult<IEnumerable<PunchDto>>> GetPunches(Guid checklistId, CancellationToken cancellationToken)
     {
-        var punches = await _sender.Send(new GetPunchesQuery { ChecklistItemId = checklistItemId}, cancellationToken);
+        var punches = await _sender.Send(new GetPunchesQuery { ChecklistId = checklistId}, cancellationToken);
         return Ok(punches);
     }
 
@@ -78,53 +78,45 @@ public class ChecklistsController : ControllerBase
         return NoContent();
     }
 
-    [HttpPatch("ChecklistQuestionCheckedUpdate/{checklistItemQuestionId}")]
-    public async Task<IActionResult> ChecklistQuestionCheckedUpdate(SetChecklistItemQuestionPatchCheckedCommandRequest c, CancellationToken cancellationToken)
+    [HttpPost("ChecklistQuestionCheckedUpdate/{checklistItemQuestionId}")]
+    public async Task<IActionResult> ChecklistQuestionCheckedUpdate([FromQuery] SetChecklistQuestionCheckedCommand query, CancellationToken cancellationToken)
     {
-        await _sender.Send(new SetChecklistItemQuestionPatchCheckedCommand{Id = c.Id, Patches = c.Patches, ModelState = ModelState}, cancellationToken);
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        await _sender.Send(query, cancellationToken);
         return NoContent();
     }
 
     [HttpPatch("ChecklistQuestionNotApplicableUpdate/{checklistItemQuestionId}")]
-    public async Task<IActionResult> ChecklistQuestionNotApplicableUpdate(SetChecklistItemQuestionPatchNotApplicableCommandRequest c, CancellationToken cancellationToken)
+    public async Task<IActionResult> ChecklistQuestionNotApplicableUpdate([FromQuery] SetChecklistQuestionNotApplicableCommand query, CancellationToken cancellationToken)
     {
-        await _sender.Send(new SetChecklistItemQuestionPatchNotApplicableCommand{Id = c.Id, Patches = c.Patches, ModelState = ModelState}, cancellationToken);
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        await _sender.Send(query, cancellationToken);
         return NoContent();
     }
 
-    [HttpPatch("ChecklistItemUpdate/{checklistItemId}")]
-    public async Task<IActionResult> ChecklistItemUpdate(SetChecklistItemPatchCommand setChecklistItemPatchCommand, CancellationToken cancellationToken)
-    {
-        await _sender.Send(setChecklistItemPatchCommand, cancellationToken);
-        return NoContent();
-    }
+    // [HttpPatch("ChecklistItemUpdate/{checklistItemId}")]
+    // public async Task<IActionResult> ChecklistItemUpdate(SetChecklistItemPatchCommand setChecklistItemPatchCommand, CancellationToken cancellationToken)
+    // {
+    //     await _sender.Send(setChecklistItemPatchCommand, cancellationToken);
+    //     return NoContent();
+    // }
 
     [HttpGet("GetChecklists")]
     public async Task<IActionResult> GetChecklists(Guid mobilizationId, int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
-        var checklistItems = await _sender.Send(new GetChecklistItemsQuery{MobilizationId = mobilizationId, PageNumber = pageNumber, PageSize = pageSize}, cancellationToken);
+        var checklistItems = await _sender.Send(new GetChecklistsQuery{MobilizationId = mobilizationId, PageNumber = pageNumber, PageSize = pageSize}, cancellationToken);
         return Ok(checklistItems);
     }
 
-    [HttpGet("GetChecklistItem/{checklistItemId}")]
-    public async Task<IActionResult> GetChecklistItem(Guid checklistItemId, CancellationToken cancellationToken)
+    [HttpGet("GetChecklist/{checklistId}")]
+    public async Task<IActionResult> GetChecklistItem(Guid checklistId, CancellationToken cancellationToken)
     {
-        var checklistItem = await _sender.Send(new GetChecklistItemQuery { ChecklistItemId = checklistItemId }, cancellationToken);
-        return Ok(checklistItem);
+        var checklist = await _sender.Send(new GetChecklistQuery { ChecklistId = checklistId }, cancellationToken);
+        return Ok(checklist);
     }
 
-    [HttpDelete("DeletePartFromMobilization/{partId}")]
-    public async Task<IActionResult> DeletePartFromMobilization(RemovePartFromMobilizationCommand removePartFromMobilizationCommand, CancellationToken cancellationToken)
+    [HttpDelete("DeleteItemFromMobilization/{itemId}")]
+    public async Task<IActionResult> DeletePartFromMobilization(RemoveItemFromMobilizationCommand command, CancellationToken cancellationToken)
     {
-        await _sender.Send(removePartFromMobilizationCommand, cancellationToken);
+        await _sender.Send(command, cancellationToken);
         return NoContent();
     }
 

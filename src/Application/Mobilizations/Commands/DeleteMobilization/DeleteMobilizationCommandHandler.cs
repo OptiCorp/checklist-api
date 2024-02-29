@@ -11,13 +11,13 @@ public class DeleteMobilizationCommandHandler : IRequestHandler<DeleteMobilizati
 
     private readonly IMobilizationRepository _mobilizationRepository;
 
-    private readonly IChecklistRepository _checklistRepository;
+    private readonly IChecklistCollectionRepository _checklistCollectionRepository;
 
 
-    public DeleteMobilizationCommandHandler(IMobilizationRepository mobilizationRepository, IChecklistRepository checklistRepository)
+    public DeleteMobilizationCommandHandler(IMobilizationRepository mobilizationRepository, IChecklistCollectionRepository checklistCollectionRepository)
     {
         _mobilizationRepository = mobilizationRepository;
-        _checklistRepository = checklistRepository;
+        _checklistCollectionRepository = checklistCollectionRepository;
     }
     public async Task Handle(DeleteMobilizationCommand request, CancellationToken cancellationToken)
     {
@@ -26,6 +26,6 @@ public class DeleteMobilizationCommandHandler : IRequestHandler<DeleteMobilizati
 
         //mobilization.DeleteParts(); //TODO this shouldt be neccessasy since the dabase handles cascade delete
 
-        await _checklistRepository.DeleteChecklist(mobilization.ChecklistId, cancellationToken);
+        await _checklistCollectionRepository.DeleteChecklistCollection(mobilization.ChecklistCollectionId, cancellationToken);
     }
 }

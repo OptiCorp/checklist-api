@@ -31,60 +31,29 @@ public class ApplicationDbContextInitializer
 
     private async Task TrySeedAsync()
     {
-        SeedUsersAsync();
-        await SeedRestAsync();
+        
+        await SeedTablesAsync();
         await _modelContextBase.SaveChangesAsync();
     }
 
-    private void SeedUsersAsync()
-    {
-        //if (_modelContextBase.Users.Any()) return;
-
-        //_modelContextBase.Users.AddRange(
-        //    new User
-        //    {
-        //        AzureAdUserId = "someid",
-        //        Email = "test@email.com",
-        //        FirstName = "Frank",
-        //        LastName = "Gunvorsen",
-        //        UmId = "Umm",
-        //        Username = "Beast",
-        //        Created = DateOnly.FromDateTime(DateTime.Now),
-        //        CreatedBy = "Robin",
-        //        UserRole = Domain.Enums.UserRole.Admin,
-        //        Status = UserStatus.Active,
-        //        LastModified = DateTime.Now,
-        //    },
-        //new User
-        //{
-        //    AzureAdUserId = "someotherid",
-        //    Email = "test2@email.com",
-        //    FirstName = "Kari",
-        //    LastName = "Gunvorsen",
-        //    UmId = "Umm",
-        //    Username = "Beast2",
-        //    Created = DateOnly.FromDateTime(DateTime.Now),
-        //    CreatedBy = "Robin",
-        //    UserRole = Domain.Enums.UserRole.User,
-        //    Status = UserStatus.Active,
-        //    LastModified = DateTime.Now,
-        //}
-        //);
-
-    }
 
 
-    private async Task SeedRestAsync()
+
+    private async Task SeedTablesAsync()
 
     {
-        //if (_modelContextBase.Parts.Any()
-        //|| _modelContextBase.PartTemplates.Any()
-        //|| _modelContextBase.Mobilizations.Any()
-        //|| _modelContextBase.Checklists.Any()
-        //|| _modelContextBase.ChecklistSections.Any()
-        //|| _modelContextBase.ChecklistSectionTemplate.Any()
+        if (_modelContextBase.Items.Any()
+        || _modelContextBase.ItemTemplates.Any()
+        || _modelContextBase.Mobilizations.Any()
+        || _modelContextBase.Checklists.Any()
+        || _modelContextBase.ChecklistCollections.Any()
+        || _modelContextBase.ChecklistQuestions.Any()
+        || _modelContextBase.Punches.Any()
+        || _modelContextBase.QuestionTemplates.Any()
 
-        //) return;
+
+
+        ) return;
 
         //var item = new Item
         //{

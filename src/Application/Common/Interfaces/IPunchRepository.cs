@@ -1,4 +1,4 @@
-﻿using MobDeMob.Domain.Entities.ChecklistAggregate;
+﻿using Domain.Entities;
 
 namespace Application.Punches;
 public interface IPunchRepository
@@ -9,15 +9,14 @@ public interface IPunchRepository
 
     Task<Punch?> GetPunch(Guid id, CancellationToken cancellationToken = default);
 
-
     //    Task<bool> PunchExists(string punchId, CancellationToken cancellationToken);
     Task<Guid> AddPunch(Punch newPunch, CancellationToken cancellationToken = default);
 
-    Task<IEnumerable<Punch>> GetPunchesForChecklistItem(Guid checklistItemId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<Punch>> GetPunchesForChecklist(Guid checklistId, CancellationToken cancellationToken = default);
 
-    Task<int> GetPunchesCount (Guid checklistItemId, CancellationToken cancellationToken = default);
+    Task<int> GetPunchesCount (Guid checklistId, CancellationToken cancellationToken = default);
 
-    Task<IEnumerable<Guid>> GetPunchIds (Guid checklistItemId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<Guid>> GetPunchIds (Guid checklistId, CancellationToken cancellationToken = default);
 
     Task SaveChanges(CancellationToken cancellationToken = default);
 

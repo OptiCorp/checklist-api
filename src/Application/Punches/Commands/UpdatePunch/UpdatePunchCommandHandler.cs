@@ -1,5 +1,6 @@
 using Application.Common.Exceptions;
 using Application.Punches;
+using Domain.Entities;
 using MediatR;
 using MobDeMob.Application.Common.Interfaces;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
@@ -28,8 +29,8 @@ public class UpdatePunchCommandHandler : IRequestHandler<UpdatePunchCommand>
 
     private static Punch ChangePunch(Punch punch, UpdatePunchCommand updatePunchCommand)
     {
-        punch.Title = updatePunchCommand.Title;
-        punch.Description = updatePunchCommand.Description;
+        punch.SetTitle(updatePunchCommand.Title);
+        punch.SetDescription(updatePunchCommand.Description ?? string.Empty);
 
         return punch;
     }

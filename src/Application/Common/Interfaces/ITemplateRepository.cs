@@ -10,7 +10,7 @@ public interface ITemplateRepository
 
     Task<ItemTemplate?> GetTemplateByItemId(string itemId, CancellationToken cancellationToken = default);
 
-    Task DeletePartTemplate(Guid Id, CancellationToken cancellationToken = default);
+    Task DeleteItemTemplate(Guid Id, CancellationToken cancellationToken = default);
 
     Task SaveChanges(CancellationToken cancellationToken = default);
 }

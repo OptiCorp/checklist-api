@@ -1,6 +1,9 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Common.Interfaces;
+using Domain.Entities;
 using Domain.Entities.TemplateAggregate;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using MobDeMob.Domain.ItemAggregate;
 
 namespace Application.Templates.AddTemplate;
@@ -9,13 +12,20 @@ public class AddTemplateCommandHandler : IRequestHandler<AddTemplateCommand, Gui
 {
     private readonly ITemplateRepository _templateRepository;
 
-    public AddTemplateCommandHandler(ITemplateRepository templateRepository)
+    private readonly IItemReposiory _itemReposiory;
+
+
+    public AddTemplateCommandHandler(ITemplateRepository templateRepository, IItemReposiory itemReposiory)
     {
         _templateRepository = templateRepository;
+        _itemReposiory = itemReposiory;
     }
 
     public async Task<Guid> Handle(AddTemplateCommand request, CancellationToken cancellationToken)
     {
+        var item = _itemReposiory.GetItemById(request.ItemId, cancellationToken)
+            ?? throw new NotFoundException(nameof(Item), request.ItemId);
+
         var template = MapToItemTemplate(request);
 
         await _templateRepository.AddTemplate(template, cancellationToken);
@@ -34,10 +44,6 @@ public class AddTemplateCommandHandler : IRequestHandler<AddTemplateCommand, Gui
         return new ItemTemplate
         {
             ItemId = request.ItemId,
-            Name = request.ItemName,
-            Description = request.ItemDescription,
-            Type = request.Type,
-            Revision = request.Revision,
         };
     }
 }

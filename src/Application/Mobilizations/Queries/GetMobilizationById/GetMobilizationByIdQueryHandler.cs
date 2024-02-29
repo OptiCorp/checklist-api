@@ -25,7 +25,7 @@ public class GetMobilizationByIdQueryHandler : IRequestHandler<GetMobilizationBy
     public async Task<MobilizationDto?> Handle(GetMobilizationByIdQuery request, CancellationToken cancellationToken)
     {
         //TODO: look at the Mobilization Entity (ChecklistCountDone, ChecklistCount, PartsCount) to see why im not using GetMobilizationById instead of GetMobilizationByIdWithChecklistItems
-        var mob = await _mobilizationRepository.GetMobilizationByIdWithChecklistItems(request.id, cancellationToken);
+        var mob = await _mobilizationRepository.GetMobilizationByIdWithChecklists(request.id, cancellationToken);
         // return _mapper.Map<MobilizationDto>(mob);
         return mob.Adapt<MobilizationDto>();
     }

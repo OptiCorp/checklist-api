@@ -1,6 +1,7 @@
 ﻿
 using Application.Mobilizations.Dtos;
 using Application.Punches.Dtos;
+using Domain.Entities;
 using MobDeMob.Domain.Entities;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
 

@@ -2,19 +2,23 @@ using Application.Common;
 using Application.Common.Mappings;
 using Domain.Entities.ChecklistAggregate;
 using Domain.Entities.TemplateAggregate;
-using TypeAdapterConfig = Mapster.TypeAdapterConfig; 
+using TypeAdapterConfig = Mapster.TypeAdapterConfig;
 using MobDeMob.Domain.Common;
 using Mapster;
 
 namespace Application.Checklists.Dtos;
 
-public class ChecklistItemQuestionDto : DtoExtension, IRegister
+public class ChecklistQuestionDto : DtoExtension, IRegister
 {
-    public Guid ChecklistItemId { get; set; }
+    public Guid ChecklistId { get; set; }
 
     public Guid QuestionTemplateId { get; set; }
 
-    public bool Checked { get; set; } 
+    public bool Checked { get; set; }
+
+    public bool NotApplicable { get; set; }
+
+    public string Question { get; set; } = string.Empty;
 
     // public void Mapping(TypeAdapterConfig config)
     // {
@@ -23,7 +27,7 @@ public class ChecklistItemQuestionDto : DtoExtension, IRegister
 
     public void Register(TypeAdapterConfig config)
     {
-        config.NewConfig<ChecklistItemQuestion, ChecklistItemQuestionDto>();
+        config.NewConfig<ChecklistQuestion, ChecklistQuestionDto>();
     }
 
 }

@@ -11,17 +11,17 @@ namespace MobDeMob.Application.Mobilizations.Commands;
 public class AddMobilizationCommandHandler : IRequestHandler<AddMobilizationCommand, Guid>
 {
     private readonly IMobilizationRepository _mobilizationRepository;
-    private readonly IChecklistRepository _checkListRepository;
+    private readonly IChecklistCollectionRepository _checklistCollectionRepository;
 
-    public AddMobilizationCommandHandler(IMobilizationRepository mobilizationRepository, IChecklistRepository checklistRepository)
+    public AddMobilizationCommandHandler(IMobilizationRepository mobilizationRepository, IChecklistCollectionRepository checklistCollectionRepository)
     {
         _mobilizationRepository = mobilizationRepository;
-        _checkListRepository = checklistRepository;
+        _checklistCollectionRepository = checklistCollectionRepository;
     }
 
     public async Task<Guid> Handle(AddMobilizationCommand request, CancellationToken cancellationToken)
     {
-        var checklistId = await _checkListRepository.AddChecklist(new Checklist(), cancellationToken);
+        var checklistId = await _checklistCollectionRepository.AddChecklist(new ChecklistCollection(), cancellationToken);
 
         var mobilization = MapToMobilization(request, checklistId);
 
@@ -32,17 +32,19 @@ public class AddMobilizationCommandHandler : IRequestHandler<AddMobilizationComm
 
     private static Mobilization MapToMobilization(AddMobilizationCommand request, Guid checklistId)
     {
-        return new Mobilization
-        (
-            request.Title,
-            checklistId,
-            request.Description ?? string.Empty
-        )
-        {
-            Created = DateOnly.FromDateTime(DateTime.Now),
-            Status = MobilizationStatus.NotReady,
-            Type = request.MobilizationType
-            //MobilizationType mobilizationType, MobilizationStatus mobilizationStatus
-        };
+        var mob = Mobilization.New(request.Title, request.MobilizationType, MobilizationStatus.NotReady, checklistId, request.Description);
+        return mob;
+        // return new Mobilization
+        // (
+        //     request.Title,
+        //     checklistId,
+        //     request.Description ?? string.Empty
+        // )
+        // {
+        //     Created = DateOnly.FromDateTime(DateTime.Now),
+        //     Status = MobilizationStatus.NotReady,
+        //     Type = request.MobilizationType
+        //     //MobilizationType mobilizationType, MobilizationStatus mobilizationStatus
+        // };
     }
 }

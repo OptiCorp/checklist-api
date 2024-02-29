@@ -9,18 +9,10 @@ public class UpdateTemplateCommandValidator : AbstractValidator<UpdateTemplateCo
 {
     public UpdateTemplateCommandValidator()
     { 
-        RuleFor(v => v.ItemName)
-            .NotEmpty()
-            .MaximumLength(50);
+        RuleFor(v => v.ItemId)
+            .NotEmpty();
 
-        RuleFor(v => v.ItemDescription)
-            .MaximumLength(200);
-
-        RuleFor(v => v.Revision)
-            .MaximumLength(50);
-
-        RuleFor(v => v.Type)
-            .NotEmpty()
+        RuleFor(v => v.ItemId)
             .MaximumLength(50);
 
         RuleFor(v => v.Questions).Must(questions => questions?.Count() <= 20).WithMessage(t => $"The list of questions can not exceed 20, found {t.Questions?.Count()}.");

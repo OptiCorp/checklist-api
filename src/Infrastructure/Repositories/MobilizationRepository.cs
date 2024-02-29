@@ -26,7 +26,7 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
     }
 
     public async Task<Mobilization?> GetMobilizationById(Guid mobilizationId, CancellationToken cancellationToken)
-        => await GetSet().Include(m => m.Checklist).FirstOrDefaultAsync(x => x.Id == mobilizationId, cancellationToken);
+        => await GetSet().Include(m => m.ChecklistCollection).FirstOrDefaultAsync(x => x.Id == mobilizationId, cancellationToken);
 
     // public async Task<IEnumerable<Mobilization>> GetAllMobilizations(CancellationToken cancellationToken)
     //     => await GetAll(cancellationToken);
@@ -35,8 +35,8 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
     {
         return await GetSet()
             .AsNoTracking()
-            .Include(m => m.Checklist)
-            .ThenInclude(c => c.ChecklistItems)
+            .Include(m => m.ChecklistCollection)
+            .ThenInclude(c => c.Checklists)
             .ToListAsync(cancellationToken);
     }
 
@@ -44,10 +44,10 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
         => await DeleteById(id, cancellationToken);
 
     //TODO: this was created for getting completion percent, may be a better way of doing it without including everything
-    public async Task<Mobilization?> GetMobilizationByIdWithChecklistItems(Guid mobilizationId, CancellationToken cancellationToken = default)
+    public async Task<Mobilization?> GetMobilizationByIdWithChecklists(Guid mobilizationId, CancellationToken cancellationToken = default)
 
-        => await GetSet().Include(m => m.Checklist)
-                            .ThenInclude(c => c.ChecklistItems)
+        => await GetSet().Include(m => m.ChecklistCollection)
+                            .ThenInclude(c => c.Checklists)
                                 //.ThenInclude(ci => ci.Questions)
                                 .SingleOrDefaultAsync(x => x.Id == mobilizationId, cancellationToken);
 
@@ -55,8 +55,8 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
     {
         return await GetSet()
             .OrderBy(x => x.Title)
-            .Include(m => m.Checklist)
-            .ThenInclude(c => c.ChecklistItems)
+            .Include(m => m.ChecklistCollection)
+            .ThenInclude(c => c.Checklists)
             .ProjectToType<MobilizationDto>()
             .PaginatedListAsync(pageNumber, pageSize);
             

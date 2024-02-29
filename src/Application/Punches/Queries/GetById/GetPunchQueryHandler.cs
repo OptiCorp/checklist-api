@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Punches.Dtos;
+using Domain.Entities;
 using Domain.Entities.ChecklistAggregate;
 using Mapster;
 using MediatR;
@@ -15,19 +16,19 @@ public class GetPunchQueryHandler : IRequestHandler<GetPunchQuery, PunchDto>
 {
     private readonly IPunchRepository _punchRepository;
 
-    private readonly IChecklistItemRepository _checklistItemRepository;
+    private readonly IChecklistRepository _checklistRepository;
 
 
     private readonly IFileStorageRepository _fileStorageRepository;
 
     private readonly ICacheRepository _cacheRepository;
 
-    public GetPunchQueryHandler(IPunchRepository punchRepository, IFileStorageRepository fileStorageRepository, ICacheRepository cachRepository, IChecklistItemRepository checklistItemRepository)
+    public GetPunchQueryHandler(IPunchRepository punchRepository, IFileStorageRepository fileStorageRepository, ICacheRepository cachRepository, IChecklistRepository checklistRepository)
     {
         _punchRepository = punchRepository;
         _fileStorageRepository = fileStorageRepository;
         _cacheRepository = cachRepository;
-        _checklistItemRepository = checklistItemRepository;
+        _checklistRepository = checklistRepository;
     }
 
     public async Task<PunchDto> Handle(GetPunchQuery request, CancellationToken cancellationToken)
@@ -35,26 +36,26 @@ public class GetPunchQueryHandler : IRequestHandler<GetPunchQuery, PunchDto>
         var punch = await _punchRepository.GetPunchNoTracking(request.punchId, cancellationToken)
             ?? throw new NotFoundException(nameof(Punch), request.punchId);
 
-        var checklistItem = await _checklistItemRepository.GetChecklistItem(punch.ChecklistItemId)
-            ?? throw new NotFoundException(nameof(ChecklistItem), punch.ChecklistItemId);
+        var checklist = await _checklistRepository.GetSingleChecklist(punch.ChecklistId)
+            ?? throw new NotFoundException(nameof(Checklist), punch.ChecklistId);
 
-        var blobUris = punch.ImageBlobUris;
+        var blobUris = punch.PunchFiles;
         if (blobUris.Count == 0)
             return punch.Adapt<PunchDto>();
 
     
-        var checklistId = checklistItem.ChecklistId;
-        var containerSasUri = _cacheRepository.GetValue(checklistId.ToString());
+        var checklistCollectionId = checklist.ChecklistCollectionId;
+        var containerSasUri = _cacheRepository.GetValue(checklistCollectionId.ToString());
 
         if (containerSasUri == null)
         {
-            var newContainerSAS = await _fileStorageRepository.GenerateContainerSAS(checklistId.ToString(), cancellationToken);
-            _cacheRepository.SetKeyValue(checklistId.ToString(), newContainerSAS);
-            punch.SasToken = newContainerSAS.Query.ToString();
+            var newContainerSAS = await _fileStorageRepository.GenerateContainerSAS(checklistCollectionId.ToString(), cancellationToken);
+            _cacheRepository.SetKeyValue(checklistCollectionId.ToString(), newContainerSAS);
+            punch.SetSasToken(newContainerSAS.Query.ToString());
         }
         else
         {
-            punch.SasToken = containerSasUri.Query.ToString();
+            punch.SetSasToken(containerSasUri.Query.ToString());
         }
 
         return punch.Adapt<PunchDto>();

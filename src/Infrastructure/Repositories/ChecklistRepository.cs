@@ -1,28 +1,83 @@
-﻿using Infrastructure.Repositories.Common;
-using MobDeMob.Application.Common.Interfaces;
+﻿using Application.Checklists.Dtos;
+using Application.Common.Interfaces;
+using Application.Common.Models;
+using Application.Punches.Dtos;
+using Domain.Entities.ChecklistAggregate;
+using Infrastructure.Repositories.Common;
+using Mapster;
+using Microsoft.EntityFrameworkCore;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
+using MobDeMob.Infrastructure;
+using Application.Common.Mappings;
 
 
-namespace MobDeMob.Infrastructure.Repositories;
-
-public class CheklistRepository : RepositoryBase<Checklist>, IChecklistRepository
+namespace Infrastructure.Repositories
 {
-    public CheklistRepository(ModelContextBase modelContextBase) : base(modelContextBase)
+    public class ChecklistRepository : RepositoryBase<Checklist>, IChecklistRepository
     {
-    }
+        public ChecklistRepository(ModelContextBase modelContextBase) : base(modelContextBase)
+        {
 
-    public async Task<Guid> AddChecklist(Checklist checklist, CancellationToken cancellationToken = default)
-    {
-        await Add(checklist, cancellationToken);
-        return checklist.Id;
-    }
+        }
 
+        public async Task<Guid> AddChecklist(Checklist checklist, CancellationToken cancellationToken = default)
+        {
+            await Add(checklist, cancellationToken);
 
-    public async Task DeleteChecklist(Guid id, CancellationToken cancellationToken)
-    => await DeleteById(id, cancellationToken);
+            return checklist.Id;
+        }
 
-    public void RemovePartFromChecklist(Checklist checklist, string partId)
-    {
-        checklist.Parts.Remove(partId);
+        //I dont think we need this or that this makes sense
+        public async Task<Checklist?> GetChecklistByItemId(string itemId, Guid checklistCollectionId, CancellationToken cancellationToken = default)
+        {
+            return await GetSet()
+                .Where(ci => ci.ChecklistCollectionId == checklistCollectionId)
+                .Include(ci => ci.ItemTemplate)
+                .SingleOrDefaultAsync(ci => ci.ItemTemplate.ItemId == itemId, cancellationToken);
+        }
+
+        public async Task<IEnumerable<Checklist>> GetChecklistsForChecklistCollection(Guid checklistCollectionId, CancellationToken cancellationToken = default)
+        {
+            return await GetSet()
+                .Include(ci => ci.ItemTemplate)
+                .Where(ci => ci.ChecklistCollectionId == checklistCollectionId)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<Checklist?> GetSingleChecklist(Guid checklistId, CancellationToken cancellationToken = default)
+        {
+            return await GetSet()
+                // .Include(c => c.Questions)
+                // .ThenInclude(c => c.QuestionTemplate)
+                //.Include(c => c.ItemTemplate)
+                .SingleOrDefaultAsync(c => c.Id == checklistId, cancellationToken);
+        }
+
+        public async Task DeleteChecklistById(Guid Id, CancellationToken cancellationToken = default)
+        {
+            await DeleteById(Id, cancellationToken);
+        }
+
+        // public void RemoveChecklistItem(ChecklistItem checklistItem, CancellationToken cancellationToken = default)
+        // {
+        //     Remove(checklistItem);
+        // }
+
+        public async Task<Checklist?> GetChecklistWithTemplate(Guid checklistId, CancellationToken cancellationToken = default)
+        {
+            return await GetSet()
+                 .Include(c => c.ItemTemplate)
+                 //.Include(c => c.Template)
+                 .SingleOrDefaultAsync(c => c.Id == checklistId, cancellationToken);
+        }
+
+        public async Task<PaginatedList<ChecklistBriefDto>> GetChecklistsWithPaginationFromChecklistCollection(Guid checklistCollectionId, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+        {
+            return await GetSet()
+                .Where(ci => ci.ChecklistCollectionId == checklistCollectionId)
+                .OrderBy(x => x.Created)
+                .ProjectToType<ChecklistBriefDto>()
+                .PaginatedListAsync(pageNumber, pageSize);
+        }
     }
 }

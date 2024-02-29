@@ -3,6 +3,8 @@
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Punches;
+using Domain.Entities;
+using Domain.Entities.ChecklistAggregate;
 using MediatR;
 using MobDeMob.Domain.Entities;
 using MobDeMob.Domain.Entities.ChecklistAggregate;
@@ -14,23 +16,23 @@ public class AddPunchCommandHandler : IRequestHandler<AddPunchCommand, Guid>
 
     private readonly IMobilizationRepository _mobilizationRepository;
     private readonly ITemplateRepository _templateRepository;
-    private readonly IChecklistItemRepository _checklistItemRepository;
-    private readonly IChecklistItemQuestionRepository _checklistItemQuestionRepository;
+    private readonly IChecklistRepository _checklistRepository;
+    private readonly IChecklistQuestionRepository _checklistQuestionRepository;
 
     private readonly IPunchRepository _punchRepository;
 
     public AddPunchCommandHandler(
         IMobilizationRepository mobilizationRepository,
         ITemplateRepository templateRepository,
-        IChecklistItemRepository checklistItemRepository,
-        IChecklistItemQuestionRepository checklistItemQuestionRepository,
+        IChecklistRepository checklistRepository,
+        IChecklistQuestionRepository checklistQuestionRepository,
         IPunchRepository punchRepository
         )
     {
         _mobilizationRepository = mobilizationRepository;
         _templateRepository = templateRepository;
-        _checklistItemRepository = checklistItemRepository;
-        _checklistItemQuestionRepository = checklistItemQuestionRepository;
+        _checklistRepository = checklistRepository;
+        _checklistQuestionRepository = checklistQuestionRepository;
         _punchRepository = punchRepository;
     }
     public async Task<Guid> Handle(AddPunchCommand request, CancellationToken cancellationToken)
@@ -38,21 +40,18 @@ public class AddPunchCommandHandler : IRequestHandler<AddPunchCommand, Guid>
         var mobilization = await _mobilizationRepository.GetMobilizationById(request.MobilizationId, cancellationToken)
             ?? throw new NotFoundException(nameof(Mobilization), request.MobilizationId);;
 
-        var checklistItem = await _checklistItemRepository.GetChecklistItemByItemId(request.ItemId, mobilization.ChecklistId, cancellationToken) ?? throw new Exception("ChecklistItem not found");
+        var checklist = await _checklistRepository.GetChecklistByItemId(request.ItemId, mobilization.ChecklistCollectionId, cancellationToken) 
+            ?? throw new NotFoundException(nameof(Checklist), request.ItemId);
         
-        var newPunch = MapToPunch(request, checklistItem.Id);
+        var newPunch = MapToPunch(request, checklist.Id);
 
         await _punchRepository.AddPunch(newPunch, cancellationToken);
         
         return newPunch.Id;
     }
 
-    private Punch MapToPunch(AddPunchCommand request, Guid checklistItemId)
+    private Punch MapToPunch(AddPunchCommand request, Guid checklistId)
     {
-        return new Punch{
-            Title = request.Title,
-            Description = request.Description,
-            ChecklistItemId = checklistItemId
-        };
+        return Punch.New(request.Title, checklistId, request.Description);
     }
 }

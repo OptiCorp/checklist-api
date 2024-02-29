@@ -22,13 +22,13 @@ namespace Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Entities.ChecklistAggregate.ChecklistItem", b =>
+            modelBuilder.Entity("Domain.Entities.ChecklistAggregate.Checklist", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ChecklistId")
+                    b.Property<Guid>("ChecklistCollectionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateOnly>("Created")
@@ -37,9 +37,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ItemId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("ItemTemplateId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -50,22 +49,17 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("TemplateId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ChecklistId");
+                    b.HasIndex("ChecklistCollectionId");
 
-                    b.HasIndex("TemplateId");
-
-                    b.HasIndex("ItemId", "ChecklistId")
+                    b.HasIndex("ItemTemplateId", "ChecklistCollectionId")
                         .IsUnique();
 
-                    b.ToTable("ChecklistItems");
+                    b.ToTable("Checklists");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ChecklistAggregate.ChecklistItemQuestion", b =>
+            modelBuilder.Entity("Domain.Entities.ChecklistAggregate.ChecklistQuestion", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -74,7 +68,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<bool>("Checked")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("ChecklistItemId")
+                    b.Property<Guid>("ChecklistId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateOnly>("Created")
@@ -97,12 +91,83 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChecklistItemId");
+                    b.HasIndex("ChecklistId");
 
-                    b.ToTable("ChecklistItemQuestions", t =>
+                    b.HasIndex("QuestionTemplateId");
+
+                    b.ToTable("ChecklistQuestions", t =>
                         {
-                            t.HasCheckConstraint("CK_ChecklistItemQuestions_CheckedNotApplicable", "([Checked] = 1 AND [NotApplicable] = 0) OR ([Checked] = 0 AND [NotApplicable] = 1)");
+                            t.HasCheckConstraint("CK_ChecklistQuestions_CheckedNotApplicable", "([Checked] = 1 AND [NotApplicable] = 0) OR ([Checked] = 0 AND [NotApplicable] = 1) OR ([Checked] = 0 AND [NotApplicable] = 0)");
                         });
+                });
+
+            modelBuilder.Entity("Domain.Entities.Item", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Punch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ChecklistId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly>("Created")
+                        .HasColumnType("date");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChecklistId");
+
+                    b.ToTable("Punches");
+                });
+
+            modelBuilder.Entity("Domain.Entities.PunchFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid?>("PunchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Uri")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PunchId");
+
+                    b.ToTable("PunchFiles");
                 });
 
             modelBuilder.Entity("Domain.Entities.TemplateAggregate.QuestionTemplate", b =>
@@ -128,17 +193,17 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Question")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ItemTemplateId");
 
-                    b.ToTable("QuestionTemplate");
+                    b.ToTable("QuestionTemplates");
                 });
 
-            modelBuilder.Entity("MobDeMob.Domain.Entities.ChecklistAggregate.Checklist", b =>
+            modelBuilder.Entity("MobDeMob.Domain.Entities.ChecklistAggregate.ChecklistCollection", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -156,52 +221,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Parts")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Checklists");
-                });
-
-            modelBuilder.Entity("MobDeMob.Domain.Entities.ChecklistAggregate.Punch", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ChecklistItemId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateOnly>("Created")
-                        .HasColumnType("date");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageBlobUris")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChecklistItemId");
-
-                    b.ToTable("Punches");
+                    b.ToTable("ChecklistCollections");
                 });
 
             modelBuilder.Entity("MobDeMob.Domain.Entities.Mobilization", b =>
@@ -210,7 +232,7 @@ namespace Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ChecklistId")
+                    b.Property<Guid>("ChecklistCollectionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateOnly>("Created")
@@ -220,6 +242,7 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModified")
@@ -240,7 +263,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChecklistId")
+                    b.HasIndex("ChecklistCollectionId")
                         .IsUnique();
 
                     b.ToTable("Mobilizations");
@@ -258,12 +281,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ItemId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -271,91 +291,117 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Revision")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("ItemId")
+                        .IsUnique();
 
                     b.ToTable("ItemTemplates");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ChecklistAggregate.ChecklistItem", b =>
+            modelBuilder.Entity("Domain.Entities.ChecklistAggregate.Checklist", b =>
                 {
-                    b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.Checklist", null)
-                        .WithMany("ChecklistItems")
+                    b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.ChecklistCollection", null)
+                        .WithMany("Checklists")
+                        .HasForeignKey("ChecklistCollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MobDeMob.Domain.ItemAggregate.ItemTemplate", "ItemTemplate")
+                        .WithMany()
+                        .HasForeignKey("ItemTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ItemTemplate");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ChecklistAggregate.ChecklistQuestion", b =>
+                {
+                    b.HasOne("Domain.Entities.ChecklistAggregate.Checklist", null)
+                        .WithMany("Questions")
                         .HasForeignKey("ChecklistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MobDeMob.Domain.ItemAggregate.ItemTemplate", "Template")
+                    b.HasOne("Domain.Entities.TemplateAggregate.QuestionTemplate", "QuestionTemplate")
                         .WithMany()
-                        .HasForeignKey("TemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("QuestionTemplateId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Template");
+                    b.Navigation("QuestionTemplate");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ChecklistAggregate.ChecklistItemQuestion", b =>
+            modelBuilder.Entity("Domain.Entities.Punch", b =>
                 {
-                    b.HasOne("Domain.Entities.ChecklistAggregate.ChecklistItem", null)
-                        .WithMany("Questions")
-                        .HasForeignKey("ChecklistItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Entities.TemplateAggregate.QuestionTemplate", b =>
-                {
-                    b.HasOne("MobDeMob.Domain.ItemAggregate.ItemTemplate", null)
-                        .WithMany("Questions")
-                        .HasForeignKey("ItemTemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("MobDeMob.Domain.Entities.ChecklistAggregate.Punch", b =>
-                {
-                    b.HasOne("Domain.Entities.ChecklistAggregate.ChecklistItem", "ChecklistItem")
+                    b.HasOne("Domain.Entities.ChecklistAggregate.Checklist", "Checklist")
                         .WithMany("Punches")
-                        .HasForeignKey("ChecklistItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ChecklistItem");
-                });
-
-            modelBuilder.Entity("MobDeMob.Domain.Entities.Mobilization", b =>
-                {
-                    b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.Checklist", "Checklist")
-                        .WithOne("Mobilization")
-                        .HasForeignKey("MobDeMob.Domain.Entities.Mobilization", "ChecklistId")
+                        .HasForeignKey("ChecklistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Checklist");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ChecklistAggregate.ChecklistItem", b =>
+            modelBuilder.Entity("Domain.Entities.PunchFile", b =>
+                {
+                    b.HasOne("Domain.Entities.Punch", null)
+                        .WithMany("PunchFiles")
+                        .HasForeignKey("PunchId");
+                });
+
+            modelBuilder.Entity("Domain.Entities.TemplateAggregate.QuestionTemplate", b =>
+                {
+                    b.HasOne("MobDeMob.Domain.ItemAggregate.ItemTemplate", "ItemTemplate")
+                        .WithMany("Questions")
+                        .HasForeignKey("ItemTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ItemTemplate");
+                });
+
+            modelBuilder.Entity("MobDeMob.Domain.Entities.Mobilization", b =>
+                {
+                    b.HasOne("MobDeMob.Domain.Entities.ChecklistAggregate.ChecklistCollection", "ChecklistCollection")
+                        .WithOne("Mobilization")
+                        .HasForeignKey("MobDeMob.Domain.Entities.Mobilization", "ChecklistCollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChecklistCollection");
+                });
+
+            modelBuilder.Entity("MobDeMob.Domain.ItemAggregate.ItemTemplate", b =>
+                {
+                    b.HasOne("Domain.Entities.Item", "Item")
+                        .WithOne()
+                        .HasForeignKey("MobDeMob.Domain.ItemAggregate.ItemTemplate", "ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ChecklistAggregate.Checklist", b =>
                 {
                     b.Navigation("Punches");
 
                     b.Navigation("Questions");
                 });
 
-            modelBuilder.Entity("MobDeMob.Domain.Entities.ChecklistAggregate.Checklist", b =>
+            modelBuilder.Entity("Domain.Entities.Punch", b =>
                 {
-                    b.Navigation("ChecklistItems");
+                    b.Navigation("PunchFiles");
+                });
 
-                    b.Navigation("Mobilization");
+            modelBuilder.Entity("MobDeMob.Domain.Entities.ChecklistAggregate.ChecklistCollection", b =>
+                {
+                    b.Navigation("Checklists");
+
+                    b.Navigation("Mobilization")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MobDeMob.Domain.ItemAggregate.ItemTemplate", b =>

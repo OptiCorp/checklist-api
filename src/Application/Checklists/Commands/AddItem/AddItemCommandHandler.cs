@@ -11,19 +11,19 @@ public class AddItemCommandHandler : IRequestHandler<AddItemCommand, Guid>
 {
     private readonly IMobilizationRepository _mobilizationRepository;
     private readonly ITemplateRepository _templateRepository;
-    private readonly IChecklistItemRepository _checklistItemRepository;
-    private readonly IChecklistItemQuestionRepository _checklistItemQuestionRepository;
+    private readonly IChecklistRepository _checklistRepository;
+    private readonly IChecklistQuestionRepository _checklistQuestionRepository;
 
     public AddItemCommandHandler(
         IMobilizationRepository mobilizationRepository,
         ITemplateRepository templateRepository,
-        IChecklistItemRepository checklistItemRepository,
-        IChecklistItemQuestionRepository checklistItemQuestionRepository)
+        IChecklistRepository checklistRepository,
+        IChecklistQuestionRepository checklistQuestionRepository)
     {
         _mobilizationRepository = mobilizationRepository;
         _templateRepository = templateRepository;
-        _checklistItemRepository = checklistItemRepository;
-        _checklistItemQuestionRepository = checklistItemQuestionRepository;
+        _checklistRepository = checklistRepository;
+        _checklistQuestionRepository = checklistQuestionRepository;
     }
 
     public async Task<Guid> Handle(AddItemCommand request, CancellationToken cancellationToken)
@@ -32,42 +32,44 @@ public class AddItemCommandHandler : IRequestHandler<AddItemCommand, Guid>
             ?? throw new NotFoundException(nameof(Mobilization), request.MobilizationId);
 
         var itemTemplate = await _templateRepository.GetTemplateByItemId(request.ItemId, cancellationToken)
-            ?? throw new NotFoundException("Item", request.ItemId);
+            ?? throw new NotFoundException(nameof(ItemTemplate), request.ItemId);
 
-        var checklistItem = await AddCheckListItem(mobilization, itemTemplate, cancellationToken);
+        var checklist = await AddCheckList(mobilization, itemTemplate, cancellationToken);
 
-        await AddPartToChecklist(request, mobilization, cancellationToken);
+        //await AddPartToChecklist(request, mobilization, cancellationToken);
 
-        return checklistItem.Id;
+        return checklist.Id;
     }
 
-    private async Task<ChecklistItem> AddCheckListItem(Mobilization mobilization, ItemTemplate itemTemplate, CancellationToken cancellationToken)
+    private async Task<Checklist> AddCheckList(Mobilization mobilization, ItemTemplate itemTemplate, CancellationToken cancellationToken)
     {
-        var checklistItem = new ChecklistItem(itemTemplate, mobilization.Checklist.Id);
+        var checklist = new Checklist(itemTemplate, mobilization.ChecklistCollectionId);
 
-        await _checklistItemRepository.AddChecklistItem(checklistItem, cancellationToken);
+        await _checklistRepository.AddChecklist(checklist, cancellationToken);
 
-        await AddQuestions(itemTemplate, checklistItem, cancellationToken);
+        await AddQuestions(itemTemplate, checklist, cancellationToken);
 
-        return checklistItem;
+        return checklist;
     }
 
-    private async Task AddQuestions(ItemTemplate itemTemplate, ChecklistItem checklistItem, CancellationToken cancellationToken)
+    private async Task AddQuestions(ItemTemplate itemTemplate, Checklist checklist, CancellationToken cancellationToken)
     {
-        var checklistItemQuestions = itemTemplate.Questions
-            .Select(q => new ChecklistItemQuestion(q, checklistItem.Id))
+        var checklistQuestions = itemTemplate.Questions
+            .Select(q => new ChecklistQuestion(q, checklist.Id))
             .ToList();
 
-        foreach (var question in checklistItemQuestions)
+        
+        foreach (var question in checklistQuestions)
         {
-            await _checklistItemQuestionRepository.AddQuestion(question, cancellationToken);
+            await _checklistQuestionRepository.AddQuestion(question, cancellationToken);
         }
     }
-    //TODO: validate ItemId string
-    private async Task AddPartToChecklist(AddItemCommand request, Mobilization mobilization, CancellationToken cancellationToken)
-    {
-        mobilization.Checklist.Parts.Add(request.ItemId);
 
-        await _mobilizationRepository.SaveChanges(cancellationToken);
-    }
+    // //TODO: validate ItemId string
+    // private async Task AddPartToChecklist(AddItemCommand request, Mobilization mobilization, CancellationToken cancellationToken)
+    // {
+    //     mobilization.Checklist.Parts.Add(request.ItemId);
+
+    //     await _mobilizationRepository.SaveChanges(cancellationToken);
+    // }
 }

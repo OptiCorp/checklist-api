@@ -1,61 +1,82 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Entities.ChecklistAggregate;
 using MobDeMob.Domain.Common;
+using MobDeMob.Domain.Entities.ChecklistAggregate;
+using MobDeMob.Domain.Enums;
+using MobDeMob.Domain.ItemAggregate;
+using Domain.Entities;
 
-namespace MobDeMob.Domain.Entities.ChecklistAggregate;
+namespace Domain.Entities.ChecklistAggregate;
+
 
 public class Checklist : AuditableEntity
 {
+    //public ChecklistCollection ChecklistCollection {get; set;} = null!
+    public Guid ChecklistCollectionId { get; private set; }
 
-    // [EnumDataType(typeof(ChecklistStatus))]
-    // public ChecklistStatus Status {get; set;}
-    public Mobilization? Mobilization { get; set; }
-    public IList<string> Parts { get; set; } = new List<string>();
-    public ICollection<ChecklistItem> ChecklistItems {get; set;} = [];
+    public ItemTemplate ItemTemplate {get; set;}
+    public Guid ItemTemplateId {get; private set;}
 
+    //public Checklist Checklist {get; set;}
+
+    public ICollection<ChecklistQuestion> Questions { get; private set; } = [];
+
+    public ICollection<Punch> Punches { get; set; } = [];
+
+
+    private int _punchesCount;
     [NotMapped]
-    public int ChecklistCountDone => ChecklistItems.Count(ci => ci.Status == Enums.ChecklistItemStatus.Completed);
+    public int PunchesCount
+    {
+        get => _punchesCount;
+        set => _punchesCount = value;
+    }
 
+    private string _itemId;
     [NotMapped]
-    public int ChecklistCount => ChecklistItems.Count;
+    public string ItemId 
+    {
+        get => _itemId;
+        set => _itemId = ItemTemplate.ItemId;
+    }
 
-    // public int GetChecklistCountDont ()
-    // {
-    //     return ChecklistItems.Count(ci => ci.Status == Enums.ChecklistItemStatus.Completed);
-    // }
+    public ChecklistItemStatus Status { get; set; }
 
-    // public int GetChecklistCountDo ()
-    // {
-    //     return ChecklistItems.Count(ci => ci.Status == Enums.ChecklistItemStatus.Completed);
-    // }
+    public double CompletionPercentage => GetCompletionPercentage();
 
-    //public ICollection<ChecklistSection> ChecklistSections { get; set; } = new List<ChecklistSection>();
+    public Checklist(ItemTemplate itemTemplate, Guid checklistCollectionId)
+    {
+        ItemTemplate = itemTemplate;
+        ChecklistCollectionId = checklistCollectionId;
+        _itemId = itemTemplate.ItemId;
+    }
 
-    //[NotMapped]
-    //public IEnumerable<Punch> Punches => ChecklistSections.SelectMany(section => section.Punches) ?? Enumerable.Empty<Punch>();
+    public void SetQuestions(IEnumerable<ChecklistQuestion> checklistItemQuestions)
+    {
+        Questions = new List<ChecklistQuestion>(checklistItemQuestions);
+    }
 
-    //[NotMapped]
-    //public double CompletionPercentage => GetCompletionPercentage();
-
-    //private double GetCompletionPercentage()
-    //{
-    //    var allSections = ChecklistSections.SelectMany(section => section.GetAllSections());
-
-    //    var completionProgressionDecimal = allSections.Count(i => i.IsCompleted) / allSections.Count();
-    //    var completionProgressionPercentage = 100.0 * completionProgressionDecimal;
-    //    return completionProgressionPercentage;
-    //}
+    public void SetPunchesCount(int punchesCount)
+    {
+        PunchesCount = punchesCount;
+    }
 
 
-    // public List<Punch> Punch {get; set;} = [];
+    protected Checklist()
+    {
 
-    // public required string ChecklistTemplateId {get; set;}
+    }
 
-    // public ChecklistTemplate ChecklistTemplate {get; set;} = null!;
+    private double GetCompletionPercentage()
+    {
+        //var questions = ChecklistItems.SelectMany(ci => ci.Questions);
+        if (!Questions.Any()) return 0;
+        var questionsApplicable = Questions.Where(q => q.NotApplicable == false);
+        if (!questionsApplicable.Any()) return 0;
 
-    // public required string MobilizationId {get; set;}
+        var completionProgressionDecimal = (double)questionsApplicable.Count(i => i.Checked) / questionsApplicable.Count();
+        var completionPercentage = 100 * completionProgressionDecimal;
+        return completionPercentage;
+    }
 
-    // public Mobilization Mobilization {get; set;} = null!;
 
-    // public List<ChecklistChecklistItem> ChecklistChecklistItems {get; set;} = null!;
 }

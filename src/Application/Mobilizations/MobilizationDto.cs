@@ -7,13 +7,13 @@ namespace Application.Mobilizations.Dtos;
 public class MobilizationDto : DtoExtension, IRegister
 {
     public required string Title { get; init; }
-    public string? Description { get; init; }
+    public string Description { get; init; } = string.Empty;
 
     public MobilizationType Type { get; init; } 
 
     public MobilizationStatus Status { get; init; }
 
-    public int PartsCount { get; init; }
+    //public int PartsCount { get; init; }
 
     public int ChecklistCountDone { get; init; }
 
