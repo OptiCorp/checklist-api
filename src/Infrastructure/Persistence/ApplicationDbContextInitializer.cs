@@ -58,7 +58,7 @@ public class ApplicationDbContextInitializer
             var item = CreateItem(CreateRandomString());
 
             var checklistCollection = CreateChecklistCollection();
-            CreateMobilization("Test title", MobilizationType.Mobilization, MobilizationStatus.NotReady, checklistCollection.Id, "Cool description");
+            CreateMobilization($"{i}Test title{i}", MobilizationType.Mobilization, MobilizationStatus.NotReady, checklistCollection.Id, "Cool description");
             var questionTemplates = CreateQuestionTemplates();
 
             var itemTemplate = CreateItemTemplateWithQuestions(item.Id, questionTemplates);
@@ -71,88 +71,6 @@ public class ApplicationDbContextInitializer
                 CreateChecklistQuestion(checklist.Id, qt, check, !check);
             }
         }
-
-        //var item = new Item
-        //{
-        //    Name = "Robotfinger",
-        //    PartTemplate = new PartTemplate
-        //    {
-        //        Name = "Fingers",
-        //        Type = "Attributes",
-        //        Created = DateOnly.FromDateTime(DateTime.Now),
-        //        LastModified = DateTime.Now,
-
-        //    },
-        //    SerialNumber = "dddddd-ldasd",
-        //    WpId = "asdddasd",
-        //};
-
-
-        //var subAssembly = new SubAssembly
-        //{
-        //    Name = "RobotHand",
-        //    PartTemplate = new PartTemplate
-        //    {
-        //        Name = "RobotHands",
-        //        Type = "Attributes",
-        //        Created = DateOnly.FromDateTime(DateTime.Now),
-        //        LastModified = DateTime.Now,
-        //    },
-        //    SerialNumber = "llllda-ldasd",
-        //    WpId = "oodaosd",
-        //    Children = [item]
-        //};
-
-        //var assembly = new Assembly
-        //{
-        //    Name = "RobotArm",
-        //    PartTemplate = new PartTemplate
-        //    {
-        //        Name = "RobotArms",
-        //        Type = "Attributes",
-        //        Created = DateOnly.FromDateTime(DateTime.Now),
-        //        LastModified = DateTime.Now,
-        //    },
-        //    SerialNumber = "ssdknaslk-ldasd",
-        //    WpId = "asølkdm",
-        //    Children = [subAssembly]
-        //};
-
-        //var unit = new Unit
-        //{
-        //    Name = "Robot",
-        //    PartTemplate = new PartTemplate
-        //    {
-        //        Name = "Skruer",
-        //        Type = "Attributes",
-        //        Created = DateOnly.FromDateTime(DateTime.Now),
-        //        LastModified = DateTime.Now,
-        //    },
-        //    SerialNumber = "saf2jn1jk2-123",
-        //    WpId = "asølkdm",
-        //    Children = [assembly],
-        //};
-
-        //await _modelContextBase.Parts.AddAsync(
-        //    unit
-        //);
-
-        //var checklist = new Checklist
-        //{
-        //    Parts = [item, assembly, subAssembly],
-        //};
-        //await _modelContextBase.Checklists.AddAsync(checklist);
-
-        //var checklistSec1 = seedChecklistSection(item, ["Does the finger look ok?", "Does the finger have a nail?"], checklist);
-        //var checklistSec2 = seedChecklistSection(subAssembly, ["Does the arms look ok?"], checklist);
-        //var checklistSec3 = seedChecklistSection(assembly, ["Does the arm look good?"], checklist);
-        ////var checklistSec4 = seedChecklistSection(unit, ["Does the robot look ok?"], checklist);
-
-        //checklistSec3.SubSections = [checklistSec2, checklistSec1];
-
-        //await _modelContextBase.ChecklistSections.AddAsync(checklistSec3);
-
-        //await seedMobilization(checklist);
     }
 
     private string CreateRandomString()

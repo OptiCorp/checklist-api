@@ -1,4 +1,5 @@
 ﻿using Application.Mobilizations.Commands;
+using Application.Mobilizations.Queries;
 using Application.Mobilizations.Queries.GetAll;
 using Application.Mobilizations.Queries.GetMobilizationById;
 using MediatR;
@@ -54,5 +55,12 @@ public class MobilizationsController : ControllerBase
     {
         await _sender.Send(deleteMobilizationCommand, cancellationToken);
         return Ok();
+    }
+
+    [HttpGet("GetBySearch")]
+    public async Task<IActionResult> SearchMobilizations([FromQuery] GetMobilizationBySearchQuery request, CancellationToken cancellationToken = default)
+    {
+        var mobs = await _sender.Send(request, cancellationToken);
+        return Ok(mobs);
     }
 }

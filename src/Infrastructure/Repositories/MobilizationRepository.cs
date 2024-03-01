@@ -62,4 +62,15 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
             
             //.PaginatedListAsync(pageNumber, pageSize);
     }
+
+    public async Task<PaginatedList<MobilizationDto>> GetMobilizationsBySearch(int pageNumber, int pageSize, string title, MobilizationStatus? status, CancellationToken cancellationToken)
+    {
+        return await GetSet()
+            .Where(m => m.Title.Contains(title) && (status == null || m.Status == status))
+            .OrderBy(x => x.Title)
+            .Include(m => m.ChecklistCollection)
+            .ThenInclude(c => c.Checklists)
+            .ProjectToType<MobilizationDto>()
+            .PaginatedListAsync(pageNumber, pageSize);
+    }
 }
