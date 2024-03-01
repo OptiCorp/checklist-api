@@ -75,6 +75,7 @@ namespace Infrastructure.Repositories
         {
             return await GetSet()
                 .Where(ci => ci.ChecklistCollectionId == checklistCollectionId)
+                .Include(ci => ci.ItemTemplate)
                 .OrderBy(x => x.Created)
                 .ProjectToType<ChecklistBriefDto>()
                 .PaginatedListAsync(pageNumber, pageSize);

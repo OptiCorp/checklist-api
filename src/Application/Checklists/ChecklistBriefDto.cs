@@ -10,15 +10,13 @@ namespace Application.Checklists.Dtos;
 
 public class ChecklistBriefDto : DtoExtension, IRegister
 {
-    public required string ItemId { get; init; }
-
-    public Guid ChecklistId { get; init; }
+    public string ItemId { get; init; }
 
     //public Checklist Checklist {get; set;}
 
-    public Guid TemplateId { get; init; }
+    public Guid ItemTemplateId { get; init; }
 
-    public ItemTemplateBriefDto Template { get; init; } = null!;
+    //public ItemTemplateBriefDto Template { get; init; } = null!;
 
     //public ICollection<PunchDto> Punches { get; init; } = [];
     public ChecklistStatus Status { get; init; }
