@@ -9,10 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddApplication()
-    .AddInfrastructure(builder.Configuration)
-    .AddApplicationDbContextInitializer()
-    .AddAzureClient(builder.Configuration)
-    .AddMemoryCacheService(); //TODO:
+    .AddInfrastructure(builder.Configuration);
 
 builder.Services.AddControllers(options =>
 {

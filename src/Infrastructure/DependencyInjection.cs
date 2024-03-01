@@ -19,7 +19,10 @@ public static class DependencyInjection
     {
         services
             .AddPersistence(configuration)
-            .AddRepositories();
+            .AddRepositories()
+            .AddApplicationDbContextInitializer()
+            .AddAzureClient(configuration)
+            .AddMemoryCacheService();
 
         return services;
     }
