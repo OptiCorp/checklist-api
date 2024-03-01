@@ -112,7 +112,7 @@ namespace Infrastructure.Persistence.Migrations
                         column: x => x.ItemTemplateId,
                         principalTable: "ItemTemplates",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -191,7 +191,7 @@ namespace Infrastructure.Persistence.Migrations
                         column: x => x.QuestionTemplateId,
                         principalTable: "QuestionTemplates",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

@@ -66,6 +66,12 @@ public class ModelContextBase : DbContext
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Checklist>()
+            .HasOne(c => c.ItemTemplate)
+            .WithMany()
+            .HasForeignKey(c => c.ItemTemplateId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Checklist>()
             .HasIndex(ci => new { ci.ItemTemplateId, ci.ChecklistCollectionId })
             .IsUnique();
 
@@ -73,7 +79,7 @@ public class ModelContextBase : DbContext
             .HasOne(cq => cq.QuestionTemplate)
             .WithMany()
             .HasForeignKey(cq => cq.QuestionTemplateId)
-            .OnDelete(DeleteBehavior.Restrict); //TODO:
+            .OnDelete(DeleteBehavior.Cascade); //TODO:
 
         modelBuilder.Entity<ChecklistQuestion>()
             .ToTable(t => t.HasCheckConstraint("CK_ChecklistQuestions_CheckedNotApplicable",

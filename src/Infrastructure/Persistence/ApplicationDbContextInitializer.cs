@@ -31,7 +31,6 @@ public class ApplicationDbContextInitializer
 
     private async Task TrySeedAsync()
     {
-        
         await SeedTablesAsync();
         await _modelContextBase.SaveChangesAsync();
     }
@@ -50,11 +49,9 @@ public class ApplicationDbContextInitializer
         || _modelContextBase.ChecklistQuestions.Any()
         || _modelContextBase.Punches.Any()
         || _modelContextBase.QuestionTemplates.Any()
-
-
-
         ) return;
 
+        
         //var item = new Item
         //{
         //    Name = "Robotfinger",

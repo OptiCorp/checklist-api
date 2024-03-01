@@ -310,7 +310,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasOne("MobDeMob.Domain.ItemAggregate.ItemTemplate", "ItemTemplate")
                         .WithMany()
                         .HasForeignKey("ItemTemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ItemTemplate");
@@ -327,7 +327,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasOne("Domain.Entities.TemplateAggregate.QuestionTemplate", "QuestionTemplate")
                         .WithMany()
                         .HasForeignKey("QuestionTemplateId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("QuestionTemplate");
