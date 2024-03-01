@@ -24,7 +24,7 @@ public class GetAllMobilizationsQueryHandler : IRequestHandler<GetAllMobilizatio
     public async Task<PaginatedList<MobilizationDto>> Handle(GetAllMobilizationsQuery request, CancellationToken cancellationToken)
     {
         var mobilizationsDtos = await _mobilizationRepository
-            .GetAllMobilizationsWithPagination(request.PageNumber, request.pageSize, cancellationToken);
+            .GetAllMobilizationsWithPagination(request.PageNumber, request.PageSize, cancellationToken);
         //var mobilizationsDto = mobilizations.Select(mob => mob.AsDto());
         // var mobilizationDtos = mobilizations.Select(m => _mapper.Map<MobilizationDto>(m));
         //var mobilizationDtos = mobilizations;

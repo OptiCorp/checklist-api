@@ -5,5 +5,5 @@ namespace Application.Punches.Queries.GetById;
 
 public class GetPunchQuery : IRequest<PunchDto>
 {
-   public Guid punchId { get; set; }
+   public Guid PunchId { get; set; }
 }

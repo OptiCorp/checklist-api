@@ -33,8 +33,8 @@ public class GetPunchQueryHandler : IRequestHandler<GetPunchQuery, PunchDto>
 
     public async Task<PunchDto> Handle(GetPunchQuery request, CancellationToken cancellationToken)
     {
-        var punch = await _punchRepository.GetPunchNoTracking(request.punchId, cancellationToken)
-            ?? throw new NotFoundException(nameof(Punch), request.punchId);
+        var punch = await _punchRepository.GetPunchNoTracking(request.PunchId, cancellationToken)
+            ?? throw new NotFoundException(nameof(Punch), request.PunchId);
 
         var checklist = await _checklistRepository.GetSingleChecklist(punch.ChecklistId)
             ?? throw new NotFoundException(nameof(Checklist), punch.ChecklistId);

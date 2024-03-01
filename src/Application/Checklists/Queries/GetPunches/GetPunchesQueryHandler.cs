@@ -48,29 +48,31 @@ public class GetPunchesQueryHandler : IRequestHandler<GetPunchesQuery, PunchList
         
         var punchesIds = punches.Select(p => p.Id);
 
-        var itemTemplateDto = checklist.ItemTemplate.Adapt<ItemTemplateDto>();
+        var itemId = checklist.ItemTemplate.ItemId;
 
-        if (!punches.Any() || !punches.Any(p => p.PunchFiles.Any()))
-        {
-            return MapToPunchDtoList(punchesIds, itemTemplateDto, checklist.Id, null);
-        }
+        // if (!punches.Any() || !punches.Any(p => p.PunchFiles.Any()))
+        // {
+        //     return MapToPunchDtoList(punchesIds, checklist.Id, itemId);
+        // }
 
-        var checklistCollectionId = checklist.ChecklistCollectionId;
-        var containerSAS = _cacheRepository.GetValue(checklistCollectionId.ToString());
+        //var checklistCollectionId = checklist.ChecklistCollectionId;
+        // var containerSAS = _cacheRepository.GetValue(checklistCollectionId.ToString());
 
-        if (containerSAS == null)
-        {
-            var newContainerSAS = await _fileStorageRepository.GenerateContainerSAS(checklistCollectionId.ToString(), cancellationToken);
-            _cacheRepository.SetKeyValue(checklistCollectionId.ToString(), newContainerSAS, TimeSpan.FromHours(1));
-            return MapToPunchDtoList(punchesIds, itemTemplateDto, checklistCollectionId, newContainerSAS.Query);
-        }
+        // if (containerSAS == null)
+        // {
+        //     var newContainerSAS = await _fileStorageRepository.GenerateContainerSAS(checklistCollectionId.ToString(), cancellationToken);
+        //     _cacheRepository.SetKeyValue(checklistCollectionId.ToString(), newContainerSAS, TimeSpan.FromHours(1));
+        //     return MapToPunchDtoList(punchesIds, checklistCollectionId, newContainerSAS.Query);
+        // }
 
-        return MapToPunchDtoList(punchesIds, itemTemplateDto, checklistCollectionId, containerSAS.Query);
+        //return MapToPunchDtoList(punchesIds, checklist.Id, containerSAS.Query);
+        return MapToPunchDtoList(punchesIds, checklist.Id, itemId);
+
     }
 
-    private static PunchListDto MapToPunchDtoList(IEnumerable<Guid> punchesIds, ItemTemplateDto itemTemplate, Guid checklistItemId, string? SASToken = null)
+    private static PunchListDto MapToPunchDtoList(IEnumerable<Guid> punchesIds, Guid checklistId, string itemId)
     {
-        return new PunchListDto(punchesIds, itemTemplate, checklistItemId, SASToken);
+        return new PunchListDto(punchesIds, checklistId, itemId);
     }
 
 }

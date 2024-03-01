@@ -39,7 +39,7 @@ public class PunchesController : ControllerBase
 
    public async Task<ActionResult<PunchDto>> GetSinglePunch(Guid punchId, CancellationToken cancellationToken)
    {
-       var punch = await _sender.Send(new GetPunchQuery { punchId = punchId }, cancellationToken);
+       var punch = await _sender.Send(new GetPunchQuery { PunchId = punchId }, cancellationToken);
        return Ok(punch);
    }
 }

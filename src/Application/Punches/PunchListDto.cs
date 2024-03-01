@@ -7,20 +7,22 @@ namespace Application.Punches.Dtos;
 public class PunchListDto
 {
 
-    public string? SASToken {get; init;}
+    //public string? SASToken {get; init;}
 
-    public Guid ChecklistItemId {get; init;}
+    public Guid ChecklistId {get; init;}
 
     public IEnumerable<Guid> PunchIds {get; init;} = [];
 
-    public ItemTemplateDto ItemTemplate {get; init;}
+    public string ItemId {get; init;}
 
-    public PunchListDto(IEnumerable<Guid> punchIds, ItemTemplateDto itemTemplate, Guid checklistItemId, string? sasToken)
+    //public ItemTemplateDto ItemTemplate {get; init;}
+
+    public PunchListDto(IEnumerable<Guid> punchIds, Guid checklistId, string itemId)
     {
         PunchIds = punchIds;
-        ItemTemplate = itemTemplate;
-        ChecklistItemId = checklistItemId;
-        SASToken = sasToken;
+        ChecklistId = checklistId;
+        ItemId = itemId;
+        //SASToken = sasToken;
     }
 
     // public void Mapping(Profile profile)

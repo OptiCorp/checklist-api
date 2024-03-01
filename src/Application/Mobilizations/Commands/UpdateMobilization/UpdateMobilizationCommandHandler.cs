@@ -15,7 +15,7 @@ public class UpdateMobilizationCommandHandler : IRequestHandler<UpdateMobilizati
     }
     public async Task Handle(UpdateMobilizationCommand request, CancellationToken cancellationToken)
     {
-        var mobilization = await _mobilizationRepository.GetMobilizationById(request.id, cancellationToken) ?? throw new NotFoundException(nameof(Mobilization), request.id);
+        var mobilization = await _mobilizationRepository.GetMobilizationById(request.Id, cancellationToken) ?? throw new NotFoundException(nameof(Mobilization), request.Id);
 
         UpdateMobilization(mobilization, request);
 

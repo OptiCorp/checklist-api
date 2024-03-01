@@ -30,7 +30,6 @@ public class PunchUploadFileCommandHandler : IRequestHandler<PunchUploadFilesCom
         foreach (var file in request.Files)
         {
             var blobUri = await _fileStorageRepository.UploadImage(file.Stream, file.FileName, checklistId, file.ContentType, cancellationToken);
-            file.Stream.Close();
             punch.PunchFiles.Add(
                 new PunchFile() 
                 { 

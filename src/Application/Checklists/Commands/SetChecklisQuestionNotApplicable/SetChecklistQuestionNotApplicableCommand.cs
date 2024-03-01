@@ -10,6 +10,6 @@ public class SetChecklistQuestionNotApplicableCommand : IRequest
 {
     public Guid Id {get; set;} 
 
-    public bool value {get; set;}
+    public bool Value {get; set;}
 
 }

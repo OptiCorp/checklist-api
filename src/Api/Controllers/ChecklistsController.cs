@@ -28,7 +28,7 @@ public class ChecklistsController : ControllerBase
         _sender = sender;
     }
 
-    [HttpGet("GetPunches/{checklistItemId}")]
+    [HttpGet("GetPunches/{checklistId}")]
 
     public async Task<ActionResult<IEnumerable<PunchDto>>> GetPunches(Guid checklistId, CancellationToken cancellationToken)
     {
@@ -46,30 +46,33 @@ public class ChecklistsController : ControllerBase
     [HttpPost("AddItem/{itemId}")]
     public async Task<IActionResult> AddNewItem(Guid mobilizationId, [FromBody] AddItemCommand addItemCommand, CancellationToken cancellationToken = default)
     {
-        await _sender.Send(addItemCommand, cancellationToken);
-        return Ok(addItemCommand);
+        var checklistId = await _sender.Send(addItemCommand, cancellationToken);
+        return Ok(checklistId);
     }
 
     [HttpPost("AddPunch/{itemId}")]
     public async Task<IActionResult> AddPunch([FromBody] AddPunchCommand addPunchCommand, CancellationToken cancellationToken = default)
     {
-        await _sender.Send(addPunchCommand, cancellationToken);
-        return Ok(addPunchCommand);
+        var id = await _sender.Send(addPunchCommand, cancellationToken);
+        return Ok(id);
     }
 
-    [HttpPost("UploadFile/{punchId}")]
-    public async Task<ActionResult<string>> UploadPunchFile(Guid punchId, [FromForm] FileModel fileModel, CancellationToken cancellationToken)
+    [HttpPost("UploadFiles/{punchId}")]
+    public async Task<ActionResult<string>> UploadPunchFiles(Guid punchId, [FromForm] FileModel fileModel, CancellationToken cancellationToken)
     {
         ICollection<PunchUploadFile> files = [];
+        using var sharedStream = new MemoryStream();
+
         foreach (var file in fileModel.files)
         {
-            using var stream = new MemoryStream();
-            await file.CopyToAsync(stream);
+            
+            sharedStream.Seek(0, SeekOrigin.Begin);
+            await file.CopyToAsync(sharedStream);
             files.Add(new PunchUploadFile()
             {
                 ContentType = file.ContentType,
                 FileName = file.FileName,
-                Stream = stream
+                Stream = new MemoryStream(sharedStream.ToArray())
             });
         }
         // await _sender.Send(new PunchUploadFilesCommand { Id = punchId, ContentType = fileModel.file.ContentType, FileName = fileModel.file.FileName, Stream = fileModel.file.OpenReadStream() }, cancellationToken);
@@ -78,14 +81,14 @@ public class ChecklistsController : ControllerBase
         return NoContent();
     }
 
-    [HttpPost("ChecklistQuestionCheckedUpdate/{checklistItemQuestionId}")]
+    [HttpPost("ChecklistQuestionCheckedUpdate/{checklistQuestionId}")]
     public async Task<IActionResult> ChecklistQuestionCheckedUpdate([FromQuery] SetChecklistQuestionCheckedCommand query, CancellationToken cancellationToken)
     {
         await _sender.Send(query, cancellationToken);
         return NoContent();
     }
 
-    [HttpPatch("ChecklistQuestionNotApplicableUpdate/{checklistItemQuestionId}")]
+    [HttpPost("ChecklistQuestionNotApplicableUpdate/{checklistQuestionId}")]
     public async Task<IActionResult> ChecklistQuestionNotApplicableUpdate([FromQuery] SetChecklistQuestionNotApplicableCommand query, CancellationToken cancellationToken)
     {
         await _sender.Send(query, cancellationToken);
@@ -100,7 +103,7 @@ public class ChecklistsController : ControllerBase
     // }
 
     [HttpGet("GetChecklists")]
-    public async Task<IActionResult> GetChecklists(Guid mobilizationId, int pageNumber, int pageSize, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetChecklists(Guid mobilizationId, CancellationToken cancellationToken, int pageNumber = 1, int pageSize = 10)
     {
         var checklistItems = await _sender.Send(new GetChecklistsQuery{MobilizationId = mobilizationId, PageNumber = pageNumber, PageSize = pageSize}, cancellationToken);
         return Ok(checklistItems);

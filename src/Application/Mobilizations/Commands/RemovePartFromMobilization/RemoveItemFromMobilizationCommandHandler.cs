@@ -31,7 +31,6 @@ public class RemovePartFromMobilizationCommandHandler : IRequestHandler<RemoveIt
         var checklist = await _checklistRepository.GetChecklistByItemId(request.ItemId, mobilization.ChecklistCollectionId, cancellationToken) 
             ?? throw new NotFoundException(nameof(Checklist), request.ItemId);
        
-    
         DeleteChecklist(checklist);
 
         await _checklistRepository.SaveChanges(cancellationToken);

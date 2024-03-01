@@ -42,6 +42,7 @@ public class PunchRepository : RepositoryBase<Punch>, IPunchRepository
     {
         return await _modelContextBase.Punches
             .Where(p => p.ChecklistId == checklistId)
+            .Include(p => p.PunchFiles)
             .ToListAsync(cancellationToken: cancellationToken);
     }
 
@@ -55,6 +56,8 @@ public class PunchRepository : RepositoryBase<Punch>, IPunchRepository
     public async Task<Punch?> GetPunch(Guid id, CancellationToken cancellationToken = default)
     {
         var punch = await GetSet()
+            .Include(p => p.PunchFiles)
+            .Include(p => p.Checklist)
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
         return punch;

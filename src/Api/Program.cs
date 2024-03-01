@@ -11,13 +11,7 @@ builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
 
-builder.Services.AddControllers(options =>
-{
-    options.InputFormatters.Insert(0, MyJPIF.GetJsonPatchInputFormatter());
-}).AddNewtonsoftJson(options =>
-{
-    options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-});
+builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

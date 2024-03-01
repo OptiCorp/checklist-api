@@ -8,5 +8,5 @@ public class GetAllMobilizationsQuery : IRequest<PaginatedList<MobilizationDto>>
 {
     public int PageNumber {get; init;} = 1;
 
-    public int pageSize {get; init;} = 10;
+    public int PageSize {get; init;} = 10;
 }

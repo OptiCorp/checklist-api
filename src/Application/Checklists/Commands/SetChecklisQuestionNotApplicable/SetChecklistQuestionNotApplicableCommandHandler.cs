@@ -35,7 +35,8 @@ public class SetChecklistNotApplicableValueCommandHandler : IRequestHandler<SetC
         var checklistQuestion = await _checklistQuestionRepository.GetQuestion(request.Id, cancellationToken)
             ?? throw new NotFoundException(nameof(ChecklistQuestion), request.Id);
 
-        checklistQuestion.MarkQuestionAsNotApplicable(request.value);
+        checklistQuestion.MarkQuestionAsNotApplicable(request.Value);
+        await _checklistQuestionRepository.SaveChanges(cancellationToken);
     }
 
 }
