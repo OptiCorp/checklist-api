@@ -49,7 +49,7 @@ namespace Infrastructure.Repositories
             return await GetSet()
                 // .Include(c => c.Questions)
                 // .ThenInclude(c => c.QuestionTemplate)
-                //.Include(c => c.ItemTemplate)
+                .Include(c => c.ItemTemplate)
                 .SingleOrDefaultAsync(c => c.Id == checklistId, cancellationToken);
         }
 

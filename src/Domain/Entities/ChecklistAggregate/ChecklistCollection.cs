@@ -13,8 +13,9 @@ public class ChecklistCollection : AuditableEntity
 
     public ICollection<Checklist> Checklists {get; set;} = [];
 
+
     [NotMapped]
-    public int ChecklistsCountDone => Checklists.Count(ci => ci.Status == Enums.ChecklistItemStatus.Completed);
+    public int ChecklistsCountDone => Checklists.Count(ci => ci.Status == Enums.ChecklistStatus.Completed);
 
     [NotMapped]
     public int ChecklistsCount => Checklists.Count;

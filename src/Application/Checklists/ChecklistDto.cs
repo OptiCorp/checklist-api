@@ -10,7 +10,7 @@ namespace Application.Checklists.Dtos;
 
 public class ChecklistDto : DtoExtension, IRegister
 {
-    public required string ItemId { get; init; }
+    public string ItemId { get; init; }
 
     //public Guid ChecklistCollectionId { get; init; }
 
@@ -18,14 +18,12 @@ public class ChecklistDto : DtoExtension, IRegister
 
     public Guid ItemTemplateId { get; init; }
 
-    public ItemTemplateDto ItemTemplate { get; init; } = null!;
-
     public ICollection<ChecklistQuestionDto> Questions { get; init; } = [];
 
     //public ICollection<PunchDto> Punches { get; init; } = [];
     public int? PunchesCount {get; init;}
 
-    public ChecklistItemStatus Status { get; init; }
+    public ChecklistStatus Status { get; init; }
 
     public double CompletionPercentage { get; init; }
 

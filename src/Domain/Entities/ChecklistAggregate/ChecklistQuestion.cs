@@ -20,19 +20,13 @@ public class ChecklistQuestion : AuditableEntity
     public string Question
     {
         get => QuestionTemplate?.Question ?? string.Empty;
-        private set => QuestionTemplate.Question = value;
     }
 
     public ChecklistQuestion(QuestionTemplate questionTemplate, Guid checklistId)
     {
         ChecklistId = checklistId;
         QuestionTemplateId = questionTemplate.Id;
-        Question = questionTemplate.Question;
-    }
-
-    public void SetQuestion(string question)
-    {
-        Question = question;
+        
     }
 
     public bool IsQuestionCheckable() => !NotApplicable;

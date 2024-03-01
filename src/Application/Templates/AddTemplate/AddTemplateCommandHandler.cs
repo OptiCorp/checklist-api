@@ -23,10 +23,10 @@ public class AddTemplateCommandHandler : IRequestHandler<AddTemplateCommand, Gui
 
     public async Task<Guid> Handle(AddTemplateCommand request, CancellationToken cancellationToken)
     {
-        var item = _itemReposiory.GetItemById(request.ItemId, cancellationToken)
+        var item = await _itemReposiory.GetItemById(request.ItemId, cancellationToken)
             ?? throw new NotFoundException(nameof(Item), request.ItemId);
 
-        var template = MapToItemTemplate(request);
+        var template = MapToItemTemplate(item);
 
         await _templateRepository.AddTemplate(template, cancellationToken);
 
@@ -39,11 +39,9 @@ public class AddTemplateCommandHandler : IRequestHandler<AddTemplateCommand, Gui
         return template.Id;
     }
 
-    private ItemTemplate MapToItemTemplate(AddTemplateCommand request)
+    private ItemTemplate MapToItemTemplate(Item item)
     {
-        return new ItemTemplate
-        {
-            ItemId = request.ItemId,
-        };
+        return new ItemTemplate(item.Id);
+        
     }
 }

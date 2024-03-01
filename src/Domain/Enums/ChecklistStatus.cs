@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 namespace MobDeMob.Domain.Enums;
-public enum ChecklistItemStatus
+public enum ChecklistStatus
 {
     [Display(Name = "NotStarted")]
     NotStarted,

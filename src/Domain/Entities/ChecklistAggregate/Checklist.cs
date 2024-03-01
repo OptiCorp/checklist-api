@@ -13,7 +13,7 @@ public class Checklist : AuditableEntity
     //public ChecklistCollection ChecklistCollection {get; set;} = null!
     public Guid ChecklistCollectionId { get; private set; }
 
-    public ItemTemplate ItemTemplate {get; set;}
+    public ItemTemplate ItemTemplate {get; set;} = null!;
     public Guid ItemTemplateId {get; private set;}
 
     //public Checklist Checklist {get; set;}
@@ -31,15 +31,17 @@ public class Checklist : AuditableEntity
         set => _punchesCount = value;
     }
 
-    private string _itemId;
     [NotMapped]
-    public string ItemId 
-    {
-        get => _itemId;
-        set => _itemId = ItemTemplate.ItemId;
-    }
+    public string ItemId => ItemTemplate?.ItemId ?? string.Empty; //TODO:
+    //public string ItemId {get; set;}
 
-    public ChecklistItemStatus Status { get; set; }
+    // public string ItemId 
+    // {
+    //     get => _itemId;
+    //     set => _itemId = ItemTemplate.ItemId;
+    // }
+
+    public ChecklistStatus Status { get; private set; }
 
     public double CompletionPercentage => GetCompletionPercentage();
 
@@ -47,7 +49,13 @@ public class Checklist : AuditableEntity
     {
         ItemTemplate = itemTemplate;
         ChecklistCollectionId = checklistCollectionId;
-        _itemId = itemTemplate.ItemId;
+        //_itemId = itemTemplate.ItemId;
+    }
+
+    public Checklist SetChecklistStatus(ChecklistStatus status)
+    {
+        Status = status;
+        return this;
     }
 
     public void SetQuestions(IEnumerable<ChecklistQuestion> checklistItemQuestions)

@@ -5,7 +5,7 @@ namespace Domain.Entities.TemplateAggregate;
 
 public class QuestionTemplate : AuditableEntity
 {
-    public Guid ItemTemplateId {get; set;}
+    public Guid ItemTemplateId {get; private set;}
     public ItemTemplate ItemTemplate {get;} = null!;
-    public required string Question { get; set; }
+    public string Question { get; set; }
 }

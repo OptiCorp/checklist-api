@@ -21,7 +21,7 @@ public class ChecklistBriefDto : DtoExtension, IRegister
     public ItemTemplateBriefDto Template { get; init; } = null!;
 
     //public ICollection<PunchDto> Punches { get; init; } = [];
-    public ChecklistItemStatus Status { get; init; }
+    public ChecklistStatus Status { get; init; }
 
     public void Register(TypeAdapterConfig config)
     {
