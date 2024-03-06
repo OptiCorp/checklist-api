@@ -71,13 +71,12 @@ namespace Infrastructure.Repositories
                  .SingleOrDefaultAsync(c => c.Id == checklistId, cancellationToken);
         }
 
-        public async Task<PaginatedList<ChecklistBriefDto>> GetChecklistsWithPaginationFromChecklistCollection(Guid checklistCollectionId, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+        public async Task<PaginatedList<Checklist>> GetChecklistsWithPaginationFromChecklistCollection(Guid checklistCollectionId, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
         {
             return await GetSet()
                 .Where(ci => ci.ChecklistCollectionId == checklistCollectionId)
                 .Include(ci => ci.ItemTemplate)
                 .OrderBy(x => x.Created)
-                .ProjectToType<ChecklistBriefDto>()
                 .PaginatedListAsync(pageNumber, pageSize);
         }
     }

@@ -34,17 +34,5 @@ public class AddMobilizationCommandHandler : IRequestHandler<AddMobilizationComm
     {
         var mob = Mobilization.New(request.Title, request.MobilizationType, MobilizationStatus.NotReady, checklistId, request.Description);
         return mob;
-        // return new Mobilization
-        // (
-        //     request.Title,
-        //     checklistId,
-        //     request.Description ?? string.Empty
-        // )
-        // {
-        //     Created = DateOnly.FromDateTime(DateTime.Now),
-        //     Status = MobilizationStatus.NotReady,
-        //     Type = request.MobilizationType
-        //     //MobilizationType mobilizationType, MobilizationStatus mobilizationStatus
-        // };
     }
 }

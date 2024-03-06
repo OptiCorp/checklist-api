@@ -14,14 +14,14 @@ public interface IMobilizationRepository
 
     Task<IEnumerable<Mobilization>> GetAllMobilizations(CancellationToken cancellationToken = default);
 
-    Task<PaginatedList<MobilizationDto>> GetAllMobilizationsWithPagination(int pageNumber, int pageSize, CancellationToken cancellationToken = default);
+    Task<PaginatedList<Mobilization>> GetAllMobilizationsWithPagination(int pageNumber, int pageSize, CancellationToken cancellationToken = default);
 
-    Task<PaginatedList<MobilizationDto>> GetMobilizationsBySearch(int pageNumber, int pageSize, string title, MobilizationStatus? status, CancellationToken cancellationToken);
+    Task<PaginatedList<Mobilization>> GetMobilizationsBySearch(int pageNumber, int pageSize, string title, MobilizationStatus? status, CancellationToken cancellationToken);
 
 
     Task DeleteMobilization(Guid id, CancellationToken cancellationToken = default); 
 
-    Task<IEnumerable<Mobilization>> GetMobilizationsForItem(string ItemId, CancellationToken cancellationToken = default);
+    Task<PaginatedList<Mobilization>> GetMobilizationsForItem(string ItemId, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
 
     //Task RemovePartFromMobilization(string id, string partId, CancellationToken cancellationToken = default);
 

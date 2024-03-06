@@ -32,14 +32,7 @@ public class Checklist : AuditableEntity
     }
 
     [NotMapped]
-    public string ItemId => ItemTemplate?.ItemId ?? string.Empty; //TODO:
-    //public string ItemId {get; set;}
-
-    // public string ItemId 
-    // {
-    //     get => _itemId;
-    //     set => _itemId = ItemTemplate.ItemId;
-    // }
+    public string ItemId => ItemTemplate?.ItemId ?? string.Empty; 
 
     public ChecklistStatus Status { get; private set; }
 

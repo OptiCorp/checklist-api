@@ -8,10 +8,10 @@ public class GetMobilizationsBySearchValidator : AbstractValidator<GetMobilizati
 {
     public GetMobilizationsBySearchValidator()
     {
-        RuleFor(v => v.title)
+        RuleFor(v => v.Title)
             .NotEmpty().WithMessage("cannot search with empty string");
         
-        RuleFor(v => v.title)
+        RuleFor(v => v.Title)
             .MaximumLength(20);
             
     }

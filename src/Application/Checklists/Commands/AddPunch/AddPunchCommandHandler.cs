@@ -13,26 +13,18 @@ namespace Application.Checklists.Commands.AddPunch;
 
 public class AddPunchCommandHandler : IRequestHandler<AddPunchCommand, Guid>
 {
-
     private readonly IMobilizationRepository _mobilizationRepository;
-    private readonly ITemplateRepository _templateRepository;
     private readonly IChecklistRepository _checklistRepository;
-    private readonly IChecklistQuestionRepository _checklistQuestionRepository;
-
     private readonly IPunchRepository _punchRepository;
 
     public AddPunchCommandHandler(
         IMobilizationRepository mobilizationRepository,
-        ITemplateRepository templateRepository,
         IChecklistRepository checklistRepository,
-        IChecklistQuestionRepository checklistQuestionRepository,
         IPunchRepository punchRepository
         )
     {
         _mobilizationRepository = mobilizationRepository;
-        _templateRepository = templateRepository;
         _checklistRepository = checklistRepository;
-        _checklistQuestionRepository = checklistQuestionRepository;
         _punchRepository = punchRepository;
     }
     public async Task<Guid> Handle(AddPunchCommand request, CancellationToken cancellationToken)

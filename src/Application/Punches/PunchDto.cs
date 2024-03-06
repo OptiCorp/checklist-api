@@ -21,12 +21,6 @@ public class PunchDto : DtoExtension, IRegister
     public string? SasToken {get; init;}
 
     public IEnumerable<Uri> PunchFileUris { get; init; } = [];
-
-    // public void Mapping(Profile profile)
-    // {
-    //     profile.CreateMap<Punch, PunchDto>()
-    //         .ForMember(pd => pd.ImageBlobUris, opt => opt.MapFrom(p => p.ImageBlobUris));
-    // }
     public void Register(TypeAdapterConfig config)
     {
         config.NewConfig<Punch, PunchDto>()

@@ -38,7 +38,6 @@ public class MobilizationsController : ControllerBase
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAllMobilizations([FromQuery] GetAllMobilizationsQuery query,CancellationToken cancellationToken = default)
     {
-        //TODO: pagination for all requests that responds lists?
         var mobs = await _sender.Send(query, cancellationToken);
         return Ok(mobs);
     }
@@ -65,9 +64,9 @@ public class MobilizationsController : ControllerBase
     }
 
     [HttpGet("GetMobilizationsForItem/{itemId}")]
-    public async Task<IActionResult> GetMobilizationsForItem([FromRoute] string itemId , CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetMobilizationsForItem([FromRoute] string itemId, int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default)
     {
-        var mobs = await _sender.Send(new GetMobilizationsForItemQuery{ItemId = itemId}, cancellationToken);
+        var mobs = await _sender.Send(new GetMobilizationsForItemQuery{ItemId = itemId, PageNumber = pageNumber, PageSize = pageSize}, cancellationToken);
         return Ok(mobs);
     }
 }

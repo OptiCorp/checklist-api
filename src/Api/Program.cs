@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using MobDeMob.Infrastructure;
 using MobDeMob.Application;
 using System.Text.Json.Serialization;
-using LearningCqrs.Core.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +18,7 @@ builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(opt => opt.DocumentFilter<JsonPatchDocumentFilter>());
-//builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddSwaggerGenNewtonsoftSupport();
 

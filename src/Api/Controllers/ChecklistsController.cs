@@ -37,13 +37,6 @@ public class ChecklistsController : ControllerBase
         return Ok(punches);
     }
 
-    // [HttpGet("GetPunch/{punchId}")]
-    // public async Task<ActionResult<PunchDto>> GetPunch(Guid punchId, CancellationToken cancellationToken)
-    // {
-    //     var punch = await _sender.Send(new GetPunchQuery { punchId = punchId }, cancellationToken);
-    //     return Ok(punch);
-    // }
-
     [HttpPost("AddItem/{itemId}")]
     public async Task<IActionResult> AddNewItem(Guid mobilizationId, [FromBody] AddItemCommand addItemCommand, CancellationToken cancellationToken = default)
     {
@@ -103,13 +96,6 @@ public class ChecklistsController : ControllerBase
         return NoContent();
     }
 
-    // [HttpPatch("ChecklistItemUpdate/{checklistItemId}")]
-    // public async Task<IActionResult> ChecklistItemUpdate(SetChecklistItemPatchCommand setChecklistItemPatchCommand, CancellationToken cancellationToken)
-    // {
-    //     await _sender.Send(setChecklistItemPatchCommand, cancellationToken);
-    //     return NoContent();
-    // }
-
     [HttpGet("GetChecklists")]
     public async Task<IActionResult> GetChecklists(Guid mobilizationId, CancellationToken cancellationToken, int pageNumber = 1, int pageSize = 10)
     {
@@ -137,20 +123,4 @@ public class ChecklistsController : ControllerBase
         await _sender.Send(updatePunchCommand, cancellationToken);
         return NoContent();
     }
-
-
-
-    //[HttpPost("{partId}/CreatePartChecklistQuestions")]
-    //public async Task<ActionResult> CreatePartChecklistQuestions(string partId, [FromBody] List<string> questions, CancellationToken cancellationToken)
-    //{
-    //    await _sender.Send(new CreatePartChecklistQuestionsCommand { partId = partId, questions = questions }, cancellationToken);
-    //    return NoContent();
-    //}
-
-    //[HttpGet("{partId}/GetAllQuestions")]
-    //public async Task<ActionResult<IEnumerable<string>>> GetAllQuestions(string partId, CancellationToken cancellationToken)
-    //{
-    //    var questions = await _sender.Send(new GetPartQuestionsQuery { Id = partId }, cancellationToken);
-    //    return Ok(questions);
-    //}
 }

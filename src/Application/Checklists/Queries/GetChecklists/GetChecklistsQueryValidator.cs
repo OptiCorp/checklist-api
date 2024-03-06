@@ -10,7 +10,7 @@ public class GetChecklistsQueryValidator : AbstractValidator<GetChecklistsQuery>
         RuleFor(x => x.MobilizationId)
             .NotEmpty().WithMessage("MobilizationId (Guid) is missing.");
             
-        RuleFor(x => x.PageNumber) //TODO:
+        RuleFor(x => x.PageNumber)
             .GreaterThanOrEqualTo(1).WithMessage("PageNumber at least greater than or equal to 1.");
 
         RuleFor(x => x.PageSize)

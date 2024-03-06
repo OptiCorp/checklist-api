@@ -36,8 +36,6 @@ public class AddItemCommandHandler : IRequestHandler<AddItemCommand, Guid>
 
         var checklist = await AddCheckList(mobilization, itemTemplate, cancellationToken);
 
-        //await AddPartToChecklist(request, mobilization, cancellationToken);
-
         return checklist.Id;
     }
 
@@ -64,12 +62,4 @@ public class AddItemCommandHandler : IRequestHandler<AddItemCommand, Guid>
             await _checklistQuestionRepository.AddQuestion(question, cancellationToken);
         }
     }
-
-    // //TODO: validate ItemId string
-    // private async Task AddPartToChecklist(AddItemCommand request, Mobilization mobilization, CancellationToken cancellationToken)
-    // {
-    //     mobilization.Checklist.Parts.Add(request.ItemId);
-
-    //     await _mobilizationRepository.SaveChanges(cancellationToken);
-    // }
 }

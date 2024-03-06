@@ -18,9 +18,6 @@ public class GetTemplateQueryHandler : IRequestHandler<GetTemplateQuery, ItemTem
 
     public async Task<ItemTemplateDto?> Handle(GetTemplateQuery request, CancellationToken cancellationToken)
     {
-        // var itemTemplate =  await _templateRepository.GetTemplateByItemId(request.ItemId, cancellationToken) 
-        //     ?? throw new NotFoundException(nameof(ItemTemplate), request.ItemId);
-
          var itemTemplate =  await _templateRepository.GetTemplateByItemId(request.ItemId, cancellationToken);
 
          if (itemTemplate == null) return null;

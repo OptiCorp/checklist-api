@@ -7,11 +7,11 @@ namespace Application.Mobilizations.Queries;
 
 public class GetMobilizationBySearchQuery : IRequest<PaginatedList<MobilizationDto?>>
 {
-    public string title { get; init; }
+    public string Title { get; init; }
 
     public int PageNumber { get; init; } = 1;
 
-    public int pageSize { get; init; } = 10;
+    public int PageSize { get; init; } = 10;
 
-    public MobilizationStatus? mobilizationStatus { get; init; }
+    public MobilizationStatus? MobilizationStatus { get; init; }
 }

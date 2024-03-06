@@ -16,7 +16,7 @@ namespace Application.Common.Interfaces
 
         Task<IEnumerable<Checklist>> GetChecklistsForChecklistCollection(Guid checklistCollectionId, CancellationToken cancellationToken = default);
 
-        Task<PaginatedList<ChecklistBriefDto>> GetChecklistsWithPaginationFromChecklistCollection(Guid checklistCollectionId, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
+        Task<PaginatedList<Checklist>> GetChecklistsWithPaginationFromChecklistCollection(Guid checklistCollectionId, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
 
 
         Task<Checklist?> GetSingleChecklist(Guid checklistId, CancellationToken cancellationToken = default);

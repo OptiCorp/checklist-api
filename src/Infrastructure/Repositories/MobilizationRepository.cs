@@ -10,7 +10,7 @@ using MobDeMob.Domain.Entities;
 
 namespace MobDeMob.Infrastructure.Repositories;
 
-public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizationRepository 
+public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizationRepository   
 {
 
 
@@ -51,37 +51,37 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
                                 //.ThenInclude(ci => ci.Questions)
                                 .SingleOrDefaultAsync(x => x.Id == mobilizationId, cancellationToken);
 
-    public async Task<PaginatedList<MobilizationDto>> GetAllMobilizationsWithPagination(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+    public async Task<PaginatedList<Mobilization>> GetAllMobilizationsWithPagination(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
     {
         return await GetSet()
             .OrderBy(x => x.Title)
             .Include(m => m.ChecklistCollection)
             .ThenInclude(c => c.Checklists)
-            .ProjectToType<MobilizationDto>()
+            //.ProjectToType<MobilizationDto>()
             .PaginatedListAsync(pageNumber, pageSize);
 
         //.PaginatedListAsync(pageNumber, pageSize);
     }
 
-    public async Task<PaginatedList<MobilizationDto>> GetMobilizationsBySearch(int pageNumber, int pageSize, string title, MobilizationStatus? status, CancellationToken cancellationToken)
+    public async Task<PaginatedList<Mobilization>> GetMobilizationsBySearch(int pageNumber, int pageSize, string title, MobilizationStatus? status, CancellationToken cancellationToken)
     {
         return await GetSet()
             .Where(m => m.Title.Contains(title) && (status == null || m.Status == status))
             .OrderBy(x => x.Title)
             .Include(m => m.ChecklistCollection)
             .ThenInclude(c => c.Checklists)
-            .ProjectToType<MobilizationDto>()
+            // .ProjectToType<MobilizationDto>()
             .PaginatedListAsync(pageNumber, pageSize); 
     }
 
-    public async Task<IEnumerable<Mobilization>> GetMobilizationsForItem(string ItemId, CancellationToken cancellationToken = default)
+    public async Task<PaginatedList<Mobilization>> GetMobilizationsForItem(string ItemId, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
     {
         return await GetSet()
             .Include(m => m.ChecklistCollection)
             .ThenInclude(cc => cc.Checklists)
             .ThenInclude(c => c.ItemTemplate)
             .Where(m => m.ChecklistCollection.Checklists.Any(c => c.ItemTemplate.ItemId == ItemId))
-            .ToListAsync(cancellationToken);
+            .PaginatedListAsync(pageNumber, pageSize);
     }
 
 }

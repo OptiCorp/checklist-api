@@ -20,11 +20,6 @@ public class ChecklistQuestionDto : DtoExtension, IRegister
 
     public string Question { get; set; } = string.Empty;
 
-    // public void Mapping(TypeAdapterConfig config)
-    // {
-    //     config.NewConfig<ChecklistItemQuestion, ChecklistItemQuestionDto>();
-    // }
-
     public void Register(TypeAdapterConfig config)
     {
         config.NewConfig<ChecklistQuestion, ChecklistQuestionDto>();

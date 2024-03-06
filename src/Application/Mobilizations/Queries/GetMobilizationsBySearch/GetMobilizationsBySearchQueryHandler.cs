@@ -1,30 +1,28 @@
+
+
+
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using Application.Mobilizations.Dtos;
 using Mapster;
 using MediatR;
-using Application.Common.Mappings;
 using MobDeMob.Application.Mobilizations;
-using MobDeMob.Domain.Entities;
-using MapsterMapper;
 
-namespace Application.Mobilizations.Queries.GetAll;
+namespace Application.Mobilizations.Queries;
 
-public class GetAllMobilizationsQueryHandler : IRequestHandler<GetAllMobilizationsQuery, PaginatedList<MobilizationDto>>
+public class GetMobilizationsBySearchQueryHandler : IRequestHandler<GetMobilizationBySearchQuery, PaginatedList<MobilizationDto>>
 
 {
     private readonly IMobilizationRepository _mobilizationRepository;
-
-    //private readonly IMapper _mapper;
-
-    public GetAllMobilizationsQueryHandler(IMobilizationRepository mobilizationRepository)
+    public GetMobilizationsBySearchQueryHandler(IMobilizationRepository mobilizationRepository)
     {
         _mobilizationRepository = mobilizationRepository;
     }
-    public async Task<PaginatedList<MobilizationDto>> Handle(GetAllMobilizationsQuery request, CancellationToken cancellationToken)
+
+    public async Task<PaginatedList<MobilizationDto>> Handle(GetMobilizationBySearchQuery request, CancellationToken cancellationToken)
     {
         var mobilizationsPaginated = await _mobilizationRepository
-            .GetAllMobilizationsWithPagination(request.PageNumber, request.PageSize, cancellationToken);
+            .GetMobilizationsBySearch(request.PageNumber, request.PageSize, request.Title, request.MobilizationStatus, cancellationToken);
 
         var mobilizationsPaginatedDtos = new PaginatedList<MobilizationDto>(
                 mobilizationsPaginated.Items.AsQueryable().ProjectToType<MobilizationDto>(),
@@ -34,6 +32,7 @@ public class GetAllMobilizationsQueryHandler : IRequestHandler<GetAllMobilizatio
         );
 
         return mobilizationsPaginatedDtos;
-
     }
+
+
 }

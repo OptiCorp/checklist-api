@@ -12,15 +12,10 @@ public class ChecklistDto : DtoExtension, IRegister
 {
     public string ItemId { get; init; }
 
-    //public Guid ChecklistCollectionId { get; init; }
-
-    //public Checklist Checklist {get; set;}
-
     public Guid ItemTemplateId { get; init; }
 
     public ICollection<ChecklistQuestionDto> Questions { get; init; } = [];
 
-    //public ICollection<PunchDto> Punches { get; init; } = [];
     public int? PunchesCount {get; init;}
 
     public ChecklistStatus Status { get; init; }

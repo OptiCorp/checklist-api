@@ -12,14 +12,12 @@ namespace MobDeMob.Application.Mobilizations.Commands;
 public class RemovePartFromMobilizationCommandHandler : IRequestHandler<RemoveItemFromMobilizationCommand>
 {
     private readonly IMobilizationRepository _mobilizationRepository;
-    private readonly IChecklistCollectionRepository _checklistCollectionRepository;
 
     private readonly IChecklistRepository _checklistRepository;
-    public RemovePartFromMobilizationCommandHandler(IMobilizationRepository mobilizationRepository, IChecklistCollectionRepository checklistCollectionRepository, IChecklistRepository checklistRepository)
+    public RemovePartFromMobilizationCommandHandler(IMobilizationRepository mobilizationRepository, IChecklistRepository checklistRepository)
     {
         _mobilizationRepository = mobilizationRepository;
         _checklistRepository = checklistRepository;
-        _checklistCollectionRepository = checklistCollectionRepository;
         
     }
 

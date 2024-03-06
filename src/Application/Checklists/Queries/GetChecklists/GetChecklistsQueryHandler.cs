@@ -15,9 +15,7 @@ namespace Application.Checklists.Queries;
 public class GetChecklistsQueryHandler : IRequestHandler<GetChecklistsQuery, PaginatedList<ChecklistBriefDto>> 
 {
     private readonly IMobilizationRepository _mobilizationRepository;
-
     private readonly IChecklistRepository _checklistRepository;
-
 
     public GetChecklistsQueryHandler(IMobilizationRepository mobilizationRepository, IChecklistRepository checklistRepository)
     {
@@ -29,13 +27,15 @@ public class GetChecklistsQueryHandler : IRequestHandler<GetChecklistsQuery, Pag
         var mobilization = await _mobilizationRepository.GetMobilizationById(request.MobilizationId, cancellationToken)
             ?? throw new NotFoundException(nameof(Mobilization), request.MobilizationId);
 
-        var checklistItems = await _checklistRepository.GetChecklistsWithPaginationFromChecklistCollection(mobilization.ChecklistCollectionId, request.PageNumber, request.PageSize, cancellationToken);
-        //var checklistItemsDto = checklistItems.AsQueryable().ProjectToType<ChecklistItemDto>();
+        var checklistsPaginated = await _checklistRepository.GetChecklistsWithPaginationFromChecklistCollection(mobilization.ChecklistCollectionId, request.PageNumber, request.PageSize, cancellationToken);
 
-        //var checklist = mobilization.Checklist;
-
-        //await _checklistItemRepository.LoadChecklistItems(checklist, cancellxationToken);
-        return checklistItems;
+        var mobilizationsPaginatedDtos = new PaginatedList<ChecklistBriefDto>(
+                checklistsPaginated.Items.AsQueryable().ProjectToType<ChecklistBriefDto>(),
+                checklistsPaginated.TotalCount,
+                checklistsPaginated.PageNumber,
+                checklistsPaginated.TotalPages
+        );
+        return mobilizationsPaginatedDtos;
     }
 
 }

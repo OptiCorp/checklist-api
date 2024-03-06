@@ -11,26 +11,15 @@ namespace Application.Checklists.Commands.SetChecklistCheckedValue;
 
 public class SetChecklistStatusCommandHandler : IRequestHandler<SetChecklistStatusCommand>
 {
-
-    private readonly IMobilizationRepository _mobilizationRepository;
-    private readonly ITemplateRepository _templateRepository;
     private readonly IChecklistRepository _checklistRepository;
-    private readonly IChecklistQuestionRepository _checklistQuestionRepository;
-
 
     public SetChecklistStatusCommandHandler(
-        IMobilizationRepository mobilizationRepository,
-        ITemplateRepository templateRepository,
-        IChecklistRepository checklistRepository,
-        IChecklistQuestionRepository checklistQuestionRepository
+
+        IChecklistRepository checklistRepository
         )
     {
-        _mobilizationRepository = mobilizationRepository;
-        _templateRepository = templateRepository;
         _checklistRepository = checklistRepository;
-        _checklistQuestionRepository = checklistQuestionRepository;
     }
-
     public async Task Handle(SetChecklistStatusCommand request, CancellationToken cancellationToken)
     {
         var checklist = await _checklistRepository.GetSingleChecklist(request.ChecklistId, cancellationToken)

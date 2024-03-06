@@ -12,22 +12,13 @@ namespace Application.Checklists.Commands.SetChecklistCheckedValue;
 public class SetChecklistNotApplicableValueCommandHandler : IRequestHandler<SetChecklistQuestionNotApplicableCommand>
 {
 
-    private readonly IMobilizationRepository _mobilizationRepository;
-    private readonly ITemplateRepository _templateRepository;
-    private readonly IChecklistRepository _checklistRepository;
     private readonly IChecklistQuestionRepository _checklistQuestionRepository;
 
 
     public SetChecklistNotApplicableValueCommandHandler(
-        IMobilizationRepository mobilizationRepository,
-        ITemplateRepository templateRepository,
-        IChecklistRepository checklistRepository,
         IChecklistQuestionRepository checklistQuestionRepository
         )
     {
-        _mobilizationRepository = mobilizationRepository;
-        _templateRepository = templateRepository;
-        _checklistRepository = checklistRepository;
         _checklistQuestionRepository = checklistQuestionRepository;
     }
     public async Task Handle(SetChecklistQuestionNotApplicableCommand request, CancellationToken cancellationToken)

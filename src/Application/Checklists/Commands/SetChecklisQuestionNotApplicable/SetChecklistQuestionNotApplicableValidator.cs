@@ -5,9 +5,9 @@ using MobDeMob.Application.Mobilizations.Commands;
 
 namespace Application.Checklists.Commands.Validators;
 
-public class SetChecklistItemQuestionNotApplicablePatchValidator : AbstractValidator<SetChecklistQuestionNotApplicableCommand>
+public class SetChecklistItemQuestionNotApplicableValidator : AbstractValidator<SetChecklistQuestionNotApplicableCommand>
 {
-    public SetChecklistItemQuestionNotApplicablePatchValidator()
+    public SetChecklistItemQuestionNotApplicableValidator()
     {
 
     }
