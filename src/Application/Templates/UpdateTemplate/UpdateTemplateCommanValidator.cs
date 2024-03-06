@@ -10,10 +10,10 @@ public class UpdateTemplateCommandValidator : AbstractValidator<UpdateTemplateCo
     public UpdateTemplateCommandValidator()
     { 
         RuleFor(v => v.ItemId)
-            .NotEmpty();
+            .NotEmpty().WithMessage("cannot search with empty string");
 
         RuleFor(v => v.ItemId)
-            .MaximumLength(50);
+            .MaximumLength(30).WithMessage("Item id cannot larger than 30 characters");
 
         RuleFor(v => v.Questions).Must(questions => questions?.Count() <= 20).WithMessage(t => $"The list of questions can not exceed 20, found {t.Questions?.Count()}.");
 
