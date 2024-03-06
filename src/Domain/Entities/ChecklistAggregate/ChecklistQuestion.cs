@@ -26,38 +26,27 @@ public class ChecklistQuestion : AuditableEntity
     {
         ChecklistId = checklistId;
         QuestionTemplateId = questionTemplate.Id;
-        
+
     }
 
     public bool IsQuestionCheckable() => !NotApplicable;
 
     public void MarkQuestionAsNotApplicable(bool value)
     {
-        if (value)
+        if (value && Checked)
         {
-            if (Checked)
-            {
-                throw new Exception("Tried to mark question as not applicable when it is checked");
-            }
-            NotApplicable = true;
-        }else {
-            NotApplicable = false;
+            throw new Exception("Tried to mark question as not applicable when it is checked");
         }
+        NotApplicable = value;
     }
 
     public void MarkQuestionAsCheckedOrUnChecked(bool value)
     {
-        if (value)
+        if (value && !IsQuestionCheckable())
         {
-            if (!IsQuestionCheckable())
-            {
-                throw new Exception("Tried to mark question as checked when it is not checkable");
-            }
-            Checked = true;
-        }else {
-            Checked = false;
+            throw new Exception("Tried to mark question as checked when it is not checkable");
         }
-
+        Checked = value;
     }
 
     protected ChecklistQuestion()
