@@ -7,15 +7,13 @@ using MobDeMob.Domain.ItemAggregate;
 
 namespace Application.Templates;
 
-public class ItemTemplateDto : DtoExtension, IRegister
+public class ItemTemplateDto : IRegister
 {
-    public required string ItemId { get; set; }
-
-    public IEnumerable<QuestionTemplate> Questions { get; set; } = [];
-
+    public IEnumerable<string> Questions { get; set; } = [];
 
     public void Register(TypeAdapterConfig config)
     {
-        config.NewConfig<ItemTemplate, ItemTemplateDto>();
+        config.NewConfig<ItemTemplate, ItemTemplateDto>()
+            .Map(dest => dest.Questions, src => src.Questions.Select(q => q.Question)).Compile();
     }
 }

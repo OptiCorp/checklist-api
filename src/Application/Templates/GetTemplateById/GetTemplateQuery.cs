@@ -3,7 +3,7 @@ using MobDeMob.Domain.ItemAggregate;
 
 namespace Application.Templates.GetById;
 
-public class GetByIdQuery : IRequest<ItemTemplateDto?>
+public class GetTemplateQuery : IRequest<ItemTemplateDto?>
 {
-    public Guid TemplateId { get; set; }
+    public string ItemId { get; set; }
 }

@@ -12,6 +12,7 @@ using Azure;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MobDeMob.Application.Mobilizations.Commands;
+using MobDeMob.Domain.Enums;
 
 namespace Api.Controllers;
 
@@ -81,17 +82,24 @@ public class ChecklistsController : ControllerBase
         return NoContent();
     }
 
-    [HttpPost("ChecklistQuestionCheckedUpdate/{checklistQuestionId}")]
-    public async Task<IActionResult> ChecklistQuestionCheckedUpdate([FromQuery] SetChecklistQuestionCheckedCommand query, CancellationToken cancellationToken)
+    [HttpPost("ChecklistQuestionCheckedUpdate/{checklistQuestionId}/{value}")]
+    public async Task<IActionResult> ChecklistQuestionCheckedUpdate(Guid checklistQuestionId, bool value, CancellationToken cancellationToken)
     {
-        await _sender.Send(query, cancellationToken);
+        await _sender.Send(new SetChecklistQuestionCheckedCommand{ChecklistQuestionId = checklistQuestionId, Value = value}, cancellationToken);
         return NoContent();
     }
 
-    [HttpPost("ChecklistQuestionNotApplicableUpdate/{checklistQuestionId}")]
-    public async Task<IActionResult> ChecklistQuestionNotApplicableUpdate([FromQuery] SetChecklistQuestionNotApplicableCommand query, CancellationToken cancellationToken)
+    [HttpPut("ChecklistStatus/{checklistId}/{status}")]
+    public async Task<IActionResult> SetChecklistStatus(Guid checklistId, ChecklistStatus status, CancellationToken cancellationToken)
     {
-        await _sender.Send(query, cancellationToken);
+        await _sender.Send(new SetChecklistStatusCommand{ChecklistId = checklistId, Status = status}, cancellationToken);
+        return NoContent();
+    }
+
+    [HttpPost("ChecklistQuestionNotApplicableUpdate/{checklistQuestionId}/{value}")]
+    public async Task<IActionResult> ChecklistQuestionNotApplicableUpdate(Guid checklistQuestionId, bool value, CancellationToken cancellationToken)
+    {
+        await _sender.Send(new SetChecklistQuestionNotApplicableCommand{ChecklistQuestionId = checklistQuestionId, Value = value}, cancellationToken);
         return NoContent();
     }
 

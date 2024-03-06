@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Application.Checklists.Commands.SetChecklistCheckedValue;
 
-public class SetChecklistNotApplicableValueCommandHandler : IRequestHandler<SetChecklistQuestionNotApplicableCommand>
+public class SetChecklistStatusCommandHandler : IRequestHandler<SetChecklistStatusCommand>
 {
 
     private readonly IMobilizationRepository _mobilizationRepository;
@@ -18,7 +18,7 @@ public class SetChecklistNotApplicableValueCommandHandler : IRequestHandler<SetC
     private readonly IChecklistQuestionRepository _checklistQuestionRepository;
 
 
-    public SetChecklistNotApplicableValueCommandHandler(
+    public SetChecklistStatusCommandHandler(
         IMobilizationRepository mobilizationRepository,
         ITemplateRepository templateRepository,
         IChecklistRepository checklistRepository,
@@ -30,13 +30,13 @@ public class SetChecklistNotApplicableValueCommandHandler : IRequestHandler<SetC
         _checklistRepository = checklistRepository;
         _checklistQuestionRepository = checklistQuestionRepository;
     }
-    public async Task Handle(SetChecklistQuestionNotApplicableCommand request, CancellationToken cancellationToken)
+
+    public async Task Handle(SetChecklistStatusCommand request, CancellationToken cancellationToken)
     {
-        var checklistQuestion = await _checklistQuestionRepository.GetQuestion(request.ChecklistQuestionId, cancellationToken)
-            ?? throw new NotFoundException(nameof(ChecklistQuestion), request.ChecklistQuestionId);
+        var checklist = await _checklistRepository.GetSingleChecklist(request.ChecklistId, cancellationToken)
+         ?? throw new NotFoundException(nameof(ChecklistQuestion), request.ChecklistId);
 
-        checklistQuestion.MarkQuestionAsNotApplicable(request.Value);
-        await _checklistQuestionRepository.SaveChanges(cancellationToken);
+        checklist.SetChecklistStatus(request.Status);
+        await _checklistRepository.SaveChanges(cancellationToken);
     }
-
 }

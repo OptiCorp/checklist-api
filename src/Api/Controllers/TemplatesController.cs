@@ -19,22 +19,22 @@ namespace Api.Controllers
             _sender = sender;
         }
 
-        [HttpGet("{templateId}")]
-        public async Task<IActionResult> GetTemplateById([FromRoute] Guid templateId, CancellationToken cancellationToken = default)
+        [HttpGet("{itemId}")]
+        public async Task<IActionResult> GetTemplateById([FromRoute] string itemId, CancellationToken cancellationToken = default)
         {
-            var id = await _sender.Send(new GetByIdQuery { TemplateId = templateId }, cancellationToken);
+            var id = await _sender.Send(new GetTemplateQuery { ItemId = itemId }, cancellationToken);
             return Ok(id);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateTemplateForItem(AddTemplateCommand addTemplateCommand, CancellationToken cancellationToken = default)
+        [HttpPost("{itemId}")]
+        public async Task<IActionResult> CreateTemplateForItem(string itemId, AddTemplateCommand addTemplateCommand, CancellationToken cancellationToken = default)
         {
             var id = await _sender.Send(addTemplateCommand, cancellationToken);
-            return CreatedAtAction(nameof(GetTemplateById), new {templateId = id}, id);
+            return CreatedAtAction(nameof(GetTemplateById), new { templateId = id }, id);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateTemplateForItem(UpdateTemplateCommand updateTemplateCommand, CancellationToken cancellationToken = default)
+        [HttpPut("{itemId}")]
+        public async Task<IActionResult> UpdateTemplateForItem(string itemId, UpdateTemplateCommand updateTemplateCommand, CancellationToken cancellationToken = default)
         {
             await _sender.Send(updateTemplateCommand, cancellationToken);
             return NoContent();

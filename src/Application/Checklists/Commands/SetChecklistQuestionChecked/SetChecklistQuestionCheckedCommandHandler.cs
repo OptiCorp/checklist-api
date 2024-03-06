@@ -32,9 +32,9 @@ public class SetChecklistCheckedValueCommandHandler : IRequestHandler<SetCheckli
     }
     public async Task Handle(SetChecklistQuestionCheckedCommand request, CancellationToken cancellationToken)
     {
-        var checklistQuestion = await _checklistQuestionRepository.GetQuestion(request.Id, cancellationToken)
-            ?? throw new NotFoundException(nameof(ChecklistQuestion), request.Id);
-
+        var checklistQuestion = await _checklistQuestionRepository.GetQuestion(request.ChecklistQuestionId, cancellationToken)
+            ?? throw new NotFoundException(nameof(ChecklistQuestion), request.ChecklistQuestionId);
+            
         checklistQuestion.MarkQuestionAsCheckedOrUnChecked(request.Value);
         await _checklistQuestionRepository.SaveChanges(cancellationToken);
     }

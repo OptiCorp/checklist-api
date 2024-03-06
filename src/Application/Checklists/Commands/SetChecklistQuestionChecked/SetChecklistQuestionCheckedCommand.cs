@@ -8,7 +8,7 @@ namespace Application.Checklists.Commands;
 
 public class SetChecklistQuestionCheckedCommand : IRequest
 {
-    public Guid Id {get; set;}
+    public Guid ChecklistQuestionId {get; init;}
 
     public bool Value {get; init;}
 

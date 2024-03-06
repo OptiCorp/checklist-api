@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Domain.Entities;
 using Domain.Entities.TemplateAggregate;
 using MobDeMob.Domain.Common;
@@ -17,6 +18,7 @@ public class ItemTemplate : AuditableEntity
     {
         ItemId = itemId;
     }
+
 
     public ICollection<QuestionTemplate> Questions { get; set; } = [];
 

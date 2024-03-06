@@ -20,7 +20,7 @@ public class ApplicationDbContextInitializer
     {
         _logger = logger;
         _modelContextBase = modelContextBase;
-        _modelContextBase.Database.EnsureCreated();
+        //_modelContextBase.Database.EnsureCreated();
     }
 
     public async Task SeedAsync()

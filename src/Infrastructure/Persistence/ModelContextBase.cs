@@ -34,8 +34,8 @@ public class ModelContextBase : DbContext
 
         modelBuilder.Entity<ItemTemplate>()
             .HasMany(it => it.Questions)
-            .WithOne(q => q.ItemTemplate)
-            .HasForeignKey(q => q.ItemTemplateId)
+            .WithOne()
+            .HasForeignKey(nameof(ItemTemplate) + "Id")
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
@@ -84,7 +84,7 @@ public class ModelContextBase : DbContext
         modelBuilder.Entity<ChecklistQuestion>()
             .ToTable(t => t.HasCheckConstraint("CK_ChecklistQuestions_CheckedNotApplicable",
                     "([Checked] = 1 AND [NotApplicable] = 0) OR ([Checked] = 0 AND [NotApplicable] = 1) OR ([Checked] = 0 AND [NotApplicable] = 0)"));
-        
+
         modelBuilder.Entity<Item>()
             .Property(i => i.Id)
             .IsRequired()
@@ -92,7 +92,7 @@ public class ModelContextBase : DbContext
 
     }
 
-    public DbSet<ChecklistCollection> ChecklistCollections {get; set;} = null!;
+    public DbSet<ChecklistCollection> ChecklistCollections { get; set; } = null!;
     public DbSet<Mobilization> Mobilizations { get; set; } = null!;
     public DbSet<Checklist> Checklists { get; set; } = null!;
     public DbSet<ChecklistQuestion> ChecklistQuestions { get; set; } = null!;
@@ -100,8 +100,8 @@ public class ModelContextBase : DbContext
     public DbSet<Punch> Punches { get; set; } = null!;
     public DbSet<PunchFile> PunchFiles { get; set; } = null!;
 
-    public DbSet<Item> Items {get; set;} = null!;
+    public DbSet<Item> Items { get; set; } = null!;
 
-    public DbSet<QuestionTemplate> QuestionTemplates {get; set;} = null!;
+    public DbSet<QuestionTemplate> QuestionTemplates { get; set; } = null!;
 
 }
