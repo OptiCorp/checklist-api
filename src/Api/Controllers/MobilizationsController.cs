@@ -31,7 +31,7 @@ public class MobilizationsController : ControllerBase
     [HttpGet("{mobId}")]
     public async Task<IActionResult> GetMobilizationById([FromRoute] Guid mobId, CancellationToken cancellationToken = default)
     {
-        var mob = await _sender.Send(new GetMobilizationByIdQuery { id = mobId }, cancellationToken);
+        var mob = await _sender.Send(new GetMobilizationByIdQuery { Id = mobId }, cancellationToken);
         return mob is not null ? Ok(mob) : NotFound();
     }
 
@@ -61,6 +61,13 @@ public class MobilizationsController : ControllerBase
     public async Task<IActionResult> SearchMobilizations([FromQuery] GetMobilizationBySearchQuery request, CancellationToken cancellationToken = default)
     {
         var mobs = await _sender.Send(request, cancellationToken);
+        return Ok(mobs);
+    }
+
+    [HttpGet("GetMobilizationsForItem/{itemId}")]
+    public async Task<IActionResult> GetMobilizationsForItem([FromRoute] string itemId , CancellationToken cancellationToken = default)
+    {
+        var mobs = await _sender.Send(new GetMobilizationsForItemQuery{ItemId = itemId}, cancellationToken);
         return Ok(mobs);
     }
 }

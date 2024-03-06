@@ -10,7 +10,7 @@ using MobDeMob.Domain.Entities;
 
 namespace MobDeMob.Infrastructure.Repositories;
 
-public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizationRepository
+public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizationRepository 
 {
 
 
@@ -59,8 +59,8 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
             .ThenInclude(c => c.Checklists)
             .ProjectToType<MobilizationDto>()
             .PaginatedListAsync(pageNumber, pageSize);
-            
-            //.PaginatedListAsync(pageNumber, pageSize);
+
+        //.PaginatedListAsync(pageNumber, pageSize);
     }
 
     public async Task<PaginatedList<MobilizationDto>> GetMobilizationsBySearch(int pageNumber, int pageSize, string title, MobilizationStatus? status, CancellationToken cancellationToken)
@@ -71,6 +71,17 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
             .Include(m => m.ChecklistCollection)
             .ThenInclude(c => c.Checklists)
             .ProjectToType<MobilizationDto>()
-            .PaginatedListAsync(pageNumber, pageSize);
+            .PaginatedListAsync(pageNumber, pageSize); 
     }
+
+    public async Task<IEnumerable<Mobilization>> GetMobilizationsForItem(string ItemId, CancellationToken cancellationToken = default)
+    {
+        return await GetSet()
+            .Include(m => m.ChecklistCollection)
+            .ThenInclude(cc => cc.Checklists)
+            .ThenInclude(c => c.ItemTemplate)
+            .Where(m => m.ChecklistCollection.Checklists.Any(c => c.ItemTemplate.ItemId == ItemId))
+            .ToListAsync(cancellationToken);
+    }
+
 }

@@ -5,5 +5,5 @@ namespace Application.Mobilizations.Queries;
 
 public class GetMobilizationByIdQuery : IRequest<MobilizationDto?>
 {
-    public Guid id { get; init; }
+    public Guid Id { get; init; }
 }
