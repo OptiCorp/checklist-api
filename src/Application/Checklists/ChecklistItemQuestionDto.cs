@@ -10,8 +10,6 @@ namespace Application.Checklists.Dtos;
 
 public class ChecklistQuestionDto : DtoExtension, IRegister
 {
-    public Guid ChecklistId { get; set; }
-
     public Guid QuestionTemplateId { get; set; }
 
     public bool Checked { get; set; }

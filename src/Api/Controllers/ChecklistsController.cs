@@ -31,7 +31,7 @@ public class ChecklistsController : ControllerBase
 
     [HttpGet("GetPunches/{checklistId}")]
 
-    public async Task<ActionResult<IEnumerable<PunchDto>>> GetPunches(Guid checklistId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetPunches(Guid checklistId, CancellationToken cancellationToken)
     {
         var punches = await _sender.Send(new GetPunchesQuery { ChecklistId = checklistId}, cancellationToken);
         return Ok(punches);
@@ -52,7 +52,7 @@ public class ChecklistsController : ControllerBase
     }
 
     [HttpPost("UploadFiles/{punchId}")]
-    public async Task<ActionResult<string>> UploadPunchFiles(Guid punchId, [FromForm] FileModel fileModel, CancellationToken cancellationToken)
+    public async Task<IActionResult> UploadPunchFiles(Guid punchId, [FromForm] FileModel fileModel, CancellationToken cancellationToken)
     {
         ICollection<PunchUploadFile> files = [];
         using var sharedStream = new MemoryStream();

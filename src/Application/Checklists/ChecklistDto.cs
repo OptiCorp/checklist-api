@@ -12,7 +12,7 @@ public class ChecklistDto : DtoExtension, IRegister
 {
     public string ItemId { get; init; }
 
-    public Guid ItemTemplateId { get; init; }
+    //public Guid ItemTemplateId { get; init; }
 
     public ICollection<ChecklistQuestionDto> Questions { get; init; } = [];
 
