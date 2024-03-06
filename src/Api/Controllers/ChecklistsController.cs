@@ -4,6 +4,7 @@ using Application.Checklists.Commands.AddItem;
 using Application.Checklists.Commands.AddPunch;
 using Application.Checklists.Dtos;
 using Application.Checklists.Queries;
+using Application.Mobilizations.Queries;
 using Application.Punches.Commands;
 using Application.Punches.Dtos;
 using Application.Punches.Queries.GetById;
@@ -122,5 +123,12 @@ public class ChecklistsController : ControllerBase
     {
         await _sender.Send(updatePunchCommand, cancellationToken);
         return NoContent();
+    }
+
+    [HttpGet("GetChecklistsForItem/{itemId}")]
+    public async Task<IActionResult> GetChecklistsForItem([FromRoute] string itemId, int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default)
+    {
+        var mobs = await _sender.Send(new GetChecklistsForItemQuery{ItemId = itemId, PageNumber = pageNumber, PageSize = pageSize}, cancellationToken);
+        return Ok(mobs);
     }
 }

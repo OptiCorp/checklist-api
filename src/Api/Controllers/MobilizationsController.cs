@@ -63,10 +63,4 @@ public class MobilizationsController : ControllerBase
         return Ok(mobs);
     }
 
-    [HttpGet("GetMobilizationsForItem/{itemId}")]
-    public async Task<IActionResult> GetMobilizationsForItem([FromRoute] string itemId, int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default)
-    {
-        var mobs = await _sender.Send(new GetMobilizationsForItemQuery{ItemId = itemId, PageNumber = pageNumber, PageSize = pageSize}, cancellationToken);
-        return Ok(mobs);
-    }
 }

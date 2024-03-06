@@ -32,6 +32,10 @@ public class Checklist : AuditableEntity
     }
 
     [NotMapped]
+    public Guid MobilizationId {get; private set;}
+  
+
+    [NotMapped]
     public string ItemId => ItemTemplate?.ItemId ?? string.Empty; 
 
     public ChecklistStatus Status { get; private set; }
@@ -43,6 +47,12 @@ public class Checklist : AuditableEntity
         ItemTemplate = itemTemplate;
         ChecklistCollectionId = checklistCollectionId;
         //_itemId = itemTemplate.ItemId;
+    }
+
+    public Checklist SetMobilizationId(Guid mobilizationId)
+    {
+        MobilizationId = mobilizationId;
+        return this;
     }
 
     public Checklist SetChecklistStatus(ChecklistStatus status)

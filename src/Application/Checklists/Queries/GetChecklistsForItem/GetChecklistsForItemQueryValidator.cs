@@ -4,7 +4,7 @@ using MobDeMob.Application.Mobilizations.Commands;
 
 namespace Application.Mobilizations.Queries;
 
-public class GetMobilizationsForItemQueryValidator : AbstractValidator<GetMobilizationsForItemQuery>
+public class GetMobilizationsForItemQueryValidator : AbstractValidator<GetChecklistsForItemQuery>
 {
     public GetMobilizationsForItemQueryValidator()
     {

@@ -79,5 +79,14 @@ namespace Infrastructure.Repositories
                 .OrderBy(x => x.Created)
                 .PaginatedListAsync(pageNumber, pageSize);
         }
+
+        public async Task<PaginatedList<Checklist>> GetChecklistsForItem(string ItemId, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+        {
+            return await GetSet()
+                .Include(c => c.ItemTemplate)
+                .Include(c => c.Punches)
+                .Where(m => m.ItemTemplate.ItemId == ItemId)
+                .PaginatedListAsync(pageNumber, pageSize);
+        }
     }
 }

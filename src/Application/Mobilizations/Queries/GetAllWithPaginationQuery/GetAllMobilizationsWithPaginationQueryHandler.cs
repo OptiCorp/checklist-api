@@ -15,8 +15,6 @@ public class GetAllMobilizationsQueryHandler : IRequestHandler<GetAllMobilizatio
 {
     private readonly IMobilizationRepository _mobilizationRepository;
 
-    //private readonly IMapper _mapper;
-
     public GetAllMobilizationsQueryHandler(IMobilizationRepository mobilizationRepository)
     {
         _mobilizationRepository = mobilizationRepository;

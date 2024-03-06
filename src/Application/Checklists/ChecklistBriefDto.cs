@@ -14,7 +14,10 @@ public class ChecklistBriefDto : DtoExtension, IRegister
 
     //public Checklist Checklist {get; set;}
 
-    public Guid ItemTemplateId { get; init; }
+    //public Guid ItemTemplateId { get; init; }
+    public Guid MobilizationId {get; init;}
+
+    public int? PunchesCount {get; init;}
 
     //public ItemTemplateBriefDto Template { get; init; } = null!;
 

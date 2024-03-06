@@ -1,10 +1,11 @@
+using Application.Checklists.Dtos;
 using Application.Common.Models;
 using Application.Mobilizations.Dtos;
 using MediatR;
 
 namespace Application.Mobilizations.Queries;
 
-public class GetMobilizationsForItemQuery: IRequest<PaginatedList<MobilizationDto?>>
+public class GetChecklistsForItemQuery: IRequest<PaginatedList<ChecklistBriefDto>>
 {
     public string ItemId { get; init; }
 

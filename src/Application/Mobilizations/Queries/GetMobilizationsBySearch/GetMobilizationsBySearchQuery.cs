@@ -5,7 +5,7 @@ using MobDeMob.Domain.Entities;
 
 namespace Application.Mobilizations.Queries;
 
-public class GetMobilizationBySearchQuery : IRequest<PaginatedList<MobilizationDto?>>
+public class GetMobilizationBySearchQuery : IRequest<PaginatedList<MobilizationDto>>
 {
     public string Title { get; init; }
 

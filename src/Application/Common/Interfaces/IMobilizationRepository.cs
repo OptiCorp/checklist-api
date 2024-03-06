@@ -19,9 +19,13 @@ public interface IMobilizationRepository
     Task<PaginatedList<Mobilization>> GetMobilizationsBySearch(int pageNumber, int pageSize, string title, MobilizationStatus? status, CancellationToken cancellationToken);
 
 
-    Task DeleteMobilization(Guid id, CancellationToken cancellationToken = default); 
+    Task DeleteMobilization(Guid id, CancellationToken cancellationToken = default);
 
-    Task<PaginatedList<Mobilization>> GetMobilizationsForItem(string ItemId, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
+    Task<Guid?> GetMobilizationIdByChecklistCollectionId(Guid id, CancellationToken cancellationToken = default);
+
+
+
+    //Task<PaginatedList<Mobilization>> GetMobilizationsForItem(string ItemId, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
 
     //Task RemovePartFromMobilization(string id, string partId, CancellationToken cancellationToken = default);
 

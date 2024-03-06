@@ -16,6 +16,9 @@ public class ChecklistDto : DtoExtension, IRegister
 
     public ICollection<ChecklistQuestionDto> Questions { get; init; } = [];
 
+
+    //public Guid MobilizationId {get; init;}
+
     public int? PunchesCount {get; init;}
 
     public ChecklistStatus Status { get; init; }

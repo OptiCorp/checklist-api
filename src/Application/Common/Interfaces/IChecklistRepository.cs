@@ -25,6 +25,9 @@ namespace Application.Common.Interfaces
 
         Task<Checklist?> GetChecklistWithTemplate(Guid checklistId, CancellationToken cancellationToken = default);
 
+        Task<PaginatedList<Checklist>> GetChecklistsForItem(string ItemId, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
+
+
         //void RemoveChecklist(Checklist checklist, CancellationToken cancellationToken = default);
 
 
