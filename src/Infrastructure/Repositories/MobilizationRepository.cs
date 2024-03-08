@@ -13,8 +13,6 @@ namespace MobDeMob.Infrastructure.Repositories;
 public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizationRepository
 {
 
-
-
     public MobilizationRepository(ModelContextBase modelContextBase) : base(modelContextBase)
     {
     }
@@ -63,16 +61,30 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
         //.PaginatedListAsync(pageNumber, pageSize);
     }
 
-    public async Task<PaginatedList<Mobilization>> GetMobilizationsBySearch(int pageNumber, int pageSize, string? title, MobilizationStatus? status, DateOnly? date, CancellationToken cancellationToken)
+    public async Task<PaginatedList<Mobilization>> GetMobilizationsBySearch(int pageNumber, int pageSize, string? title, DateOnly? date, MobilizationStatus? status, CancellationToken cancellationToken)
     {
         if (title == null && status == null && date == null) throw new Exception("Cannot search for mobilizations with no inputs");
-        return await GetSet()
-            .Where(m => m.Title.Contains(title) && (status == null || m.Status == status) && (date == null || m.Created == date))
+        var query = GetSet()
             .OrderBy(x => x.Title)
             .Include(m => m.ChecklistCollection)
             .ThenInclude(c => c.Checklists)
-            // .ProjectToType<MobilizationDto>()
-            .PaginatedListAsync(pageNumber, pageSize);
+            .AsQueryable();
+        // .OrderBy(x => x.Title)
+        // .Include(m => m.ChecklistCollection)
+        // .ThenInclude(c => c.Checklists);
+
+        if (!string.IsNullOrEmpty(title))
+            query = query.Where(m => m.Title.Contains(title));
+
+        if (status != null)
+            query = query.Where(m => m.Status == status);
+
+        if (date != null)
+            query = query.Where(m => m.Created == date);
+
+
+
+        return await query.PaginatedListAsync(pageNumber, pageSize);
     }
 
     public async Task<Guid?> GetMobilizationIdByChecklistCollectionId(Guid id, CancellationToken cancellationToken = default)
