@@ -12,5 +12,7 @@ public interface ITemplateRepository
 
     Task DeleteItemTemplate(Guid Id, CancellationToken cancellationToken = default);
 
+    Task<Dictionary<string, bool>> ItemTemplateExistsForItemIds (IEnumerable<string> itemIds, CancellationToken cancellationToken = default);
+
     Task SaveChanges(CancellationToken cancellationToken = default);
 }

@@ -34,7 +34,7 @@ public class ChecklistsController : ControllerBase
 
     public async Task<IActionResult> GetPunches(Guid checklistId, CancellationToken cancellationToken)
     {
-        var punches = await _sender.Send(new GetPunchesQuery { ChecklistId = checklistId}, cancellationToken);
+        var punches = await _sender.Send(new GetPunchesQuery { ChecklistId = checklistId }, cancellationToken);
         return Ok(punches);
     }
 
@@ -60,7 +60,7 @@ public class ChecklistsController : ControllerBase
 
         foreach (var file in fileModel.files)
         {
-            
+
             sharedStream.Seek(0, SeekOrigin.Begin);
             await file.CopyToAsync(sharedStream);
             files.Add(new PunchUploadFile()
@@ -76,31 +76,31 @@ public class ChecklistsController : ControllerBase
         return NoContent();
     }
 
-    [HttpPost("ChecklistQuestionCheckedUpdate/{checklistQuestionId}/{value}")]
-    public async Task<IActionResult> ChecklistQuestionCheckedUpdate(Guid checklistQuestionId, bool value, CancellationToken cancellationToken)
+    [HttpPost("ChecklistQuestionCheckedUpdate/{checklistId}/{checklistQuestionId}/{value}")]
+    public async Task<IActionResult> ChecklistQuestionCheckedUpdate(Guid checklistId, Guid checklistQuestionId, bool value, CancellationToken cancellationToken)
     {
-        await _sender.Send(new SetChecklistQuestionCheckedCommand{ChecklistQuestionId = checklistQuestionId, Value = value}, cancellationToken);
+        await _sender.Send(new SetChecklistQuestionCheckedCommand { ChecklistQuestionId = checklistQuestionId, ChecklistId = checklistId, Value = value }, cancellationToken);
         return NoContent();
     }
 
     [HttpPut("ChecklistStatus/{checklistId}/{status}")]
     public async Task<IActionResult> SetChecklistStatus(Guid checklistId, ChecklistStatus status, CancellationToken cancellationToken)
     {
-        await _sender.Send(new SetChecklistStatusCommand{ChecklistId = checklistId, Status = status}, cancellationToken);
+        await _sender.Send(new SetChecklistStatusCommand { ChecklistId = checklistId, Status = status }, cancellationToken);
         return NoContent();
     }
 
-    [HttpPost("ChecklistQuestionNotApplicableUpdate/{checklistQuestionId}/{value}")]
-    public async Task<IActionResult> ChecklistQuestionNotApplicableUpdate(Guid checklistQuestionId, bool value, CancellationToken cancellationToken)
+    [HttpPost("ChecklistQuestionNotApplicableUpdate/{checklistId}/{checklistQuestionId}/{value}")]
+    public async Task<IActionResult> ChecklistQuestionNotApplicableUpdate(Guid checklistId, Guid checklistQuestionId, bool value, CancellationToken cancellationToken)
     {
-        await _sender.Send(new SetChecklistQuestionNotApplicableCommand{ChecklistQuestionId = checklistQuestionId, Value = value}, cancellationToken);
+        await _sender.Send(new SetChecklistQuestionNotApplicableCommand { ChecklistQuestionId = checklistQuestionId, ChecklistId = checklistId, Value = value }, cancellationToken);
         return NoContent();
     }
 
     [HttpGet("GetChecklists")]
     public async Task<IActionResult> GetChecklists(Guid mobilizationId, CancellationToken cancellationToken, int pageNumber = 1, int pageSize = 10)
     {
-        var checklistItems = await _sender.Send(new GetChecklistsQuery{MobilizationId = mobilizationId, PageNumber = pageNumber, PageSize = pageSize}, cancellationToken);
+        var checklistItems = await _sender.Send(new GetChecklistsQuery { MobilizationId = mobilizationId, PageNumber = pageNumber, PageSize = pageSize }, cancellationToken);
         return Ok(checklistItems);
     }
 
@@ -123,12 +123,5 @@ public class ChecklistsController : ControllerBase
     {
         await _sender.Send(updatePunchCommand, cancellationToken);
         return NoContent();
-    }
-
-    [HttpGet("GetChecklistsForItem/{itemId}")]
-    public async Task<IActionResult> GetChecklistsForItem([FromRoute] string itemId, int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default)
-    {
-        var mobs = await _sender.Send(new GetChecklistsForItemQuery{ItemId = itemId, PageNumber = pageNumber, PageSize = pageSize}, cancellationToken);
-        return Ok(mobs);
     }
 }

@@ -10,6 +10,8 @@ public class SetChecklistQuestionCheckedCommand : IRequest
 {
     public Guid ChecklistQuestionId {get; init;}
 
+    public Guid ChecklistId {get; init;}
+
     public bool Value {get; init;}
 
 }

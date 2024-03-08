@@ -16,7 +16,7 @@ public interface IMobilizationRepository
 
     Task<PaginatedList<Mobilization>> GetAllMobilizationsWithPagination(int pageNumber, int pageSize, CancellationToken cancellationToken = default);
 
-    Task<PaginatedList<Mobilization>> GetMobilizationsBySearch(int pageNumber, int pageSize, string title, MobilizationStatus? status, CancellationToken cancellationToken);
+    Task<PaginatedList<Mobilization>> GetMobilizationsBySearch(int pageNumber, int pageSize, string? title, MobilizationStatus? status, DateOnly? date, CancellationToken cancellationToken);
 
 
     Task DeleteMobilization(Guid id, CancellationToken cancellationToken = default);

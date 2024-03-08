@@ -9,6 +9,7 @@ namespace Application.Templates;
 
 public class ItemTemplateDto : IRegister
 {
+    public Guid Id {get; init;}
     public IEnumerable<string> Questions { get; set; } = [];
 
     public void Register(TypeAdapterConfig config)

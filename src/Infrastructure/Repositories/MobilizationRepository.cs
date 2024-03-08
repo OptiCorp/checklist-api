@@ -63,10 +63,11 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
         //.PaginatedListAsync(pageNumber, pageSize);
     }
 
-    public async Task<PaginatedList<Mobilization>> GetMobilizationsBySearch(int pageNumber, int pageSize, string title, MobilizationStatus? status, CancellationToken cancellationToken)
+    public async Task<PaginatedList<Mobilization>> GetMobilizationsBySearch(int pageNumber, int pageSize, string? title, MobilizationStatus? status, DateOnly? date, CancellationToken cancellationToken)
     {
+        if (title == null && status == null && date == null) throw new Exception("Cannot search for mobilizations with no inputs");
         return await GetSet()
-            .Where(m => m.Title.Contains(title) && (status == null || m.Status == status))
+            .Where(m => m.Title.Contains(title) && (status == null || m.Status == status) && (date == null || m.Created == date))
             .OrderBy(x => x.Title)
             .Include(m => m.ChecklistCollection)
             .ThenInclude(c => c.Checklists)
