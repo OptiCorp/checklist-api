@@ -32,8 +32,32 @@ public class TemplateRepository : RepositoryBase<ItemTemplate>, ITemplateReposit
     {
         return await _modelContextBase.ItemTemplates
             .Include(t => t.Questions)
-            .FirstOrDefaultAsync(x => x.ItemId == itemId, cancellationToken);
+            .SingleOrDefaultAsync(x => x.ItemId == itemId, cancellationToken);
     }
 
-    
+    public async Task<Dictionary<string, bool>> ItemTemplateExistsForItemIds(IEnumerable<string> itemIds, CancellationToken cancellationToken = default)
+    {
+        var itemIdsHash = new HashSet<string>(itemIds);
+        var itemHasItemTemplate = new Dictionary<string, bool>();
+
+        var tasks = await GetSet()
+            .Where(it => itemIdsHash.Contains(it.ItemId))
+            .Select(it => new { it.ItemId, Exists = true })
+            .ToListAsync(cancellationToken: cancellationToken);
+
+        foreach (var item in tasks)
+        {
+            itemHasItemTemplate[item.ItemId] = item.Exists;
+        }
+
+        foreach (var itemId in itemIds)
+        {
+            if (!itemHasItemTemplate.ContainsKey(itemId))
+            {
+                itemHasItemTemplate[itemId] = false;
+            }
+        }
+
+        return itemHasItemTemplate;
+    }
 }

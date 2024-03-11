@@ -42,6 +42,5 @@ public class AddTemplateCommandHandler : IRequestHandler<AddTemplateCommand, Gui
     private ItemTemplate MapToItemTemplate(Item item)
     {
         return new ItemTemplate(item.Id);
-        
     }
 }

@@ -22,7 +22,7 @@ public class GetMobilizationsBySearchQueryHandler : IRequestHandler<GetMobilizat
     public async Task<PaginatedList<MobilizationDto>> Handle(GetMobilizationBySearchQuery request, CancellationToken cancellationToken)
     {
         var mobilizationsPaginated = await _mobilizationRepository
-            .GetMobilizationsBySearch(request.PageNumber, request.PageSize, request.Title, request.MobilizationStatus, cancellationToken);
+            .GetMobilizationsBySearch(request.PageNumber, request.PageSize, request.Title, request.date, request.MobilizationStatus, cancellationToken);
 
         var mobilizationsPaginatedDtos = new PaginatedList<MobilizationDto>(
                 mobilizationsPaginated.Items.AsQueryable().ProjectToType<MobilizationDto>(),

@@ -7,7 +7,9 @@ namespace Application.Mobilizations.Queries;
 
 public class GetMobilizationBySearchQuery : IRequest<PaginatedList<MobilizationDto>>
 {
-    public string Title { get; init; }
+    public string? Title { get; init; }
+
+    public DateOnly? date {get; init;}
 
     public int PageNumber { get; init; } = 1;
 
