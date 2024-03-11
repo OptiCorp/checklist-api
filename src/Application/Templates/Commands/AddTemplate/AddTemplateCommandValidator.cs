@@ -9,7 +9,7 @@ public class AddTemplateCommandValidator : AbstractValidator<AddTemplateCommand>
     public AddTemplateCommandValidator()
     {
         RuleFor(v => v.ItemId)
-            .NotEmpty().WithMessage("cannot search with empty string");
+            .NotEmpty().WithMessage("itemId cannot be empty");
 
         RuleFor(v => v.ItemId)
             .MaximumLength(30).WithMessage("Item id cannot larger than 30 characters");

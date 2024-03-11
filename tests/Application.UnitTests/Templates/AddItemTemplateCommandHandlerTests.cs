@@ -1,13 +1,14 @@
 
+using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Templates.AddTemplate;
 using Domain.Entities;
 using FluentAssertions;
-using MobDeMob.Domain.ItemAggregate; 
+using MobDeMob.Domain.ItemAggregate;
 using Moq;
 using Xunit;
 
-namespace Application.UnitTests;
+namespace Application.UnitTests.Templates;
 public class AddItemTemplateCommandHandlerTests
 {
     [Fact]
@@ -31,7 +32,7 @@ public class AddItemTemplateCommandHandlerTests
         };
 
         //acts:
-        
+
         var value = await handler.Handle(command, CancellationToken.None);
 
         //assertions:
@@ -39,5 +40,30 @@ public class AddItemTemplateCommandHandlerTests
         mockTemplateRepo.Verify(som => som.SaveChanges(It.IsAny<CancellationToken>()), Times.Once());
         //Assert.Equal(id, idByEfCore);
     }
+
+    [Fact] //this test might not belong here
+    public async Task Handle_GivenAddTemplateCommandWithNonExistingItem_ShouldRaiseNotFoundException()
+    {
+        Mock<IItemReposiory> mockItemRepo = new Mock<IItemReposiory>();
+        mockItemRepo.Setup(som => som.GetItemById(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync((Item)null);
+
+        Mock<ITemplateRepository> mockTemplateRepo = new Mock<ITemplateRepository>();
+
+        var handler = new AddTemplateCommandHandler(mockTemplateRepo.Object, mockItemRepo.Object);
+        var command = new AddTemplateCommand()
+        {
+            ItemId = "adas",
+            Questions = ["something"]
+        };
+
+        // Act and Assert
+        await Assert.ThrowsAsync<NotFoundException>(async () =>
+        {
+            await handler.Handle(command, CancellationToken.None);
+        });
+
+
+    }
+
 
 }
