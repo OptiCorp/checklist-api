@@ -22,10 +22,15 @@ public class ItemTemplate : AuditableEntity
 
     public ICollection<QuestionTemplate> Questions { get; set; } = [];
 
+    public void AddQuestionTemplate (QuestionTemplate questionTemplate)
+    {
+        Questions.Add(questionTemplate);
+    }
+
     public ItemTemplate UpdateQuestions(IEnumerable<string>? questions)
     {
         Questions = questions
-                    ?.Select(q => new QuestionTemplate { Question = q }) 
+                    ?.Select(q => QuestionTemplate.New(q)) 
                     ?.ToList() ?? [];
         return this;
     }

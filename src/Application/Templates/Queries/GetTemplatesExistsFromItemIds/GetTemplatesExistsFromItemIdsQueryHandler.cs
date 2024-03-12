@@ -9,9 +9,9 @@ namespace Application.Templates.Queries;
 
 public class GetItemTemplatesExistsFromItemIdsQueryHandler : IRequestHandler<GetTemplatesExistsFromItemIdsQuery, IEnumerable<TemplateExistsReponse>>
 {
-    private readonly ITemplateRepository _templateRepository;
+    private readonly IItemTemplateRepository _templateRepository;
 
-    public GetItemTemplatesExistsFromItemIdsQueryHandler(ITemplateRepository templateRepository)
+    public GetItemTemplatesExistsFromItemIdsQueryHandler(IItemTemplateRepository templateRepository)
     {
         _templateRepository = templateRepository;
     }

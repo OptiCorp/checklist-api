@@ -10,11 +10,11 @@ namespace Application.Templates.GetById;
 
 public class GetTemplateQueryHandler : IRequestHandler<GetTemplateQuery, ItemTemplateDto?>
 {
-    private readonly ITemplateRepository _templateRepository;
+    private readonly IItemTemplateRepository _templateRepository;
 
     private readonly IItemReposiory _itemRepository;
 
-    public GetTemplateQueryHandler(ITemplateRepository templateRepository, IItemReposiory itemReposiory)
+    public GetTemplateQueryHandler(IItemTemplateRepository templateRepository, IItemReposiory itemReposiory)
     {
         _templateRepository = templateRepository;
         _itemRepository = itemReposiory;

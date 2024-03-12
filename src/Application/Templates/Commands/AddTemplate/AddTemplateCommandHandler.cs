@@ -10,12 +10,14 @@ namespace Application.Templates.AddTemplate;
 
 public class AddTemplateCommandHandler : IRequestHandler<AddTemplateCommand, Guid>
 {
-    private readonly ITemplateRepository _templateRepository;
+    private readonly IItemTemplateRepository _templateRepository;
+
+    private readonly IQuestionTemplateRepository _questionTemplateRepository;
 
     private readonly IItemReposiory _itemReposiory;
 
 
-    public AddTemplateCommandHandler(ITemplateRepository templateRepository, IItemReposiory itemReposiory)
+    public AddTemplateCommandHandler(IItemTemplateRepository templateRepository, IItemReposiory itemReposiory)
     {
         _templateRepository = templateRepository;
         _itemReposiory = itemReposiory;
@@ -31,7 +33,7 @@ public class AddTemplateCommandHandler : IRequestHandler<AddTemplateCommand, Gui
         await _templateRepository.AddTemplate(template, cancellationToken);
 
         template.Questions = request?.Questions
-            ?.Select(q => new QuestionTemplate { Question = q })
+            ?.Select(q => QuestionTemplate.New(q))
             ?.ToList() ?? [];
 
         await _templateRepository.SaveChanges(cancellationToken);

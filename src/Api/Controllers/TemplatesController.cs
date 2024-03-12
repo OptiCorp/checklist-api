@@ -1,4 +1,5 @@
 ﻿using Application.Mobilizations.Queries;
+using Application.Templates;
 using Application.Templates.AddTemplate;
 using Application.Templates.GetById;
 using Application.Templates.Queries;
@@ -28,21 +29,29 @@ namespace Api.Controllers
             return Ok(id);
         }
 
-        [HttpPost("{itemId}")]
-        public async Task<IActionResult> CreateTemplateForItem(string itemId, AddTemplateCommand addTemplateCommand, CancellationToken cancellationToken = default)
+        [HttpPost("{itemId}/CreateTemplateForItem")]
+        public async Task<IActionResult> CreateTemplateForItem(AddTemplateCommand command, CancellationToken cancellationToken = default)
         {
-            var id = await _sender.Send(addTemplateCommand, cancellationToken);
-            return CreatedAtAction(nameof(GetTemplateById), new { templateId = id }, id);
+            var id = await _sender.Send(command, cancellationToken);
+            // return CreatedAtAction(nameof(GetTemplateById), new { templateId = id }, id);
+            return Ok(id);
         }
 
-        [HttpPut("{itemId}")]
-        public async Task<IActionResult> UpdateTemplateForItem(string itemId, UpdateTemplateCommand updateTemplateCommand, CancellationToken cancellationToken = default)
+        [HttpPost("AddQuestionForTemplate/{itemTemplateId}")]
+        public async Task<IActionResult> AddQuestionForTemplate(Guid itemTemplateId, [FromBody] string question, CancellationToken cancellationToken = default)
         {
-            await _sender.Send(updateTemplateCommand, cancellationToken);
+            var id = await _sender.Send(new AddItemTemplateQuestionCommand { ItemTemplateId = itemTemplateId, Question = question }, cancellationToken);
+            return Ok(id);
+        }
+
+        [HttpPut("{itemId}/{questionTemplateId}")]
+        public async Task<IActionResult> UpdateTemplateForItem(string itemId, Guid questionTemplateId, [FromBody] string question, CancellationToken cancellationToken = default)
+        {
+            await _sender.Send(new UpdateTemplateCommand { QuestionTemplateId = questionTemplateId, Question = question }, cancellationToken);
             return NoContent();
         }
 
-        [HttpGet("GetChecklistsForItem/{itemId}")]
+        [HttpGet("{itemId}/GetChecklistsForItem")]
         public async Task<IActionResult> GetChecklistsForItem([FromRoute] string itemId, int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default)
         {
             var checklists = await _sender.Send(new GetChecklistsForItemQuery { ItemId = itemId, PageNumber = pageNumber, PageSize = pageSize }, cancellationToken);
@@ -56,11 +65,18 @@ namespace Api.Controllers
             return Ok(itemTemplatesExist);
         }
 
-        [HttpGet("GetCheckItemQuestionConflict/{itemTemplateId}")]
-        public async Task<IActionResult> GetCheckItemQuestionConflict(Guid itemTemplateId, CancellationToken cancellationToken = default)
+        [HttpGet("{itemId}/GetCheckItemQuestionConflict/{itemTemplateId}")]
+        public async Task<IActionResult> GetCheckItemQuestionConflict(string itemId, Guid itemTemplateId, CancellationToken cancellationToken = default)
         {
-            var checklistIdConflicts = await _sender.Send(new CheckConflictsOnUpdateItemTemplateQuestionsQuery{ItemTemplateId = itemTemplateId}, cancellationToken);
+            var checklistIdConflicts = await _sender.Send(new CheckConflictsOnUpdateItemTemplateQuestionsQuery { ItemTemplateId = itemTemplateId }, cancellationToken);
             return Ok(checklistIdConflicts);
+        }
+
+        [HttpDelete("{itemId}/DeleteQuestionTemplate/{questionTemplateId}")]
+        public async Task<IActionResult> DeleteQuestionTemplate(string itemId, Guid questionTemplateId, CancellationToken cancellationToken = default)
+        {
+            await _sender.Send(new DeleteItemTemplateQuestionCommand { TemplateQuestionId = questionTemplateId }, cancellationToken);
+            return NoContent();
         }
     }
 }

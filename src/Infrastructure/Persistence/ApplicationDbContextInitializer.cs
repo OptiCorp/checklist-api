@@ -79,7 +79,7 @@ public class ApplicationDbContextInitializer
         int length = 10;
         string randomString = new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", length)
             .Select(s => s[random.Next(s.Length)]).ToArray());
-        
+
         return randomString;
     }
 
@@ -106,18 +106,10 @@ public class ApplicationDbContextInitializer
     private ICollection<QuestionTemplate> CreateQuestionTemplates()
     {
         ICollection<QuestionTemplate> questionTemplates = [
-       new QuestionTemplate
-        {
-            Question = "Is the bolt ok?",
-        },
-        new QuestionTemplate
-        {
-            Question = "Does it work?",
-        },
-        new QuestionTemplate
-        {
-            Question = "Is the bolt very pretty?",
-        }];
+            QuestionTemplate.New("Is the bolt ok?"),
+            QuestionTemplate.New("Does it work?"),
+            QuestionTemplate.New("Is the bolt very pretty?"),
+        ];
         return questionTemplates;
     }
 
