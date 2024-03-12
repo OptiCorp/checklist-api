@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Domain.Entities.TemplateAggregate;
 using Infrastructure.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
 using MobDeMob.Domain.ItemAggregate;
@@ -6,11 +7,12 @@ using MobDeMob.Infrastructure;
 
 namespace Infrastructure.Repositories;
 
-public class TemplateRepository : RepositoryBase<ItemTemplate>, ITemplateRepository
+public class ItemTemplateRepository : RepositoryBase<ItemTemplate>, IItemTemplateRepository
 {
-    public TemplateRepository(ModelContextBase modelContextBase) : base(modelContextBase)
+    public ItemTemplateRepository(ModelContextBase modelContextBase) : base(modelContextBase) 
     {
     }
+  
 
     public async Task<Guid> AddTemplate(ItemTemplate itemTemplate, CancellationToken cancellationToken = default)
     {

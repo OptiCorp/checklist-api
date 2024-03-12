@@ -34,10 +34,12 @@ public static class DependencyInjection
         services.AddScoped<IChecklistCollectionRepository, CheklistCollectionRepository>();
         services.AddScoped<IChecklistRepository, ChecklistRepository>();
         services.AddScoped<IChecklistQuestionRepository, ChecklistQuestionRepository>();
-        services.AddScoped<ITemplateRepository, TemplateRepository>();
+        services.AddScoped<IItemTemplateRepository, ItemTemplateRepository>();
         services.AddScoped<ICacheRepository, CacheRepository>();
         services.AddScoped<IPunchRepository, PunchRepository>();
         services.AddScoped<IItemReposiory, ItemRepository>();
+        services.AddScoped<IQuestionTemplateRepository, QuestionTemplateRepository>();
+
 
         return services;
     }

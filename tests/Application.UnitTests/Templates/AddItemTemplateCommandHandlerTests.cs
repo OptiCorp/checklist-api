@@ -18,7 +18,7 @@ public class AddItemTemplateCommandHandlerTests
         Mock<IItemReposiory> mockItemRepo = new Mock<IItemReposiory>();
         mockItemRepo.Setup(som => som.GetItemById(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Item { Id = id });
 
-        Mock<ITemplateRepository> mockTemplateRepo = new Mock<ITemplateRepository>();
+        Mock<IItemTemplateRepository> mockTemplateRepo = new Mock<IItemTemplateRepository>();
         mockTemplateRepo.Setup(som => som.AddTemplate(It.IsAny<ItemTemplate>(), It.IsAny<CancellationToken>()));
         mockTemplateRepo.Setup(som => som.SaveChanges(It.IsAny<CancellationToken>()));
 
@@ -47,7 +47,7 @@ public class AddItemTemplateCommandHandlerTests
         Mock<IItemReposiory> mockItemRepo = new Mock<IItemReposiory>();
         mockItemRepo.Setup(som => som.GetItemById(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync((Item)null);
 
-        Mock<ITemplateRepository> mockTemplateRepo = new Mock<ITemplateRepository>();
+        Mock<IItemTemplateRepository> mockTemplateRepo = new Mock<IItemTemplateRepository>();
 
         var handler = new AddTemplateCommandHandler(mockTemplateRepo.Object, mockItemRepo.Object);
         var command = new AddTemplateCommand()

@@ -10,13 +10,13 @@ namespace Application.Checklists.Commands.AddItem;
 public class AddItemCommandHandler : IRequestHandler<AddItemCommand, Guid>
 {
     private readonly IMobilizationRepository _mobilizationRepository;
-    private readonly ITemplateRepository _templateRepository;
+    private readonly IItemTemplateRepository _templateRepository;
     private readonly IChecklistRepository _checklistRepository;
     private readonly IChecklistQuestionRepository _checklistQuestionRepository;
 
     public AddItemCommandHandler(
         IMobilizationRepository mobilizationRepository,
-        ITemplateRepository templateRepository,
+        IItemTemplateRepository templateRepository,
         IChecklistRepository checklistRepository,
         IChecklistQuestionRepository checklistQuestionRepository)
     {

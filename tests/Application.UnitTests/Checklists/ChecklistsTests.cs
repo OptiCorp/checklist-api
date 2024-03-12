@@ -25,7 +25,7 @@ public class ChecklistTests
 
         Mock<IChecklistQuestionRepository> mockChecklistQuestionsRepo = new Mock<IChecklistQuestionRepository>();
         mockChecklistQuestionsRepo.Setup(repo => repo.GetQuestionsByChecklistId(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync([new ChecklistQuestion(new QuestionTemplate(){Question = ""}, Guid.NewGuid())]);
+            .ReturnsAsync([new ChecklistQuestion(QuestionTemplate.New(""), Guid.NewGuid())]);
 
         Mock<IPunchRepository> mockpunchRepo = new Mock<IPunchRepository>();
         mockpunchRepo.Setup(repo => repo.GetPunchesCount(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
@@ -48,7 +48,6 @@ public class ChecklistTests
         mockpunchRepo.Verify(rep => rep.GetPunchesCount(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once());
 
         Assert.Equal(checklist.Id, checklistDto.Id);
-        
         
     }
 

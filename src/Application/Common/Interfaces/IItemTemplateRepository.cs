@@ -2,9 +2,10 @@
 
 namespace Application.Common.Interfaces;
 
-public interface ITemplateRepository
+public interface IItemTemplateRepository
 {
     Task<Guid> AddTemplate(ItemTemplate template, CancellationToken cancellationToken = default);
+
 
     Task<ItemTemplate?> GetTemplateById(Guid templateId, CancellationToken cancellationToken = default);
 
