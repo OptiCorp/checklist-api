@@ -11,4 +11,7 @@ public interface IQuestionTemplateRepository
 
     public Task DeleteQuestionById (Guid Id, CancellationToken cancellationToken = default);
 
+    Task SaveChanges(CancellationToken cancellationToken = default);
+
+
 }

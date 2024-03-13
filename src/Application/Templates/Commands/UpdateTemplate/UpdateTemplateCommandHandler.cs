@@ -11,21 +11,10 @@ namespace Application.Templates.UpdateTemplate;
 
 public class UpdateTemplateCommandHandler : IRequestHandler<UpdateTemplateCommand>
 {
-    private readonly IItemTemplateRepository _templateRepository;
-
-    private readonly IChecklistRepository _checklistRepository;
-
-    private readonly IChecklistQuestionRepository _checklistQuestionRepository;
-
     private readonly IQuestionTemplateRepository _questionTemplateRepository;
 
-
-
-    public UpdateTemplateCommandHandler(IItemTemplateRepository templateRepository, IChecklistRepository checklistRepository, IChecklistQuestionRepository checklistQuestionRepository, IQuestionTemplateRepository questionTemplateRepository)
+    public UpdateTemplateCommandHandler(IQuestionTemplateRepository questionTemplateRepository)
     {
-        _templateRepository = templateRepository;
-        _checklistRepository = checklistRepository;
-        _checklistQuestionRepository = checklistQuestionRepository;
         _questionTemplateRepository = questionTemplateRepository;
     }
 
@@ -44,7 +33,7 @@ public class UpdateTemplateCommandHandler : IRequestHandler<UpdateTemplateComman
         if (questionTemplate.Question == newQuestion) return;
 
         questionTemplate.UpdateQuestion(newQuestion);
-        await _templateRepository.SaveChanges(cancellationToken);
+        await _questionTemplateRepository.SaveChanges(cancellationToken);
     }
 
 
