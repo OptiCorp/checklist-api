@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.UnitTests", "te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.IntegrationTests", "tests\Application.IntegrationTests\Application.IntegrationTests.csproj", "{6EFD91BF-F787-40B8-A3FB-B214E67775AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "checklist-messageHandler", "checklist-messageHandler\checklist-messageHandler.csproj", "{49B681AA-0469-4A37-AB79-531E35B5D559}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{6EFD91BF-F787-40B8-A3FB-B214E67775AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EFD91BF-F787-40B8-A3FB-B214E67775AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EFD91BF-F787-40B8-A3FB-B214E67775AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49B681AA-0469-4A37-AB79-531E35B5D559}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49B681AA-0469-4A37-AB79-531E35B5D559}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49B681AA-0469-4A37-AB79-531E35B5D559}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49B681AA-0469-4A37-AB79-531E35B5D559}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

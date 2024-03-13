@@ -1,5 +1,6 @@
 using Application.Common.Interfaces;
 using Domain.Entities;
+using Infrastructure.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
 using MobDeMob.Infrastructure;
 
@@ -12,11 +13,18 @@ public class ItemRepository : IItemReposiory
 
 
 
-    public ItemRepository(ModelContextBase modelContextBase)
+    public ItemRepository(ModelContextBase modelContextBase) 
     {
         _modelContextBase = modelContextBase;
 
     }
+
+    public async Task AddItem(string Id, CancellationToken cancellationToken = default)
+    {
+        await _modelContextBase.Items.AddAsync(new Item(){Id = Id}, cancellationToken);
+        await _modelContextBase.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task<Item?> GetItemById(string Id, CancellationToken cancellationToken = default)
     {
         return await _modelContextBase.Items
