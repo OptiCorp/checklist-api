@@ -90,7 +90,7 @@ namespace Infrastructure.Repositories
         }
 
         //TODO: I think this can be no tracking
-        public async Task<IEnumerable<Checklist>> GetChecklistByItemTemplateId(Guid itemTemplateId, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Checklist>> GetChecklistsByItemTemplateId(Guid itemTemplateId, CancellationToken cancellationToken = default)
         {
             return await GetSet()
                 .Where(c => c.ItemTemplateId == itemTemplateId)

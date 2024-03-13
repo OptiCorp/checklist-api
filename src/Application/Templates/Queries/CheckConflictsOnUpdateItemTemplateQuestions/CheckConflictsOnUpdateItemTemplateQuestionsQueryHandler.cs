@@ -23,7 +23,7 @@ public class CheckConflictsOnUpdateItemTemplateQuestionsQueryHandler : IRequestH
         // var itemHasItemTemplate = await _templateRepository.ItemTemplateExistsForItemIds(request.ItemIds, cancellationToken);
         // return itemHasItemTemplate
         //     .Select(templateDict => TemplateExistsReponse.New(templateDict.Key, templateDict.Value)).ToList();
-        var checklists = await _checklistRepository.GetChecklistByItemTemplateId(request.ItemTemplateId, cancellationToken);
+        var checklists = await _checklistRepository.GetChecklistsByItemTemplateId(request.ItemTemplateId, cancellationToken);
         ICollection<Guid> conflictChecklists = [];
         foreach(var Id in CheckIfChecklistStatusConflict(checklists))
         {

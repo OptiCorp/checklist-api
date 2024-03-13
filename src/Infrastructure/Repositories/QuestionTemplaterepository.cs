@@ -28,4 +28,5 @@ public class QuestionTemplateRepository : RepositoryBase<QuestionTemplate>, IQue
     {
         await DeleteById(Id, cancellationToken);
     }
+
 }
