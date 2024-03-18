@@ -10,18 +10,18 @@ using Microsoft.OpenApi.Writers;
 
 namespace Infrastructure.Persistence.ServiceBus;
 
-public class ServiceBusItemCreatedProcessor : IHostedService
+public class ServiceBusItemCreatedProcessor : BaseHostedService
 {
     private readonly ILogger<ServiceBusItemCreatedProcessor> _logger;
-    private readonly ServiceBusClient _serviceBusClient;
+    // private readonly ServiceBusClient __serviceBusClient;
 
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private ServiceBusProcessor _processor;
+    // private readonly ServiceBusProcessor _processor;
     // private readonly IItemReposiory _itemReposiory;
-    private string _topicName;
+    private readonly string _topicName;
 
-    private string _subcriptionName;
-    public ServiceBusItemCreatedProcessor(ServiceBusClient serviceBusClient, IServiceScopeFactory serviceScopFactory, ILogger<ServiceBusItemCreatedProcessor> logger, IConfiguration configuration)
+    private readonly string _subcriptionName;
+    public ServiceBusItemCreatedProcessor(ServiceBusClient serviceBusClient, IServiceScopeFactory serviceScopFactory, ILogger<ServiceBusItemCreatedProcessor> logger, IConfiguration configuration) 
     {
         _logger = logger;
         _serviceBusClient = serviceBusClient;
@@ -31,36 +31,43 @@ public class ServiceBusItemCreatedProcessor : IHostedService
         _processor = _serviceBusClient.CreateProcessor(_topicName, _subcriptionName, new ServiceBusProcessorOptions());
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
-    {
-        _processor.ProcessMessageAsync += MessageHandler;
-        _processor.ProcessErrorAsync += ErrorHandler;
-        return _processor.StartProcessingAsync(cancellationToken);
-    }
+    // public async Task StartAsync(CancellationToken cancellationToken) 
+    // {
+    //     await base.StartAsync(cancellationToken);
+    // }
 
-    public async Task StopAsync(CancellationToken cancellationToken)
-    {
-        if (_processor != null)
-        {
-            await _processor.StopProcessingAsync(cancellationToken);
-            await _processor.DisposeAsync();
-        }
+    // public async Task StopAsync(CancellationToken cancellationToken) 
+    // {
+    //     await base.StopAsync(cancellationToken);
+    // }
 
-        if (_serviceBusClient != null)
-        {
-            await _serviceBusClient.DisposeAsync();
-        }
-    }
+    // public Task StartAsync(CancellationToken cancellationToken)
+    // {
+    //     _processor.ProcessMessageAsync += MessageHandler;
+    //     _processor.ProcessErrorAsync += ErrorHandler;
+    //     return _processor.StartProcessingAsync(cancellationToken);
+    // }
 
-    private async Task MessageHandler(ProcessMessageEventArgs args)
+    // public async Task StopAsync(CancellationToken cancellationToken)
+    // {
+    //     if (_processor != null)
+    //     {
+    //         await _processor.StopProcessingAsync(cancellationToken);
+    //         await _processor.DisposeAsync();
+    //     }
+
+    //     if (_serviceBusClient != null)
+    //     {
+    //         await _serviceBusClient.DisposeAsync();
+    //     }
+    // }
+
+    protected override async Task MessageHandler(ProcessMessageEventArgs args)
     {
         using (var scope = _serviceScopeFactory.CreateScope())
         {
-            //string itemId = args.Message.Body.ToString();
             var itemRepository = scope.ServiceProvider.GetRequiredService<IItemReposiory>();
             var itemId = args.Message.Body.ToString();
-            //var itemIdSerializad = TrySerializeMessageData(args.Message.Body);
-            // if (itemIdSerializad != null) await itemRepository.AddItem(itemIdSerializad);
             await itemRepository.AddItem(itemId);
 
             _logger.Log(LogLevel.Information, $"Read itemId: {itemId}");
@@ -69,28 +76,7 @@ public class ServiceBusItemCreatedProcessor : IHostedService
         await args.CompleteMessageAsync(args.Message);
     }
 
-    // private string? TrySerializeMessageData(BinaryData data)
-    // {
-    //     try
-    //     {
-
-    //         var serializedItemId = JsonSerializer.Deserialize<string>(data);
-    //         if (serializedItemId == null)
-    //         {
-    //             _logger.Log(LogLevel.Warning, $"Could not serialize data from service bus.\nTried to serielize:{data}");
-    //         }
-    //         return serializedItemId;
-    //     }
-    //     catch (Exception err)
-    //     {
-    //         _logger.Log(LogLevel.Error, $"Could not serialize data from service bus.\nTried to serielize:{data}\nException: {err}");
-
-    //     }
-    //     return null;
-
-    // }
-
-    private Task ErrorHandler(ProcessErrorEventArgs args)
+    protected override Task ErrorHandler(ProcessErrorEventArgs args)
     {
         var errorMessage = args.Exception.ToString();
         _logger.Log(LogLevel.Error, errorMessage);
