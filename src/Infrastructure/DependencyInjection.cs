@@ -91,9 +91,8 @@ public static class DependencyInjection
             string serviceBusNamespace = configuration.GetSection("ServiceBus")["Namespace"] ?? throw new Exception("missing namespace in configuration");
             return new ServiceBusClient(string.Concat(serviceBusNamespace,".servicebus.windows.net"), azureCredentials);
             //return new ServiceBusClient("Endpoint=sb://wellpartner-service-bus.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=r0w2FvKJdKc41IWxMBMIEr+n7he0E63z3+ASbMCu184=");
-
         });
-        services.AddHostedService<ServiceBusReadTopicMessages>();
+        services.AddHostedService<ServiceBusItemCreatedProcessor>();
 
         return services;
     }

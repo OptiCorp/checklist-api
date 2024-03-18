@@ -10,9 +10,9 @@ using Microsoft.OpenApi.Writers;
 
 namespace Infrastructure.Persistence.ServiceBus;
 
-public class ServiceBusReadTopicMessages : IHostedService
+public class ServiceBusItemCreatedProcessor : IHostedService
 {
-    private readonly ILogger<ServiceBusReadTopicMessages> _logger;
+    private readonly ILogger<ServiceBusItemCreatedProcessor> _logger;
     private readonly ServiceBusClient _serviceBusClient;
 
     private readonly IServiceScopeFactory _serviceScopeFactory;
@@ -21,7 +21,7 @@ public class ServiceBusReadTopicMessages : IHostedService
     private string _topicName;
 
     private string _subcriptionName;
-    public ServiceBusReadTopicMessages(ServiceBusClient serviceBusClient, IServiceScopeFactory serviceScopFactory, ILogger<ServiceBusReadTopicMessages> logger, IConfiguration configuration)
+    public ServiceBusItemCreatedProcessor(ServiceBusClient serviceBusClient, IServiceScopeFactory serviceScopFactory, ILogger<ServiceBusItemCreatedProcessor> logger, IConfiguration configuration)
     {
         _logger = logger;
         _serviceBusClient = serviceBusClient;
@@ -58,35 +58,37 @@ public class ServiceBusReadTopicMessages : IHostedService
         {
             //string itemId = args.Message.Body.ToString();
             var itemRepository = scope.ServiceProvider.GetRequiredService<IItemReposiory>();
-            var itemIdSerializad = TrySerializeMessageData(args.Message.Body);
-            if (itemIdSerializad != null) await itemRepository.AddItem(itemIdSerializad);
+            var itemId = args.Message.Body.ToString();
+            //var itemIdSerializad = TrySerializeMessageData(args.Message.Body);
+            // if (itemIdSerializad != null) await itemRepository.AddItem(itemIdSerializad);
+            await itemRepository.AddItem(itemId);
 
-            _logger.Log(LogLevel.Information, $"Read itemId: {itemIdSerializad}");
+            _logger.Log(LogLevel.Information, $"Read itemId: {itemId}");
         }
 
         await args.CompleteMessageAsync(args.Message);
     }
 
-    private string? TrySerializeMessageData(BinaryData data)
-    {
-        try
-        {
+    // private string? TrySerializeMessageData(BinaryData data)
+    // {
+    //     try
+    //     {
 
-            var serializedItemId = JsonSerializer.Deserialize<string>(data);
-            if (serializedItemId == null)
-            {
-                _logger.Log(LogLevel.Warning, $"Could not serialize data from service bus.\nTried to serielize:{data}");
-            }
-            return serializedItemId;
-        }
-        catch (Exception err)
-        {
-            _logger.Log(LogLevel.Error, $"Could not serialize data from service bus.\nTried to serielize:{data}\nException: {err}");
+    //         var serializedItemId = JsonSerializer.Deserialize<string>(data);
+    //         if (serializedItemId == null)
+    //         {
+    //             _logger.Log(LogLevel.Warning, $"Could not serialize data from service bus.\nTried to serielize:{data}");
+    //         }
+    //         return serializedItemId;
+    //     }
+    //     catch (Exception err)
+    //     {
+    //         _logger.Log(LogLevel.Error, $"Could not serialize data from service bus.\nTried to serielize:{data}\nException: {err}");
 
-        }
-        return null;
+    //     }
+    //     return null;
 
-    }
+    // }
 
     private Task ErrorHandler(ProcessErrorEventArgs args)
     {
