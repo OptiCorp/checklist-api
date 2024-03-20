@@ -8,11 +8,11 @@ public class GetMobilizationsBySearchValidator : AbstractValidator<GetMobilizati
 {
     public GetMobilizationsBySearchValidator()
     {
-        RuleFor(v => v.Title)
-            .NotEmpty().WithMessage("cannot search with empty string");
+        // RuleFor(v => v.Title)
+        //     .NotEmpty().WithMessage("cannot search with empty string");
 
         RuleFor(v => v.Title)
-            .MaximumLength(20);
+            .MaximumLength(50);
 
         RuleFor(x => x.PageNumber)
             .GreaterThanOrEqualTo(1).WithMessage("PageNumber at least greater than or equal to 1.");

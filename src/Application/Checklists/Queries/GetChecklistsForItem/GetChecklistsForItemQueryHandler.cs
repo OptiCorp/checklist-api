@@ -4,6 +4,7 @@ using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using Application.Mobilizations.Dtos;
+using Domain.Entities;
 using Mapster;
 using MediatR;
 using MobDeMob.Domain.Entities;
@@ -16,14 +17,20 @@ public class GetMobilizationForItemQueryHandler : IRequestHandler<GetChecklistsF
 
     private readonly IMobilizationRepository _mobilizationRepository;
 
-    public GetMobilizationForItemQueryHandler(IChecklistRepository checklistRepository, IMobilizationRepository mobilizationRepository)
+    private readonly IItemReposiory _itemReposiory;
+
+    public GetMobilizationForItemQueryHandler(IChecklistRepository checklistRepository, IMobilizationRepository mobilizationRepository, IItemReposiory itemReposiory)
     {
         _checklistRepository = checklistRepository;
         _mobilizationRepository = mobilizationRepository;
+        _itemReposiory = itemReposiory;
     }
+
     public async Task<PaginatedList<ChecklistBriefDto>> Handle(GetChecklistsForItemQuery request, CancellationToken cancellationToken)
     {
-        var checklistPaginated = await _checklistRepository.GetChecklistsForItem(request.ItemId, request.PageNumber, request.PageSize, cancellationToken);
+        var item = await _itemReposiory.GetItemById(request.ItemId) 
+            ?? throw new NotFoundException(nameof(Item), request.ItemId);
+        var checklistPaginated = await _checklistRepository.GetChecklistsForItem(item.Id, request.PageNumber, request.PageSize, cancellationToken);
         //var checklistCollectionIds = checklistPaginated.Items.Select(c => c.ChecklistCollectionId);
 
         //_ = checklistPaginated.Items.Select(async c => c.SetMobilizationId(await _mobilizationRepository.GetMobilizationIdByChecklistCollectionId(c.ChecklistCollectionId)));

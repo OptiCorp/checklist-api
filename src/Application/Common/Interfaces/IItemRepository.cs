@@ -6,4 +6,9 @@ namespace Application.Common.Interfaces;
 public interface IItemReposiory
 {
     Task<Item?> GetItemById (string Id, CancellationToken cancellationToken = default);
+
+    Task AddItem (string Id, CancellationToken cancellationToken = default);
+
+    Task DeleteItemById (string id, CancellationToken cancellationToken = default);
+
 }

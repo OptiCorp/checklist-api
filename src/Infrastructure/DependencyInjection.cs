@@ -1,6 +1,8 @@
 ﻿using Application.Common.Interfaces;
 using Application.Punches;
 using Azure.Identity;
+using Azure.Messaging.ServiceBus;
+using Infrastructure.Persistence.ServiceBus;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -17,12 +19,14 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        var defaultAzureCredentials = new DefaultAzureCredential();
         services
             .AddPersistence(configuration)
             .AddRepositories()
             .AddApplicationDbContextInitializer()
-            .AddAzureClient(configuration)
-            .AddMemoryCacheService();
+            .AddAzureClient(configuration, defaultAzureCredentials)
+            .AddMemoryCacheService()
+            .AddAzureServiceBusSubscription(configuration, defaultAzureCredentials);
 
         return services;
     }
@@ -58,13 +62,13 @@ public static class DependencyInjection
         return services;
     }
 
-    public static IServiceCollection AddAzureClient(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddAzureClient(this IServiceCollection services, IConfiguration configuration, DefaultAzureCredential azureCredentials)
     {
         services.AddAzureClients(builder =>
         {
             builder.AddBlobServiceClient(new Uri(configuration.GetConnectionString("BlobServiceClientUri") ??
                 throw new Exception("Could not find the connectionstring for the storage account uri")));
-            builder.UseCredential(new DefaultAzureCredential());
+            builder.UseCredential(azureCredentials);
         });
         return services;
     }
@@ -77,6 +81,19 @@ public static class DependencyInjection
             options.ExpirationScanFrequency = TimeSpan.FromMinutes(30);
         });
         services.AddSingleton<ICacheRepository, CacheRepository>();
+        return services;
+    }
+
+    public static IServiceCollection AddAzureServiceBusSubscription(this IServiceCollection services, IConfiguration configuration, DefaultAzureCredential azureCredentials)
+    {
+        services.AddSingleton(x =>
+        {
+            string serviceBusNamespace = configuration.GetSection("ServiceBus")["Namespace"] ?? throw new Exception("missing namespace in configuration");
+            return new ServiceBusClient(string.Concat(serviceBusNamespace,".servicebus.windows.net"), azureCredentials);
+        });
+        services.AddHostedService<ServiceBusItemCreatedProcessor>();
+        services.AddHostedService<ServiceBusItemDeletedProcessor>();
+
         return services;
     }
 }
