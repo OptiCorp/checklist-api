@@ -1,24 +1,20 @@
 using Azure.Messaging.ServiceBus;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Persistence.ServiceBus;
 
 public abstract class BaseHostedService : IHostedService
 {
-    protected ServiceBusProcessor _processor;
+    public ServiceBusProcessor _processor;
 
-    protected ServiceBusClient _serviceBusClient;
-
-    // protected string _subcriptionName;
-
-    // protected string _topicName;
-
-
-    // public BaseHostedService(string subcriptionName, string topicName)
-    // {
-    //     _subcriptionName = subcriptionName;
-    //     _topicName = topicName;
-    // }
+    public ServiceBusClient _serviceBusClient;
+    protected BaseHostedService(ServiceBusClient serviceBusClient, IServiceScopeFactory serviceScopFactory, ILogger logger, IConfiguration configuration)
+    {
+        _serviceBusClient = serviceBusClient;
+    }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {

@@ -25,6 +25,11 @@ public class ItemRepository : IItemReposiory
         await _modelContextBase.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task DeleteItemById(string id, CancellationToken cancellationToken = default)
+    {
+        await _modelContextBase.Items.Where(i => i.Id == id).ExecuteDeleteAsync(cancellationToken);
+    }
+
     public async Task<Item?> GetItemById(string Id, CancellationToken cancellationToken = default)
     {
         return await _modelContextBase.Items

@@ -2,6 +2,7 @@
 using Application.Mobilizations.Queries;
 using Application.Mobilizations.Queries.GetAll;
 using Application.Mobilizations.Queries.GetMobilizationById;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using MobDeMob.Application.Mobilizations.Commands;
@@ -22,6 +23,8 @@ public class MobilizationsController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesDefaultResponseType]
     public async Task<IActionResult> CreateMobilization(AddMobilizationCommand addMobilizationCommand, CancellationToken cancellationToken = default)
     {
         var id = await _sender.Send(addMobilizationCommand, cancellationToken);
@@ -48,6 +51,25 @@ public class MobilizationsController : ControllerBase
         await _sender.Send(updateMobilizationCommand, cancellationToken);
         return NoContent();
     }
+
+//         [HttpPut("{mobId}")]
+//     public async Task<IActionResult> UpdateMobilization([FromBody] UpdateMobilizationCommand updateMobilizationCommand, CancellationToken cancellationToken = default)
+//     {
+//         try 
+//         {
+
+//         }catch(ChecklistValidation e) {
+// return BadRequest(e.Message
+//         }
+//         catch(ValidationException e) 
+//         {
+//          return barreques()  
+//         }
+//         await _sender.Send(updateMobilizationCommand, cancellationToken);
+//         return NoContent();
+//     }
+
+
 
     [HttpDelete("{mobId}")]
     public async Task<IActionResult> DeleteMobilization(DeleteMobilizationCommand deleteMobilizationCommand,CancellationToken cancellationToken = default)

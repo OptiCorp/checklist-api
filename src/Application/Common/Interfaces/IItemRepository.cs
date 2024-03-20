@@ -9,4 +9,6 @@ public interface IItemReposiory
 
     Task AddItem (string Id, CancellationToken cancellationToken = default);
 
+    Task DeleteItemById (string id, CancellationToken cancellationToken = default);
+
 }
