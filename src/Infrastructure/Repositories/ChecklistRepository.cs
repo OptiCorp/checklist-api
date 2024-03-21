@@ -27,13 +27,13 @@ namespace Infrastructure.Repositories
             return checklist.Id;
         }
 
-        //I dont think we need this or that this makes sense
         public async Task<Checklist?> GetChecklistByItemId(string itemId, Guid checklistCollectionId, CancellationToken cancellationToken = default)
         {
             return await GetSet()
                 .Where(ci => ci.ChecklistCollectionId == checklistCollectionId)
                 .Include(ci => ci.ItemTemplate)
-                .SingleOrDefaultAsync(ci => ci.ItemTemplate.ItemId == itemId, cancellationToken);
+                    .ThenInclude(itt => itt.Items)
+                .SingleOrDefaultAsync(ci => ci.ItemTemplate.Items.Any(i => i.Id == itemId), cancellationToken);
         }
 
         public async Task<IEnumerable<Checklist>> GetChecklistsForChecklistCollection(Guid checklistCollectionId, CancellationToken cancellationToken = default)
@@ -80,12 +80,13 @@ namespace Infrastructure.Repositories
                 .PaginatedListAsync(pageNumber, pageSize);
         }
 
-        public async Task<PaginatedList<Checklist>> GetChecklistsForItem(string ItemId, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+        public async Task<PaginatedList<Checklist>> GetChecklistsForItem(string itemId, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
         {
             return await GetSet()
                 .Include(c => c.ItemTemplate)
+                    .ThenInclude(itt => itt.Items)
                 .Include(c => c.Punches)
-                .Where(m => m.ItemTemplate.ItemId == ItemId)
+                .Where(m => m.ItemTemplate.Items.Any(i => i.Id == itemId))
                 .PaginatedListAsync(pageNumber, pageSize);
         }
 

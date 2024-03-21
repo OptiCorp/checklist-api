@@ -1,4 +1,5 @@
 using Azure.Messaging.ServiceBus;
+using Infrastructure.Persistence.ServiceBus.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -41,5 +42,9 @@ public abstract class BaseHostedService : IHostedService
     protected abstract Task MessageHandler(ProcessMessageEventArgs args);
 
     protected abstract Task ErrorHandler(ProcessErrorEventArgs args);
+
+    protected abstract object DeserializeObject(BinaryData data);
+
+    // protected static 
 
 }

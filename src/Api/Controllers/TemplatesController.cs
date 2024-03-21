@@ -37,12 +37,12 @@ namespace Api.Controllers
             return Ok(id);
         }
 
-        [HttpPost("AddQuestionForTemplate/{itemTemplateId}")]
-        public async Task<IActionResult> AddQuestionForTemplate(Guid itemTemplateId, [FromBody] string question, CancellationToken cancellationToken = default)
-        {
-            var id = await _sender.Send(new AddItemTemplateQuestionCommand { ItemTemplateId = itemTemplateId, Question = question }, cancellationToken);
-            return Ok(id);
-        }
+        // [HttpPost("AddQuestionForTemplate/{itemTemplateId}")]
+        // public async Task<IActionResult> AddQuestionForTemplate(Guid itemTemplateId, [FromBody] string question, CancellationToken cancellationToken = default)
+        // {
+        //     var id = await _sender.Send(new AddItemTemplateQuestionCommand { ItemTemplateId = itemTemplateId, Question = question }, cancellationToken);
+        //     return Ok(id);
+        // }
 
         [HttpPut("{itemId}/{questionTemplateId}")]
         public async Task<IActionResult> UpdateTemplateForItem(string itemId, Guid questionTemplateId, [FromBody] string question, CancellationToken cancellationToken = default)

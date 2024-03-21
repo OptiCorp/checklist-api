@@ -1,37 +1,37 @@
-using Application.Common.Exceptions;
-using Application.Common.Interfaces;
-using Domain.Entities;
-using Domain.Entities.TemplateAggregate;
-using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
-using MobDeMob.Domain.ItemAggregate;
+// using Application.Common.Exceptions;
+// using Application.Common.Interfaces;
+// using Domain.Entities;
+// using Domain.Entities.TemplateAggregate;
+// using MediatR;
+// using Microsoft.AspNetCore.Http.HttpResults;
+// using MobDeMob.Domain.ItemAggregate;
 
-namespace Application.Templates.AddTemplate;
+// namespace Application.Templates.AddTemplate;
 
-public class AddItemTemplateQuestionCommandHandler : IRequestHandler<AddItemTemplateQuestionCommand, Guid>
-{
-    private readonly IItemTemplateRepository _templateRepository;
-
-
+// public class AddItemTemplateQuestionCommandHandler : IRequestHandler<AddItemTemplateQuestionCommand, Guid>
+// {
+//     private readonly IItemTemplateRepository _templateRepository;
 
 
-    public AddItemTemplateQuestionCommandHandler(IItemTemplateRepository templateRepository)
-    {
-        _templateRepository = templateRepository;
-    }
 
-    public async Task<Guid> Handle(AddItemTemplateQuestionCommand request, CancellationToken cancellationToken)
-    {
-        var template = await _templateRepository.GetTemplateById(request.ItemTemplateId, cancellationToken)
-            ?? throw new NotFoundException(nameof(Item), request.ItemTemplateId); 
 
-        var newQuestionTemplate = QuestionTemplate.New(request.Question);
+//     public AddItemTemplateQuestionCommandHandler(IItemTemplateRepository templateRepository)
+//     {
+//         _templateRepository = templateRepository;
+//     }
 
-        template.AddQuestionTemplate(newQuestionTemplate);
+//     public async Task<Guid> Handle(AddItemTemplateQuestionCommand request, CancellationToken cancellationToken)
+//     {
+//         var template = await _templateRepository.GetTemplateById(request.ItemTemplateId, cancellationToken)
+//             ?? throw new NotFoundException(nameof(Item), request.ItemTemplateId); 
 
-        await _templateRepository.SaveChanges(cancellationToken);
+//         var newQuestionTemplate = QuestionTemplate.New(request.Question);
 
-        return newQuestionTemplate.Id;        
-    }
+//         template.AddQuestionTemplate(newQuestionTemplate);
 
-}
+//         await _templateRepository.SaveChanges(cancellationToken);
+
+//         return newQuestionTemplate.Id;        
+//     }
+
+// }

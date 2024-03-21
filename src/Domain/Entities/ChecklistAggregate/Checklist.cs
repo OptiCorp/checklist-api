@@ -36,7 +36,13 @@ public class Checklist : AuditableEntity
   
 
     [NotMapped]
-    public string ItemId => ItemTemplate?.ItemId ?? string.Empty; 
+    public string? ItemId {get; private set;}
+
+    public Checklist SetItemIdOnChecklist(string itemId)
+    {
+        ItemId = itemId;
+        return this;
+    } 
 
     public ChecklistStatus Status { get; private set; }
 

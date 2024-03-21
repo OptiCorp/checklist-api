@@ -34,6 +34,7 @@ public class AddPunchCommandHandler : IRequestHandler<AddPunchCommand, Guid>
 
         var checklist = await _checklistRepository.GetChecklistByItemId(request.ItemId, mobilization.ChecklistCollectionId, cancellationToken) 
             ?? throw new NotFoundException(nameof(Checklist), request.ItemId);
+        checklist.SetItemIdOnChecklist(request.ItemId);
         
         var newPunch = MapToPunch(request, checklist.Id);
 

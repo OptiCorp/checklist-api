@@ -61,7 +61,7 @@ public class ApplicationDbContextInitializer
             CreateMobilization($"{i}Test title{i}", MobilizationType.Mobilization, MobilizationStatus.NotReady, checklistCollection.Id, "Cool description");
             var questionTemplates = CreateQuestionTemplates();
 
-            var itemTemplate = CreateItemTemplateWithQuestions(item.Id, questionTemplates);
+            var itemTemplate = CreateItemTemplate(item.Id);
             var checklist = CreateChecklist(checklistCollection.Id, itemTemplate);
 
             foreach (var qt in questionTemplates)
@@ -93,14 +93,20 @@ public class ApplicationDbContextInitializer
         return item;
     }
 
-    private ItemTemplate CreateItemTemplateWithQuestions(string itemId, ICollection<QuestionTemplate> questions)
+    private ItemTemplate CreateItemTemplate(string itemId)
     {
-        var itemTemplate = new ItemTemplate(itemId)
-        {
-            Questions = questions,
-        };
+        var itemTemplate = ItemTemplate.New(itemId);
+
         _modelContextBase.ItemTemplates.Add(itemTemplate);
         return itemTemplate;
+    }
+
+    private ChecklistTemplate CreateChecklistTemplate(string itemTemplateId, ICollection<QuestionTemplate> questions)
+    {
+        var checklistTemplate = ChecklistTemplate.New(itemTemplateId, questions); 
+
+        _modelContextBase.ChecklistTemplate.Add(checklistTemplate); //TODO:
+        return checklistTemplate;
     }
 
     private ICollection<QuestionTemplate> CreateQuestionTemplates()

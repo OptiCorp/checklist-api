@@ -19,9 +19,9 @@ public class ItemRepository : IItemReposiory
 
     }
 
-    public async Task AddItem(string Id, CancellationToken cancellationToken = default)
+    public async Task AddItem(Item item, CancellationToken cancellationToken = default)
     {
-        await _modelContextBase.Items.AddAsync(new Item(){Id = Id}, cancellationToken);
+        await _modelContextBase.Items.AddAsync(item, cancellationToken);
         await _modelContextBase.SaveChangesAsync(cancellationToken);
     }
 

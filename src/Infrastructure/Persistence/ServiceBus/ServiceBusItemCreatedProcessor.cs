@@ -2,11 +2,15 @@
 using System.Text.Json;
 using Application.Common.Interfaces;
 using Azure.Messaging.ServiceBus;
+using Domain.Entities;
+using Infrastructure.Persistence.ServiceBus.Models;
+using Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Writers;
+using MobDeMob.Domain.ItemAggregate;
 
 namespace Infrastructure.Persistence.ServiceBus;
 
@@ -31,10 +35,16 @@ public class ServiceBusItemCreatedProcessor : BaseHostedService
         using (var scope = _serviceScopeFactory.CreateScope())
         {
             var itemRepository = scope.ServiceProvider.GetRequiredService<IItemReposiory>();
-            var itemId = args.Message.Body.ToString();
-            await itemRepository.AddItem(itemId);
+            var itemTemplateRepository = scope.ServiceProvider.GetRequiredService<ItemTemplateRepository>();
+            var itemCreated = DeserializeObject(args.Message.Body);
+            _logger.Log(LogLevel.Information, $"Read itemId: {itemCreated.ItemId}");
 
-            _logger.Log(LogLevel.Information, $"Read itemId: {itemId}");
+            var itemTemplate = await itemTemplateRepository.GetTemplateById(itemCreated.ItemTemplateId);
+            if (itemTemplate == null) await itemTemplateRepository.AddTemplate(ItemTemplate.New(itemCreated.ItemTemplateId));
+            var item = MapItemCreatedToItem(itemCreated);
+            await itemRepository.AddItem(item);
+
+            
         }
         await args.CompleteMessageAsync(args.Message);
     }
@@ -44,5 +54,16 @@ public class ServiceBusItemCreatedProcessor : BaseHostedService
         var errorMessage = args.Exception.ToString();
         _logger.Log(LogLevel.Error, errorMessage);
         return Task.CompletedTask;
+    }
+
+    protected override ItemCreated DeserializeObject(BinaryData data)
+    {
+        var ItemCreated = JsonSerializer.Deserialize<ItemCreated>(data) ?? throw new Exception("Could not serialize from service bus");
+        return ItemCreated;
+    }
+
+    private static Item MapItemCreatedToItem(ItemCreated itemCreated)
+    {
+        return Item.New(itemCreated.ItemTemplateId, itemCreated.ItemId);
     }
 }

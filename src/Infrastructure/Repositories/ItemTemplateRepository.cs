@@ -7,59 +7,67 @@ using MobDeMob.Infrastructure;
 
 namespace Infrastructure.Repositories;
 
-public class ItemTemplateRepository : RepositoryBase<ItemTemplate>, IItemTemplateRepository
+public class ItemTemplateRepository : IItemTemplateRepository
 {
-    public ItemTemplateRepository(ModelContextBase modelContextBase) : base(modelContextBase) 
+    private readonly ModelContextBase _modelContextBase;
+    public ItemTemplateRepository(ModelContextBase modelContextBase)
     {
+        _modelContextBase = modelContextBase;
     }
-  
 
-    public async Task<Guid> AddTemplate(ItemTemplate itemTemplate, CancellationToken cancellationToken = default)
+
+    public async Task<string> AddTemplate(ItemTemplate itemTemplate, CancellationToken cancellationToken = default)
     {
-        await Add(itemTemplate, cancellationToken);
+        await _modelContextBase.ItemTemplates.AddAsync(itemTemplate, cancellationToken);
+        await _modelContextBase.SaveChangesAsync(cancellationToken);
         return itemTemplate.Id;
     }
 
-    public async Task DeleteItemTemplate(Guid Id, CancellationToken cancellationToken = default)
-    => await DeleteById(Id, cancellationToken);
+    public async Task DeleteItemTemplate(string id, CancellationToken cancellationToken = default)
+    => await _modelContextBase.ItemTemplates.Where(m => m.Id == id).ExecuteDeleteAsync(cancellationToken); 
 
-    public async Task<ItemTemplate?> GetTemplateById(Guid templateId, CancellationToken cancellationToken = default)
-    {
-        return await GetSet()
-            .Include(t => t.Questions) //TODO: should getting questions be a separate repository call?
-            .FirstOrDefaultAsync(x => x.Id == templateId, cancellationToken);
-    }
-
-    public async Task<ItemTemplate?> GetTemplateByItemId(string itemId, CancellationToken cancellationToken = default)
+    public async Task<ItemTemplate?> GetTemplateById(string templateId, CancellationToken cancellationToken = default)
     {
         return await _modelContextBase.ItemTemplates
-            .Include(t => t.Questions)
-            .SingleOrDefaultAsync(x => x.ItemId == itemId, cancellationToken);
+            .Include(itt => itt.Items)
+            .Include(t => t.ChecklistTemplate) 
+            .FirstOrDefaultAsync(x => x.Id == templateId, cancellationToken); 
     }
 
-    public async Task<Dictionary<string, bool>> ItemTemplateExistsForItemIds(IEnumerable<string> itemIds, CancellationToken cancellationToken = default)
-    {
-        var itemIdsHash = new HashSet<string>(itemIds);
-        var itemHasItemTemplate = new Dictionary<string, bool>();
+    // public async Task<ItemTemplate?> GetTemplateByItemId(string itemId, CancellationToken cancellationToken = default)
+    // {
+    //     return await _modelContextBase.ItemTemplates
+    //         .Include(t => t.Questions)
+    //         .SingleOrDefaultAsync(x => x.ItemId == itemId, cancellationToken);
+    // }
 
-        var tasks = await GetSet()
-            .Where(it => itemIdsHash.Contains(it.ItemId))
-            .Select(it => new { it.ItemId, Exists = true })
-            .ToListAsync(cancellationToken: cancellationToken);
+    // public async Task<Dictionary<string, bool>> ItemTemplateExistsForItemIds(IEnumerable<string> itemIds, CancellationToken cancellationToken = default)
+    // {
+    //     var itemIdsHash = new HashSet<string>(itemIds);
+    //     var itemHasItemTemplate = new Dictionary<string, bool>();
 
-        foreach (var item in tasks)
-        {
-            itemHasItemTemplate[item.ItemId] = item.Exists;
-        }
+    //     var tasks = await GetSet()
+    //         .Where(it => itemIdsHash.Contains(it.ItemId))
+    //         .Select(it => new { it.ItemId, Exists = true })
+    //         .ToListAsync(cancellationToken: cancellationToken);
 
-        foreach (var itemId in itemIds)
-        {
-            if (!itemHasItemTemplate.ContainsKey(itemId))
-            {
-                itemHasItemTemplate[itemId] = false;
-            }
-        }
+    //     foreach (var item in tasks)
+    //     {
+    //         itemHasItemTemplate[item.ItemId] = item.Exists;
+    //     }
 
-        return itemHasItemTemplate;
-    }
+    //     foreach (var itemId in itemIds)
+    //     {
+    //         if (!itemHasItemTemplate.ContainsKey(itemId))
+    //         {
+    //             itemHasItemTemplate[itemId] = false;
+    //         }
+    //     }
+
+    //     return itemHasItemTemplate;
+    // }
+
+    public async Task SaveChanges(CancellationToken cancellationToken = default)
+        => await _modelContextBase.SaveChangesAsync(cancellationToken);
+
 }

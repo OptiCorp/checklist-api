@@ -46,4 +46,9 @@ public class ServiceBusItemDeletedProcessor : BaseHostedService
         _logger.Log(LogLevel.Error, errorMessage);
         return Task.CompletedTask;
     }
+
+    protected override object DeserializeObject(BinaryData data)
+    {
+        throw new NotImplementedException();
+    }
 }

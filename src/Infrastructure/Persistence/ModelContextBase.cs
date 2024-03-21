@@ -32,17 +32,25 @@ public class ModelContextBase : DbContext
             .HasForeignKey<Mobilization>(m => m.ChecklistCollectionId)
             .IsRequired();
 
-        modelBuilder.Entity<ItemTemplate>()
-            .HasMany(it => it.Questions)
-            .WithOne()
-            .HasForeignKey(nameof(ItemTemplate) + "Id")
+        modelBuilder.Entity<ChecklistTemplate>()
+            .HasOne(ct => ct.ItemTemplate)
+            .WithOne(it => it.ChecklistTemplate)
+            // .HasForeignKey(nameof(ItemTemplate) + "Id")
+            .HasForeignKey<ChecklistTemplate>(ct => ct.ItemTemplateId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<ItemTemplate>()
-            .HasOne(it => it.Item)
+            .HasMany(itt => itt.Items)
+            .WithOne(it => it.ItemTemplate)
+            .HasForeignKey(it => it.ItemTemplateId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ChecklistTemplate>()
+            .HasMany(ct => ct.Questions)
             .WithOne()
-            .HasForeignKey<ItemTemplate>(it => it.ItemId)
+            .HasForeignKey(nameof(ChecklistTemplate) + "Id")
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
@@ -50,6 +58,7 @@ public class ModelContextBase : DbContext
             .Property(qt => qt.Question)
             .IsRequired()
             .HasMaxLength(250); // Random value, pls change
+
 
         modelBuilder.Entity<Checklist>()
             .HasMany(it => it.Questions)
@@ -67,8 +76,8 @@ public class ModelContextBase : DbContext
 
         modelBuilder.Entity<Checklist>()
             .HasOne(c => c.ItemTemplate)
-            .WithMany()
-            .HasForeignKey(c => c.ItemTemplateId)
+            .WithOne()
+            .HasForeignKey<Checklist>(c => c.ItemTemplateId)
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Checklist>()
@@ -77,9 +86,9 @@ public class ModelContextBase : DbContext
 
         modelBuilder.Entity<ChecklistQuestion>()
             .HasOne(cq => cq.QuestionTemplate)
-            .WithMany()
-            .HasForeignKey(cq => cq.QuestionTemplateId)
-            .OnDelete(DeleteBehavior.Cascade); //TODO:
+            .WithOne()
+            .HasForeignKey<ChecklistQuestion>(cq => cq.QuestionTemplateId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<ChecklistQuestion>()
             .ToTable(t => t.HasCheckConstraint("CK_ChecklistQuestions_CheckedNotApplicable",
@@ -99,6 +108,7 @@ public class ModelContextBase : DbContext
     public DbSet<ItemTemplate> ItemTemplates { get; set; } = null!;
     public DbSet<Punch> Punches { get; set; } = null!;
     public DbSet<PunchFile> PunchFiles { get; set; } = null!;
+    public DbSet<ChecklistTemplate> ChecklistTemplate { get; set; } = null!;
 
     public DbSet<Item> Items { get; set; } = null!;
 
