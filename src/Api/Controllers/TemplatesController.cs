@@ -1,16 +1,19 @@
-﻿using Application.Mobilizations.Queries;
+﻿using Application.Common.Exceptions;
+using Application.Mobilizations.Queries;
 using Application.Templates;
 using Application.Templates.AddTemplate;
+using Application.Templates.Commands;
 using Application.Templates.GetById;
 using Application.Templates.Queries;
 using Application.Templates.UpdateTemplate;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/Templates/{itemTemplateId}")]
     public class TemplatesController : ControllerBase
     {
         private readonly ILogger<TemplatesController> _logger;
@@ -22,61 +25,129 @@ namespace Api.Controllers
             _sender = sender;
         }
 
-        [HttpGet("{itemId}")]
-        public async Task<IActionResult> GetTemplateById([FromRoute] string itemId, CancellationToken cancellationToken = default)
+        [HttpGet("getItemTemplateById")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetItemTemplateById([FromRoute] string itemTemplateId, CancellationToken cancellationToken = default)
         {
-            var id = await _sender.Send(new GetTemplateQuery { ItemId = itemId }, cancellationToken);
-            return Ok(id);
+            try
+            {
+                var itemTemplate = await _sender.Send(new GetItemTemplateQuery { ItemTemplateId = itemTemplateId }, cancellationToken);
+                return itemTemplate is not null ? Ok(itemTemplate) : NotFound(itemTemplate);
+            }
+            catch (ValidationException e)
+            {
+                return BadRequest(e.Errors);
+            }
         }
 
-        [HttpPost("{itemId}/CreateTemplateForItem")]
-        public async Task<IActionResult> CreateTemplateForItem(AddTemplateCommand command, CancellationToken cancellationToken = default)
+        [HttpGet("GetChecklistTemplate/{checklistTemplateId}", Name = "GetChecklistTemplate")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetChecklistTemplate([FromRoute] string itemTemplateId, Guid checklistTemplateId, CancellationToken cancellationToken = default)
         {
-            var id = await _sender.Send(command, cancellationToken);
-            // return CreatedAtAction(nameof(GetTemplateById), new { templateId = id }, id);
-            return Ok(id);
+            var checklistTemplate = await _sender.Send(new GetChecklistTemplateQuery { checklistTemplateId = checklistTemplateId }, cancellationToken);
+            return checklistTemplate is not null ? Ok(checklistTemplate) : NotFound(checklistTemplate);
         }
 
-        // [HttpPost("AddQuestionForTemplate/{itemTemplateId}")]
-        // public async Task<IActionResult> AddQuestionForTemplate(Guid itemTemplateId, [FromBody] string question, CancellationToken cancellationToken = default)
-        // {
-        //     var id = await _sender.Send(new AddItemTemplateQuestionCommand { ItemTemplateId = itemTemplateId, Question = question }, cancellationToken);
-        //     return Ok(id);
-        // }
+        [HttpPost("CreateChecklistTemplateForItemTemplate")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        [HttpPut("{itemId}/{questionTemplateId}")]
-        public async Task<IActionResult> UpdateTemplateForItem(string itemId, Guid questionTemplateId, [FromBody] string question, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> CreateChecklistTemplateForItemTemplate(AddChecklistTemplateCommand command, CancellationToken cancellationToken = default)
         {
-            await _sender.Send(new UpdateTemplateCommand { QuestionTemplateId = questionTemplateId, Question = question }, cancellationToken);
-            return NoContent();
+            try
+            {
+                var itemTemplate = await _sender.Send(command, cancellationToken);
+                // return CreatedAtAction(nameof(GetTemplateById), new { templateId = id }, id);
+                return CreatedAtRoute(nameof(GetChecklistTemplate), new { itemTemplateId = itemTemplate.Id, checklistTemplateId = itemTemplate.ChecklistTemplate.Id }, itemTemplate);
+            }
+            catch (ValidationException e)
+            {
+                return BadRequest(e.Errors);
+            }
+            catch (NotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
-        [HttpGet("{itemId}/GetChecklistsForItem")]
-        public async Task<IActionResult> GetChecklistsForItem([FromRoute] string itemId, int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default)
+        [HttpPost("AddQuestionForChecklistTemplate/{checklistTemplateId}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> AddQuestionForTemplate(string itemTemplateId, Guid checklistTemplateId, [FromBody] string question, CancellationToken cancellationToken = default)
         {
-            var checklists = await _sender.Send(new GetChecklistsForItemQuery { ItemId = itemId, PageNumber = pageNumber, PageSize = pageSize }, cancellationToken);
-            return Ok(checklists);
+            try
+            {
+                var id = await _sender.Send(new AddChecklistTemplateQuestionCommand { checklistTemplateId = checklistTemplateId, question = question }, cancellationToken);
+                return Ok(id);
+            }
+            catch (ValidationException e)
+            {
+                return BadRequest(e.Errors);
+            }
+            catch (NotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
-        [HttpGet("GetItemTemplatesExists")]
-        public async Task<IActionResult> GetItemTemplatesExists([FromQuery] IEnumerable<string> itemIds, CancellationToken cancellationToken = default)
+        [HttpPut("{checklistTemplateId}/{questionTemplateId}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateChecklistTemplateForItemTemplate(string itemTemplateId, Guid checklistTemplateId, Guid questionTemplateId, [FromBody] string question, CancellationToken cancellationToken = default)
         {
-            var itemTemplatesExist = await _sender.Send(new GetTemplatesExistsFromItemIdsQuery { ItemIds = itemIds }, cancellationToken);
-            return Ok(itemTemplatesExist);
+            try
+            {
+                await _sender.Send(new UpdateTemplateCommand { questionTemplateId = questionTemplateId, question = question }, cancellationToken);
+                return NoContent();
+            }
+
+            catch (ValidationException e)
+            {
+                return BadRequest(e.Errors);
+            }
+            catch (NotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
-        [HttpGet("{itemId}/GetCheckItemQuestionConflict/{itemTemplateId}")]
-        public async Task<IActionResult> GetCheckItemQuestionConflict(string itemId, Guid itemTemplateId, CancellationToken cancellationToken = default)
+
+        [HttpGet("GetCheckItemQuestionConflict/{checklistTemplateId}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetCheckItemQuestionConflict([FromRoute] CheckConflictsOnUpdateChecklistTemplateQuestionsQuery query, CancellationToken cancellationToken = default)
         {
-            var checklistIdConflicts = await _sender.Send(new CheckConflictsOnUpdateItemTemplateQuestionsQuery { ItemTemplateId = itemTemplateId }, cancellationToken);
+            var checklistIdConflicts = await _sender.Send(query, cancellationToken);
             return Ok(checklistIdConflicts);
         }
 
-        [HttpDelete("{itemId}/DeleteQuestionTemplate/{questionTemplateId}")]
-        public async Task<IActionResult> DeleteQuestionTemplate(string itemId, Guid questionTemplateId, CancellationToken cancellationToken = default)
+        [HttpDelete("DeleteQuestionTemplate/{checklistTemplateId}/{questionTemplateId}")]
+        [ProducesDefaultResponseType]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteQuestionTemplate(Guid checklistTemplateId, Guid questionTemplateId, CancellationToken cancellationToken = default)
         {
-            await _sender.Send(new DeleteItemTemplateQuestionCommand { TemplateQuestionId = questionTemplateId }, cancellationToken);
-            return NoContent();
+            try
+            {
+                await _sender.Send(new DeleteQuestionTemplateCommand { QuestionTemplateId = questionTemplateId }, cancellationToken);
+                return NoContent();
+            }
+            catch (NotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+
         }
     }
 }

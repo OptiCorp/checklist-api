@@ -15,7 +15,7 @@ public class SetChecklistCheckedValueCommandHandler : IRequestHandler<SetCheckli
     private readonly IChecklistQuestionRepository _checklistQuestionRepository;
 
     private readonly IChecklistRepository _checklistRepository;
-
+ 
 
     public SetChecklistCheckedValueCommandHandler(
         IChecklistQuestionRepository checklistQuestionRepository,
@@ -27,16 +27,16 @@ public class SetChecklistCheckedValueCommandHandler : IRequestHandler<SetCheckli
     }
     public async Task Handle(SetChecklistQuestionCheckedCommand request, CancellationToken cancellationToken)
     {
-        var checklist = await _checklistRepository.GetSingleChecklist(request.ChecklistId, cancellationToken)
-            ?? throw new NotFoundException(nameof(ChecklistQuestion), request.ChecklistId);
+        var checklist = await _checklistRepository.GetSingleChecklist(request.checklistId, cancellationToken)
+            ?? throw new NotFoundException(nameof(Checklist), request.checklistId);
 
-        var checklistQuestion = await _checklistQuestionRepository.GetQuestion(request.ChecklistQuestionId, cancellationToken)
-            ?? throw new NotFoundException(nameof(ChecklistQuestion), request.ChecklistQuestionId);
+        var checklistQuestion = await _checklistQuestionRepository.GetQuestion(request.checklistQuestionId, cancellationToken)
+            ?? throw new NotFoundException(nameof(ChecklistQuestion), request.checklistQuestionId);
 
         checklist.SetChecklistStatus(ChecklistStatus.InProgress);
 
 
-        checklistQuestion.MarkQuestionAsCheckedOrUnChecked(request.Value);
+        checklistQuestion.MarkQuestionAsCheckedOrUnChecked(request.value);
         await _checklistQuestionRepository.SaveChanges(cancellationToken);
     }
 

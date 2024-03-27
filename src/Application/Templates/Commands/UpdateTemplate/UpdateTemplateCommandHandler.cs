@@ -22,10 +22,10 @@ public class UpdateTemplateCommandHandler : IRequestHandler<UpdateTemplateComman
     {
         // var template = await _templateRepository.GetTemplateByItemId(request.ItemId, cancellationToken)
         //     ?? throw new NotFoundException(nameof(ItemTemplate), request.ItemId);
-        var questionTemplate = await _questionTemplateRepository.GetSingleQuestion(request.QuestionTemplateId, cancellationToken)
-            ?? throw new NotFoundException(nameof(QuestionTemplate), request.QuestionTemplateId); ;
+        var questionTemplate = await _questionTemplateRepository.GetSingleQuestion(request.questionTemplateId, cancellationToken)
+            ?? throw new NotFoundException(nameof(QuestionTemplate), request.questionTemplateId); ;
 
-        await UpdateQuestionIfChange(questionTemplate, request.Question, cancellationToken);
+        await UpdateQuestionIfChange(questionTemplate, request.question, cancellationToken);
     }
 
     public async Task UpdateQuestionIfChange(QuestionTemplate questionTemplate, string newQuestion, CancellationToken cancellationToken)

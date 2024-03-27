@@ -30,5 +30,12 @@ namespace Infrastructure.Repositories
                 .Where(c => c.ChecklistId == Id)
                 .ToListAsync(cancellationToken);
         }
+
+        public async Task<IEnumerable<ChecklistQuestion>> GetQuestionsByQuestionTemplateId(Guid questionTemplateId, CancellationToken cancellationToken = default)
+        {
+            return await GetSet()
+                .Where(cq => cq.QuestionTemplateId == questionTemplateId)
+                .ToListAsync(cancellationToken);
+        }
     }
 }

@@ -11,7 +11,7 @@ public class CheklistCollectionRepository : RepositoryBase<ChecklistCollection>,
     {
     }
 
-    public async Task<Guid> AddChecklist(ChecklistCollection checklistCollection, CancellationToken cancellationToken = default)
+    public async Task<Guid> AddChecklistCollection(ChecklistCollection checklistCollection, CancellationToken cancellationToken = default)
     {
         await Add(checklistCollection, cancellationToken);
         return checklistCollection.Id;

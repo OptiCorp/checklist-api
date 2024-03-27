@@ -19,13 +19,13 @@ public class ServiceBusItemCreatedProcessor : BaseHostedService
     private readonly ILogger<ServiceBusItemCreatedProcessor> _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public ServiceBusItemCreatedProcessor(ServiceBusClient serviceBusClient, IServiceScopeFactory serviceScopFactory, ILogger<ServiceBusItemCreatedProcessor> logger, IConfiguration configuration) : base(serviceBusClient, serviceScopFactory, logger, configuration) 
+    public ServiceBusItemCreatedProcessor(ServiceBusClient serviceBusClient, IServiceScopeFactory serviceScopFactory, ILogger<ServiceBusItemCreatedProcessor> logger, IConfiguration configuration) : base(serviceBusClient, serviceScopFactory, logger, configuration)
     {
         var topicName = configuration.GetSection("ServiceBus")["TopicItemCreated"] ?? throw new Exception("Missing topic name in configuration");
         var subcriptionName = configuration.GetSection("ServiceBus")["SubscriptionName"] ?? throw new Exception("Missing topic name in configuration");
 
         _logger = logger;
-        _serviceBusClient = serviceBusClient;  
+        _serviceBusClient = serviceBusClient;
         _serviceScopeFactory = serviceScopFactory;
         _processor = _serviceBusClient.CreateProcessor(topicName, subcriptionName, new ServiceBusProcessorOptions());
     }
@@ -35,16 +35,17 @@ public class ServiceBusItemCreatedProcessor : BaseHostedService
         using (var scope = _serviceScopeFactory.CreateScope())
         {
             var itemRepository = scope.ServiceProvider.GetRequiredService<IItemReposiory>();
-            var itemTemplateRepository = scope.ServiceProvider.GetRequiredService<ItemTemplateRepository>();
+            var itemTemplateRepository = scope.ServiceProvider.GetRequiredService<IItemTemplateRepository>();
             var itemCreated = DeserializeObject(args.Message.Body);
-            _logger.Log(LogLevel.Information, $"Read itemId: {itemCreated.ItemId}");
+            _logger.Log(LogLevel.Information, $"Read itemId: {itemCreated.itemId} {itemCreated.itemTemplateId}");
 
-            var itemTemplate = await itemTemplateRepository.GetTemplateById(itemCreated.ItemTemplateId);
-            if (itemTemplate == null) await itemTemplateRepository.AddTemplate(ItemTemplate.New(itemCreated.ItemTemplateId));
-            var item = MapItemCreatedToItem(itemCreated);
+            ItemTemplate? itemTemplate;
+            itemTemplate = await itemTemplateRepository.GetTemplateById(itemCreated.itemTemplateId);
+
+            itemTemplate ??= await itemTemplateRepository.AddTemplate(ItemTemplate.New(itemCreated.itemTemplateId));
+
+            var item = MapItemCreatedToItem(itemCreated.itemId, itemTemplate.Id);
             await itemRepository.AddItem(item);
-
-            
         }
         await args.CompleteMessageAsync(args.Message);
     }
@@ -62,8 +63,8 @@ public class ServiceBusItemCreatedProcessor : BaseHostedService
         return ItemCreated;
     }
 
-    private static Item MapItemCreatedToItem(ItemCreated itemCreated)
+    private static Item MapItemCreatedToItem(string itemId, string itemTemplateId)
     {
-        return Item.New(itemCreated.ItemTemplateId, itemCreated.ItemId);
+        return Item.New(itemTemplateId, itemId);
     }
 }

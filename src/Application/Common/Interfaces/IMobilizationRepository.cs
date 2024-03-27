@@ -21,7 +21,7 @@ public interface IMobilizationRepository
 
     Task DeleteMobilization(Guid id, CancellationToken cancellationToken = default);
 
-    Task<Guid?> GetMobilizationIdByChecklistCollectionId(Guid id, CancellationToken cancellationToken = default);
+    Task<Mobilization?> GetMobilizationIdByChecklistCollectionId(Guid id, CancellationToken cancellationToken = default);
 
 
 

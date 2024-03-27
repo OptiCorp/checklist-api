@@ -68,6 +68,13 @@ public class ModelContextBase : DbContext
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Checklist>()
+            .HasOne(c => c.ChecklistTemplate)
+            .WithMany()
+            .HasForeignKey(c => c.ChecklistTemplateId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Checklist>()
             .HasMany(c => c.Punches)
             .WithOne(p => p.Checklist)
             .HasForeignKey(p => p.ChecklistId)
@@ -75,20 +82,21 @@ public class ModelContextBase : DbContext
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Checklist>()
-            .HasOne(c => c.ItemTemplate)
-            .WithOne()
-            .HasForeignKey<Checklist>(c => c.ItemTemplateId)
+            .HasOne(c => c.Item)
+            .WithMany()
+            .HasForeignKey(c => c.ItemId) 
+            .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Checklist>()
-            .HasIndex(ci => new { ci.ItemTemplateId, ci.ChecklistCollectionId })
+            .HasIndex(ci => new { ci.ItemId, ci.ChecklistCollectionId }) //can not add the same item twice in the same mobilization
             .IsUnique();
 
         modelBuilder.Entity<ChecklistQuestion>()
             .HasOne(cq => cq.QuestionTemplate)
-            .WithOne()
-            .HasForeignKey<ChecklistQuestion>(cq => cq.QuestionTemplateId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .WithMany()
+            .HasForeignKey(cq => cq.QuestionTemplateId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<ChecklistQuestion>()
             .ToTable(t => t.HasCheckConstraint("CK_ChecklistQuestions_CheckedNotApplicable",
@@ -108,7 +116,7 @@ public class ModelContextBase : DbContext
     public DbSet<ItemTemplate> ItemTemplates { get; set; } = null!;
     public DbSet<Punch> Punches { get; set; } = null!;
     public DbSet<PunchFile> PunchFiles { get; set; } = null!;
-    public DbSet<ChecklistTemplate> ChecklistTemplate { get; set; } = null!;
+    public DbSet<ChecklistTemplate> ChecklistTemplates { get; set; } = null!;
 
     public DbSet<Item> Items { get; set; } = null!;
 

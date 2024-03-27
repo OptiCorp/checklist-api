@@ -30,23 +30,16 @@ public class GetMobilizationForItemQueryHandler : IRequestHandler<GetChecklistsF
     {
         var item = await _itemReposiory.GetItemById(request.ItemId) 
             ?? throw new NotFoundException(nameof(Item), request.ItemId);
-        var checklistPaginated = await _checklistRepository.GetChecklistsForItem(item.Id, request.PageNumber, request.PageSize, cancellationToken);
-        //var checklistCollectionIds = checklistPaginated.Items.Select(c => c.ChecklistCollectionId);
 
-        //_ = checklistPaginated.Items.Select(async c => c.SetMobilizationId(await _mobilizationRepository.GetMobilizationIdByChecklistCollectionId(c.ChecklistCollectionId)));
+        var checklistPaginated = await _checklistRepository.GetChecklistsForItem(request.ItemId, request.PageNumber, request.PageSize, cancellationToken);
 
         foreach (var c in checklistPaginated.Items)
         {
-            var mobId = await _mobilizationRepository.GetMobilizationIdByChecklistCollectionId(c.ChecklistCollectionId, cancellationToken)
-                ?? throw new NotFoundException(nameof(Mobilization), c.ChecklistCollectionId);
+            var mobilization = await _mobilizationRepository.GetMobilizationIdByChecklistCollectionId(c.ChecklistCollectionId, cancellationToken)
+                ?? throw new Exception("Something went wrong");
 
-            c.SetMobilizationId(mobId);
+            c.SetMobilizationId(mobilization.Id);
             c.SetPunchesCount(c.Punches.Count);
-        }
-
-        if (!checklistPaginated.Items.Any())
-        {
-            
         }
 
         var checklistDtosPaginated = new PaginatedList<ChecklistBriefDto>(

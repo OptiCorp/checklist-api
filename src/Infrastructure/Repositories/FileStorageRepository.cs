@@ -73,7 +73,7 @@ public class FileStorageRepositories : IFileStorageRepository
         return $"{fileId}.{fileExt}".ToLower();
     }
 
-    public async Task<Uri> UploadImage(Stream stream, string fileName, string containerName, string contentType, CancellationToken cancellationToken)
+    public async Task<Uri> UploadFile(Stream stream, string fileName, string containerName, string contentType, CancellationToken cancellationToken)
     {
         BlobContainerClient container = await GetContainer(containerName, cancellationToken);
         var fileId = Guid.NewGuid();

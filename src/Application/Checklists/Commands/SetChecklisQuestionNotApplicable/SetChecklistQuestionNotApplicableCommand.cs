@@ -8,10 +8,10 @@ namespace Application.Checklists.Commands;
 
 public class SetChecklistQuestionNotApplicableCommand : IRequest
 {
-    public Guid ChecklistQuestionId {get; set;}
+    public Guid checklistQuestionId {get; set;}
 
-    public Guid ChecklistId {get; init;}
+    public Guid checklistId {get; init;}
 
-    public bool Value {get; set;}
+    public bool value {get; set;}
 
 }

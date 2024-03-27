@@ -13,14 +13,18 @@ public class Checklist : AuditableEntity
     //public ChecklistCollection ChecklistCollection {get; set;} = null!
     public Guid ChecklistCollectionId { get; private set; }
 
-    public ItemTemplate ItemTemplate {get; set;} = null!;
-    public Guid ItemTemplateId {get; private set;}
+    public Item Item {get; set;} = null!;
+    public string ItemId {get; private set;}
 
     //public Checklist Checklist {get; set;}
 
     public ICollection<ChecklistQuestion> Questions { get; private set; } = [];
 
     public ICollection<Punch> Punches { get; set; } = [];
+
+    public Guid ChecklistTemplateId {get; private set;}
+
+    public ChecklistTemplate ChecklistTemplate = null!;
 
 
     private int _punchesCount;
@@ -35,24 +39,25 @@ public class Checklist : AuditableEntity
     public Guid MobilizationId {get; private set;}
   
 
-    [NotMapped]
-    public string? ItemId {get; private set;}
-
-    public Checklist SetItemIdOnChecklist(string itemId)
-    {
-        ItemId = itemId;
-        return this;
-    } 
-
     public ChecklistStatus Status { get; private set; }
 
     public double CompletionPercentage => GetCompletionPercentage();
 
-    public Checklist(ItemTemplate itemTemplate, Guid checklistCollectionId)
+    public Checklist(Item item, Guid checklistCollectionId)
     {
-        ItemTemplate = itemTemplate;
+        Item = item;
         ChecklistCollectionId = checklistCollectionId;
         //_itemId = itemTemplate.ItemId;
+    }
+
+    public static Checklist New(string itemId, Guid checklistCollectionId, Guid checklistTemplateId)
+    {
+        return new Checklist()
+        {
+            ItemId = itemId,
+            ChecklistCollectionId = checklistCollectionId,
+            ChecklistTemplateId = checklistTemplateId
+        };
     }
 
     public Checklist SetMobilizationId(Guid mobilizationId)

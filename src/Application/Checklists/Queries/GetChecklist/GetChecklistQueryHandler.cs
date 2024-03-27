@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Application.Checklists.Queries;
 
-public class GetChecklistQueryHandler : IRequestHandler<GetChecklistQuery, ChecklistDto>
+public class GetChecklistQueryHandler : IRequestHandler<GetChecklistQuery, ChecklistDto?>
 {
     private readonly IChecklistRepository _checklistRepository;
 
@@ -25,10 +25,11 @@ public class GetChecklistQueryHandler : IRequestHandler<GetChecklistQuery, Check
         _checklistQuestionRepository = checklistQuestionRepository;
     }
 
-    public async Task<ChecklistDto> Handle(GetChecklistQuery request, CancellationToken cancellationToken)
+    public async Task<ChecklistDto?> Handle(GetChecklistQuery request, CancellationToken cancellationToken)
     {
-        var checklist = await _checklistRepository.GetSingleChecklist(request.ChecklistId, cancellationToken) ??
-             throw new NotFoundException(nameof(Checklist), request.ChecklistId);
+        var checklist = await _checklistRepository.GetSingleChecklist(request.ChecklistId, cancellationToken);
+
+        if (checklist == null) return null;
 
         var checklistItemQuestions = await _checklistQuestionRepository.GetQuestionsByChecklistId(checklist.Id, cancellationToken);
 

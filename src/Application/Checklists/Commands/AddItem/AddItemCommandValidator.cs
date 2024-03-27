@@ -9,9 +9,9 @@ public class AddItemCommandValidator : AbstractValidator<AddItemCommand>
    public AddItemCommandValidator()
    {
       RuleFor(v => v.ItemId)
-         .NotEmpty().WithMessage("cannot search with empty string");
+         .NotEmpty();
 
       RuleFor(v => v.ItemId)
-          .MaximumLength(30).WithMessage("Item id cannot larger than 30 characters");
+          .MaximumLength(30);
    }
 }

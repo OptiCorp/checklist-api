@@ -9,16 +9,16 @@ public class GetMobilizationsForItemQueryValidator : AbstractValidator<GetCheckl
     public GetMobilizationsForItemQueryValidator()
     {
         RuleFor(v => v.ItemId)
-            .NotEmpty().WithMessage("cannot search with empty string");
+            .NotEmpty();
 
         RuleFor(v => v.ItemId)
-            .MaximumLength(50).WithMessage("Item id cannot larger than 30 characters");
+            .MaximumLength(50);
 
         RuleFor(x => x.PageNumber)
-            .GreaterThanOrEqualTo(1).WithMessage("PageNumber at least greater than or equal to 1.");
+            .GreaterThanOrEqualTo(1);
 
         RuleFor(x => x.PageSize)
-            .GreaterThanOrEqualTo(1).WithMessage("PageSize at least greater than or equal to 1.");
+            .GreaterThanOrEqualTo(1);
 
     }
 }

@@ -21,18 +21,18 @@ public class AddMobilizationCommandHandler : IRequestHandler<AddMobilizationComm
 
     public async Task<Guid> Handle(AddMobilizationCommand request, CancellationToken cancellationToken)
     {
-        var checklistId = await _checklistCollectionRepository.AddChecklist(new ChecklistCollection(), cancellationToken);
+        var checklistCollectionId = await _checklistCollectionRepository.AddChecklistCollection(new ChecklistCollection(), cancellationToken);
 
-        var mobilization = MapToMobilization(request, checklistId);
+        var mobilization = MapToMobilization(request, checklistCollectionId);
 
         await _mobilizationRepository.AddMobilization(mobilization, cancellationToken);
 
         return mobilization.Id;
     }
 
-    private static Mobilization MapToMobilization(AddMobilizationCommand request, Guid checklistId)
+    private static Mobilization MapToMobilization(AddMobilizationCommand request, Guid checklistCollectionId)
     {
-        var mob = Mobilization.New(request.Title, request.MobilizationType, MobilizationStatus.NotReady, checklistId, request.Description);
+        var mob = Mobilization.New(request.Title, request.MobilizationType, MobilizationStatus.NotReady, checklistCollectionId, request.Description);
         return mob;
     }
 }

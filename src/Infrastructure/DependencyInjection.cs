@@ -4,6 +4,7 @@ using Azure.Identity;
 using Azure.Messaging.ServiceBus;
 using Infrastructure.Persistence.ServiceBus;
 using Infrastructure.Repositories;
+using Infrastructure.Repositories.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +44,7 @@ public static class DependencyInjection
         services.AddScoped<IPunchRepository, PunchRepository>();
         services.AddScoped<IItemReposiory, ItemRepository>();
         services.AddScoped<IQuestionTemplateRepository, QuestionTemplateRepository>();
+        services.AddScoped<IChecklistTemplateRepository, ChecklistTemplateRespository>();
 
 
         return services;

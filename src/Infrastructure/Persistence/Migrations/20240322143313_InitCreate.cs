@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class initCreate : Migration
+    public partial class InitCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,14 +27,14 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Items",
+                name: "ItemTemplates",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Items", x => x.Id);
+                    table.PrimaryKey("PK_ItemTemplates", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -64,11 +64,11 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ItemTemplates",
+                name: "ChecklistTemplates",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ItemId = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    ItemTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Created = table.Column<DateOnly>(type: "date", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -76,11 +76,52 @@ namespace Infrastructure.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ItemTemplates", x => x.Id);
+                    table.PrimaryKey("PK_ChecklistTemplates", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ItemTemplates_Items_ItemId",
-                        column: x => x.ItemId,
-                        principalTable: "Items",
+                        name: "FK_ChecklistTemplates_ItemTemplates_ItemTemplateId",
+                        column: x => x.ItemTemplateId,
+                        principalTable: "ItemTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Items",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ItemTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Items", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Items_ItemTemplates_ItemTemplateId",
+                        column: x => x.ItemTemplateId,
+                        principalTable: "ItemTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "QuestionTemplates",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Question = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    ChecklistTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Created = table.Column<DateOnly>(type: "date", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QuestionTemplates", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_QuestionTemplates_ChecklistTemplates_ChecklistTemplateId",
+                        column: x => x.ChecklistTemplateId,
+                        principalTable: "ChecklistTemplates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -91,7 +132,8 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ChecklistCollectionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ItemTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ItemId = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    ChecklistTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     Created = table.Column<DateOnly>(type: "date", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -108,58 +150,17 @@ namespace Infrastructure.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Checklists_ItemTemplates_ItemTemplateId",
-                        column: x => x.ItemTemplateId,
-                        principalTable: "ItemTemplates",
+                        name: "FK_Checklists_ChecklistTemplates_ChecklistTemplateId",
+                        column: x => x.ChecklistTemplateId,
+                        principalTable: "ChecklistTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Checklists_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Items",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "QuestionTemplates",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ItemTemplateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Question = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    Created = table.Column<DateOnly>(type: "date", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_QuestionTemplates", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_QuestionTemplates_ItemTemplates_ItemTemplateId",
-                        column: x => x.ItemTemplateId,
-                        principalTable: "ItemTemplates",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Punches",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ChecklistId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Created = table.Column<DateOnly>(type: "date", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Punches", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Punches_Checklists_ChecklistId",
-                        column: x => x.ChecklistId,
-                        principalTable: "Checklists",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -190,6 +191,30 @@ namespace Infrastructure.Persistence.Migrations
                         name: "FK_ChecklistQuestions_QuestionTemplates_QuestionTemplateId",
                         column: x => x.QuestionTemplateId,
                         principalTable: "QuestionTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Punches",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ChecklistId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Created = table.Column<DateOnly>(type: "date", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Punches", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Punches_Checklists_ChecklistId",
+                        column: x => x.ChecklistId,
+                        principalTable: "Checklists",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -229,16 +254,26 @@ namespace Infrastructure.Persistence.Migrations
                 column: "ChecklistCollectionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Checklists_ItemTemplateId_ChecklistCollectionId",
+                name: "IX_Checklists_ChecklistTemplateId",
                 table: "Checklists",
-                columns: new[] { "ItemTemplateId", "ChecklistCollectionId" },
+                column: "ChecklistTemplateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Checklists_ItemId_ChecklistCollectionId",
+                table: "Checklists",
+                columns: new[] { "ItemId", "ChecklistCollectionId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ItemTemplates_ItemId",
-                table: "ItemTemplates",
-                column: "ItemId",
+                name: "IX_ChecklistTemplates_ItemTemplateId",
+                table: "ChecklistTemplates",
+                column: "ItemTemplateId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Items_ItemTemplateId",
+                table: "Items",
+                column: "ItemTemplateId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Mobilizations_ChecklistCollectionId",
@@ -257,9 +292,9 @@ namespace Infrastructure.Persistence.Migrations
                 column: "PunchId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuestionTemplates_ItemTemplateId",
+                name: "IX_QuestionTemplates_ChecklistTemplateId",
                 table: "QuestionTemplates",
-                column: "ItemTemplateId");
+                column: "ChecklistTemplateId");
         }
 
         /// <inheritdoc />
@@ -287,10 +322,13 @@ namespace Infrastructure.Persistence.Migrations
                 name: "ChecklistCollections");
 
             migrationBuilder.DropTable(
-                name: "ItemTemplates");
+                name: "ChecklistTemplates");
 
             migrationBuilder.DropTable(
                 name: "Items");
+
+            migrationBuilder.DropTable(
+                name: "ItemTemplates");
         }
     }
 }

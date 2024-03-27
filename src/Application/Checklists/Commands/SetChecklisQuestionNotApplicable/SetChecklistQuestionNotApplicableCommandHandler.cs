@@ -28,15 +28,15 @@ public class SetChecklistNotApplicableValueCommandHandler : IRequestHandler<SetC
     }
     public async Task Handle(SetChecklistQuestionNotApplicableCommand request, CancellationToken cancellationToken)
     {
-        var checklist = await _checklistRepository.GetSingleChecklist(request.ChecklistId, cancellationToken)
-            ?? throw new NotFoundException(nameof(ChecklistQuestion), request.ChecklistId);
+        var checklist = await _checklistRepository.GetSingleChecklist(request.checklistId, cancellationToken)
+            ?? throw new NotFoundException(nameof(Checklist), request.checklistId);
 
-        var checklistQuestion = await _checklistQuestionRepository.GetQuestion(request.ChecklistQuestionId, cancellationToken)
-            ?? throw new NotFoundException(nameof(ChecklistQuestion), request.ChecklistQuestionId);
+        var checklistQuestion = await _checklistQuestionRepository.GetQuestion(request.checklistQuestionId, cancellationToken)
+            ?? throw new NotFoundException(nameof(ChecklistQuestion), request.checklistQuestionId);
 
         checklist.SetChecklistStatus(ChecklistStatus.InProgress);
 
-        checklistQuestion.MarkQuestionAsNotApplicable(request.Value);
+        checklistQuestion.MarkQuestionAsNotApplicable(request.value);
         await _checklistQuestionRepository.SaveChanges(cancellationToken);
     }
 

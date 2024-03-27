@@ -55,14 +55,19 @@ public class ApplicationDbContextInitializer
 
         for (var i = 0; i < 100; i++)
         {
-            var item = CreateItem(CreateRandomString());
+            
 
             var checklistCollection = CreateChecklistCollection();
             CreateMobilization($"{i}Test title{i}", MobilizationType.Mobilization, MobilizationStatus.NotReady, checklistCollection.Id, "Cool description");
             var questionTemplates = CreateQuestionTemplates();
 
-            var itemTemplate = CreateItemTemplate(item.Id);
-            var checklist = CreateChecklist(checklistCollection.Id, itemTemplate);
+            var itemTemplate = CreateItemTemplate();
+
+            var item = CreateItem(itemTemplate.Id);
+
+            var checklistTemplate = CreateChecklistTemplate(itemTemplate.Id, questionTemplates);
+
+            var checklist = CreateChecklist(checklistCollection.Id, item.Id, checklistTemplate.Id);
 
             foreach (var qt in questionTemplates)
             {
@@ -83,19 +88,19 @@ public class ApplicationDbContextInitializer
         return randomString;
     }
 
-    private Item CreateItem(string itemId)
+    private Item CreateItem(string itemTemplateId)
     {
-        var item = new Item()
-        {
-            Id = itemId
-        };
+        var id = CreateRandomString();
+        var item = Item.New(itemTemplateId, id);
+
         _modelContextBase.Items.Add(item);
         return item;
     }
 
-    private ItemTemplate CreateItemTemplate(string itemId)
+    private ItemTemplate CreateItemTemplate()
     {
-        var itemTemplate = ItemTemplate.New(itemId);
+        var id = CreateRandomString();
+        var itemTemplate = ItemTemplate.New(id);
 
         _modelContextBase.ItemTemplates.Add(itemTemplate);
         return itemTemplate;
@@ -105,7 +110,7 @@ public class ApplicationDbContextInitializer
     {
         var checklistTemplate = ChecklistTemplate.New(itemTemplateId, questions); 
 
-        _modelContextBase.ChecklistTemplate.Add(checklistTemplate); //TODO:
+        _modelContextBase.ChecklistTemplates.Add(checklistTemplate); //TODO:
         return checklistTemplate;
     }
 
@@ -119,9 +124,9 @@ public class ApplicationDbContextInitializer
         return questionTemplates;
     }
 
-    private Checklist CreateChecklist(Guid checklistCollectionId, ItemTemplate itemTemplate)
+    private Checklist CreateChecklist(Guid checklistCollectionId, string itemId, Guid checklistTemplateId)
     {
-        var checklist = new Checklist(itemTemplate, checklistCollectionId);
+        var checklist = Checklist.New(itemId, checklistCollectionId, checklistTemplateId);
         checklist.SetChecklistStatus(ChecklistStatus.NotStarted);
         _modelContextBase.Checklists.Add(checklist);
         return checklist;

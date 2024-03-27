@@ -4,14 +4,17 @@ using Application.Checklists.Commands.AddItem;
 using Application.Checklists.Commands.AddPunch;
 using Application.Checklists.Dtos;
 using Application.Checklists.Queries;
+using Application.Common.Exceptions;
 using Application.Mobilizations.Queries;
 using Application.Punches.Commands;
 using Application.Punches.Dtos;
 using Application.Punches.Queries.GetById;
 using Application.Upload;
 using Azure;
+using Domain.Common.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MobDeMob.Application.Checklists.Commands;
 using MobDeMob.Application.Mobilizations.Commands;
 using MobDeMob.Domain.Enums;
 
@@ -31,97 +34,176 @@ public class ChecklistsController : ControllerBase
     }
 
     [HttpGet("GetPunches/{checklistId}")]
-
+    [ProducesDefaultResponseType]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetPunches(Guid checklistId, CancellationToken cancellationToken)
     {
-        var punches = await _sender.Send(new GetPunchesQuery { ChecklistId = checklistId }, cancellationToken);
-        return Ok(punches);
+        try
+        {
+            var punches = await _sender.Send(new GetPunchesQuery { ChecklistId = checklistId }, cancellationToken);
+            return Ok(punches);
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Errors);
+        }
+
     }
 
     [HttpPost("AddItem/{itemId}")]
+    [ProducesDefaultResponseType]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
     public async Task<IActionResult> AddNewItem(Guid mobilizationId, [FromBody] AddItemCommand addItemCommand, CancellationToken cancellationToken = default)
     {
-        var checklistId = await _sender.Send(addItemCommand, cancellationToken);
-        return Ok(checklistId);
-    }
-
-    [HttpPost("AddPunch/{itemId}")]
-    public async Task<IActionResult> AddPunch([FromBody] AddPunchCommand addPunchCommand, CancellationToken cancellationToken = default)
-    {
-        var id = await _sender.Send(addPunchCommand, cancellationToken);
-        return Ok(id);
-    }
-
-    [HttpPost("UploadFiles/{punchId}")]
-    public async Task<IActionResult> UploadPunchFiles(Guid punchId, [FromForm] FileModel fileModel, CancellationToken cancellationToken)
-    {
-        ICollection<PunchUploadFile> files = [];
-        using var sharedStream = new MemoryStream();
-
-        foreach (var file in fileModel.files)
+        try
         {
-
-            sharedStream.Seek(0, SeekOrigin.Begin);
-            await file.CopyToAsync(sharedStream);
-            files.Add(new PunchUploadFile()
-            {
-                ContentType = file.ContentType,
-                FileName = file.FileName,
-                Stream = new MemoryStream(sharedStream.ToArray())
-            });
+            var checklistId = await _sender.Send(addItemCommand, cancellationToken);
+            return Ok(checklistId);
         }
-        // await _sender.Send(new PunchUploadFilesCommand { Id = punchId, ContentType = fileModel.file.ContentType, FileName = fileModel.file.FileName, Stream = fileModel.file.OpenReadStream() }, cancellationToken);
-        await _sender.Send(new PunchUploadFilesCommand { Id = punchId, Files = files }, cancellationToken);
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Errors);
+        }
 
-        return NoContent();
+    }
+
+    [HttpPost("AddPunch/{checklistId}/{itemId}")]
+    [ProducesDefaultResponseType]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> AddPunch(Guid mobilizationId, AddPunchCommand addPunchCommand, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var id = await _sender.Send(addPunchCommand, cancellationToken);
+            return Ok(id);
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Errors);
+        }
+
     }
 
     [HttpPost("ChecklistQuestionCheckedUpdate/{checklistId}/{checklistQuestionId}/{value}")]
-    public async Task<IActionResult> ChecklistQuestionCheckedUpdate(Guid checklistId, Guid checklistQuestionId, bool value, CancellationToken cancellationToken)
+    [ProducesDefaultResponseType]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ChecklistQuestionCheckedUpdate(SetChecklistQuestionCheckedCommand command, CancellationToken cancellationToken)
     {
-        await _sender.Send(new SetChecklistQuestionCheckedCommand { ChecklistQuestionId = checklistQuestionId, ChecklistId = checklistId, Value = value }, cancellationToken);
-        return NoContent();
-    }
-
-    [HttpPut("ChecklistStatus/{checklistId}/{status}")]
-    public async Task<IActionResult> SetChecklistStatus(Guid checklistId, ChecklistStatus status, CancellationToken cancellationToken)
-    {
-        await _sender.Send(new SetChecklistStatusCommand { ChecklistId = checklistId, Status = status }, cancellationToken);
-        return NoContent();
+        try
+        {
+            await _sender.Send(command, cancellationToken);
+            return NoContent();
+        }
+        catch (ChecklistValidationException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
     }
 
     [HttpPost("ChecklistQuestionNotApplicableUpdate/{checklistId}/{checklistQuestionId}/{value}")]
-    public async Task<IActionResult> ChecklistQuestionNotApplicableUpdate(Guid checklistId, Guid checklistQuestionId, bool value, CancellationToken cancellationToken)
+    [ProducesDefaultResponseType]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ChecklistQuestionNotApplicableUpdate(SetChecklistQuestionNotApplicableCommand command, CancellationToken cancellationToken)
     {
-        await _sender.Send(new SetChecklistQuestionNotApplicableCommand { ChecklistQuestionId = checklistQuestionId, ChecklistId = checklistId, Value = value }, cancellationToken);
-        return NoContent();
+        try
+        {
+            await _sender.Send(command, cancellationToken);
+            return NoContent();
+        }
+        catch (ChecklistValidationException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+    }
+
+    [HttpPut("ChecklistStatus/{checklistId}/{status}")]
+    [ProducesDefaultResponseType]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> SetChecklistStatus(Guid checklistId, ChecklistStatus status, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await _sender.Send(new SetChecklistStatusCommand { ChecklistId = checklistId, Status = status }, cancellationToken);
+            return NoContent();
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e);
+        }
     }
 
     [HttpGet("GetChecklists")]
+    [ProducesDefaultResponseType]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetChecklists(Guid mobilizationId, CancellationToken cancellationToken, int pageNumber = 1, int pageSize = 10)
     {
-        var checklistItems = await _sender.Send(new GetChecklistsQuery { MobilizationId = mobilizationId, PageNumber = pageNumber, PageSize = pageSize }, cancellationToken);
-        return Ok(checklistItems);
+        try
+        {
+            var checklistItems = await _sender.Send(new GetChecklistsQuery { MobilizationId = mobilizationId, PageNumber = pageNumber, PageSize = pageSize }, cancellationToken);
+            return Ok(checklistItems);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e);
+        }
     }
 
     [HttpGet("GetChecklist/{checklistId}")]
-    public async Task<IActionResult> GetChecklistItem(Guid checklistId, CancellationToken cancellationToken)
+    [ProducesDefaultResponseType]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetChecklist(Guid checklistId, CancellationToken cancellationToken)
     {
         var checklist = await _sender.Send(new GetChecklistQuery { ChecklistId = checklistId }, cancellationToken);
-        return Ok(checklist);
+        return checklist is not null ? Ok(checklist) : NotFound();
     }
 
-    [HttpDelete("DeleteItemFromMobilization/{itemId}")]
-    public async Task<IActionResult> DeletePartFromMobilization(RemoveItemFromMobilizationCommand command, CancellationToken cancellationToken)
+    [HttpDelete("DeleteChecklist/{checklistId}/{itemId}")]
+    public async Task<IActionResult> DeleteChecklist(DeleteChecklistCommand command, CancellationToken cancellationToken)
     {
         await _sender.Send(command, cancellationToken);
         return NoContent();
     }
 
     [HttpPut("UpdatePunch/{punchId}")]
+    [ProducesDefaultResponseType]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdatePunch(UpdatePunchCommand updatePunchCommand, CancellationToken cancellationToken = default)
     {
-        await _sender.Send(updatePunchCommand, cancellationToken);
-        return NoContent();
+        try
+        {
+            await _sender.Send(updatePunchCommand, cancellationToken);
+            return NoContent();
+        }
+        catch (ValidationException e)
+        {
+            return BadRequest(e.Errors);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+
     }
 }

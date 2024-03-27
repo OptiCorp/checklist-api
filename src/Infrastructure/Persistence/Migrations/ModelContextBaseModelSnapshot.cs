@@ -31,14 +31,18 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<Guid>("ChecklistCollectionId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("ChecklistTemplateId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateOnly>("Created")
                         .HasColumnType("date");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ItemTemplateId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ItemId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -53,7 +57,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ChecklistCollectionId");
 
-                    b.HasIndex("ItemTemplateId", "ChecklistCollectionId")
+                    b.HasIndex("ChecklistTemplateId");
+
+                    b.HasIndex("ItemId", "ChecklistCollectionId")
                         .IsUnique();
 
                     b.ToTable("Checklists");
@@ -101,13 +107,49 @@ namespace Infrastructure.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Domain.Entities.ChecklistTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly>("Created")
+                        .HasColumnType("date");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ItemTemplateId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemTemplateId")
+                        .IsUnique();
+
+                    b.ToTable("ChecklistTemplates");
+                });
+
             modelBuilder.Entity("Domain.Entities.Item", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("ItemTemplateId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ItemTemplateId");
 
                     b.ToTable("Items");
                 });
@@ -176,20 +218,8 @@ namespace Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateOnly>("Created")
-                        .HasColumnType("date");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ItemTemplateId")
+                    b.Property<Guid>("ChecklistTemplateId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Question")
                         .IsRequired()
@@ -198,7 +228,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ItemTemplateId");
+                    b.HasIndex("ChecklistTemplateId");
 
                     b.ToTable("QuestionTemplates");
                 });
@@ -271,30 +301,10 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("MobDeMob.Domain.ItemAggregate.ItemTemplate", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateOnly>("Created")
-                        .HasColumnType("date");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ItemId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ItemId")
-                        .IsUnique();
 
                     b.ToTable("ItemTemplates");
                 });
@@ -307,13 +317,21 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MobDeMob.Domain.ItemAggregate.ItemTemplate", "ItemTemplate")
+                    b.HasOne("Domain.Entities.ChecklistTemplate", "ChecklistTemplate")
                         .WithMany()
-                        .HasForeignKey("ItemTemplateId")
+                        .HasForeignKey("ChecklistTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("ItemTemplate");
+                    b.Navigation("ChecklistTemplate");
+
+                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("Domain.Entities.ChecklistAggregate.ChecklistQuestion", b =>
@@ -327,10 +345,32 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasOne("Domain.Entities.TemplateAggregate.QuestionTemplate", "QuestionTemplate")
                         .WithMany()
                         .HasForeignKey("QuestionTemplateId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("QuestionTemplate");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ChecklistTemplate", b =>
+                {
+                    b.HasOne("MobDeMob.Domain.ItemAggregate.ItemTemplate", "ItemTemplate")
+                        .WithOne("ChecklistTemplate")
+                        .HasForeignKey("Domain.Entities.ChecklistTemplate", "ItemTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ItemTemplate");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Item", b =>
+                {
+                    b.HasOne("MobDeMob.Domain.ItemAggregate.ItemTemplate", "ItemTemplate")
+                        .WithMany("Items")
+                        .HasForeignKey("ItemTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ItemTemplate");
                 });
 
             modelBuilder.Entity("Domain.Entities.Punch", b =>
@@ -353,13 +393,11 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.TemplateAggregate.QuestionTemplate", b =>
                 {
-                    b.HasOne("MobDeMob.Domain.ItemAggregate.ItemTemplate", "ItemTemplate")
+                    b.HasOne("Domain.Entities.ChecklistTemplate", null)
                         .WithMany("Questions")
-                        .HasForeignKey("ItemTemplateId")
+                        .HasForeignKey("ChecklistTemplateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ItemTemplate");
                 });
 
             modelBuilder.Entity("MobDeMob.Domain.Entities.Mobilization", b =>
@@ -373,21 +411,15 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("ChecklistCollection");
                 });
 
-            modelBuilder.Entity("MobDeMob.Domain.ItemAggregate.ItemTemplate", b =>
-                {
-                    b.HasOne("Domain.Entities.Item", "Item")
-                        .WithOne()
-                        .HasForeignKey("MobDeMob.Domain.ItemAggregate.ItemTemplate", "ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Item");
-                });
-
             modelBuilder.Entity("Domain.Entities.ChecklistAggregate.Checklist", b =>
                 {
                     b.Navigation("Punches");
 
+                    b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ChecklistTemplate", b =>
+                {
                     b.Navigation("Questions");
                 });
 
@@ -406,7 +438,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("MobDeMob.Domain.ItemAggregate.ItemTemplate", b =>
                 {
-                    b.Navigation("Questions");
+                    b.Navigation("ChecklistTemplate");
+
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

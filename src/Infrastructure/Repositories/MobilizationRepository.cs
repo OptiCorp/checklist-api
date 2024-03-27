@@ -87,11 +87,11 @@ public class MobilizationRepository : RepositoryBase<Mobilization>, IMobilizatio
         return await query.PaginatedListAsync(pageNumber, pageSize);
     }
 
-    public async Task<Guid?> GetMobilizationIdByChecklistCollectionId(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Mobilization?> GetMobilizationIdByChecklistCollectionId(Guid id, CancellationToken cancellationToken = default)
     {
-        return await GetSet()
+        return await GetSet() 
+            .AsNoTracking()
             .Where(m => m.ChecklistCollectionId == id)
-            .Select(m => m.Id)
             .SingleOrDefaultAsync(cancellationToken);
     }
 

@@ -18,6 +18,8 @@ public class PunchDto : DtoExtension, IRegister
 
     public string Description { get; init; } = string.Empty;
 
+    public string? ItemId {get; init;}
+
     public string? SasToken {get; init;}
 
     public IEnumerable<Uri> PunchFileUris { get; init; } = [];

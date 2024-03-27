@@ -4,7 +4,7 @@ namespace Application.Common.Interfaces;
 
 public interface IItemTemplateRepository
 {
-    Task<string> AddTemplate(ItemTemplate template, CancellationToken cancellationToken = default);
+    Task<ItemTemplate> AddTemplate(ItemTemplate template, CancellationToken cancellationToken = default);
 
 
     Task<ItemTemplate?> GetTemplateById(string templateId, CancellationToken cancellationToken = default);

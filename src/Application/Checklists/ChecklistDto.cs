@@ -16,6 +16,8 @@ public class ChecklistDto : DtoExtension, IRegister
 
     public ICollection<ChecklistQuestionDto> Questions { get; init; } = [];
 
+    public Guid ChecklistTemplateId {get; private set;}
+
 
     //public Guid MobilizationId {get; init;}
 

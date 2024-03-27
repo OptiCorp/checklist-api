@@ -9,14 +9,14 @@ public class AddPunchCommandValidator : AbstractValidator<AddPunchCommand>
 {
     public AddPunchCommandValidator()
     {
-        RuleFor(v => v.ItemId)
+        RuleFor(v => v.itemId)
             .NotEmpty()
-            .MaximumLength(40);
+            .MaximumLength(30);
 
-        RuleFor(v => v.Description)
+        RuleFor(v => v.description)
             .MaximumLength(200);
             
-        RuleFor(v => v.Title)
+        RuleFor(v => v.title)
             .NotEmpty()
             .MaximumLength(50);
     }

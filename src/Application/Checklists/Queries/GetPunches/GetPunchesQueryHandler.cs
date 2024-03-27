@@ -41,14 +41,14 @@ public class GetPunchesQueryHandler : IRequestHandler<GetPunchesQuery, PunchList
     }
     public async Task<PunchListDto> Handle(GetPunchesQuery request, CancellationToken cancellationToken)
     {
-        var checklist = await _checklistRepository.GetChecklistWithTemplate(request.ChecklistId, cancellationToken)
+        var checklist = await _checklistRepository.GetSingleChecklist(request.ChecklistId, cancellationToken)
              ?? throw new NotFoundException(nameof(Checklist), request.ChecklistId);
 
         var punches = await _punchRepository.GetPunchesForChecklist(request.ChecklistId, cancellationToken);
         
         var punchesIds = punches.Select(p => p.Id);
 
-        var itemId = checklist.ItemTemplate.ItemId;
+        var itemId = checklist.ItemId;
 
         // if (!punches.Any() || !punches.Any(p => p.PunchFiles.Any()))
         // {

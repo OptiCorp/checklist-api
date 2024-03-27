@@ -1,4 +1,3 @@
-using Application.Templates.AddTemplate;
 using Application.Templates.UpdateTemplate;
 using FluentValidation;
 using MobDeMob.Application.Mobilizations.Commands;
@@ -16,8 +15,8 @@ public class UpdateTemplateCommandValidator : AbstractValidator<UpdateTemplateCo
         //     .MaximumLength(30).WithMessage("Item id cannot larger than 30 characters");
 
         // RuleFor(v => v.Questions).Must(questions => questions?.Count() <= 20).WithMessage(t => $"The list of questions can not exceed 20, found {t.Questions?.Count()}.");
-        RuleFor(v => v.Question)
-            .MaximumLength(100).WithMessage("A question can not exceed 100 characters");
+        RuleFor(v => v.question)
+            .MaximumLength(100);
 
 
         // RuleForEach(v => v.Questions).NotEmpty().MaximumLength(100).WithMessage("The questions cant be empty strings");

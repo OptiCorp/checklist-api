@@ -1,4 +1,5 @@
-﻿using Application.Punches;
+﻿using Application.Common.Exceptions;
+using Application.Punches;
 using Domain.Entities;
 using MediatR;
 using MobDeMob.Application.Common.Interfaces;
@@ -22,14 +23,14 @@ public class PunchUploadFileCommandHandler : IRequestHandler<PunchUploadFilesCom
     public async Task Handle(PunchUploadFilesCommand request, CancellationToken cancellationToken)
     {
         var punch = await _punchRepository.GetPunch(request.Id, cancellationToken)
-            ?? throw new Exception($"Punch with id: '{request.Id}' does not exist");
+            ?? throw new NotFoundException(nameof(Punch), request.Id);
 
         var checklistId = punch.Checklist.ChecklistCollectionId.ToString();
 
         //upload file, close file, add image uri to ImageBlobUris
         foreach (var file in request.Files)
         {
-            var blobUri = await _fileStorageRepository.UploadImage(file.Stream, file.FileName, checklistId, file.ContentType, cancellationToken);
+            var blobUri = await _fileStorageRepository.UploadFile(file.Stream, file.FileName, checklistId, file.ContentType, cancellationToken);
             punch.PunchFiles.Add(
                 new PunchFile() 
                 { 

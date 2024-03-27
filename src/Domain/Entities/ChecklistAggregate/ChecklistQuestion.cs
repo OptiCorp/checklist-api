@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Common.Exceptions;
 using Domain.Entities.TemplateAggregate;
 using MobDeMob.Domain.Common;
 
@@ -35,7 +36,7 @@ public class ChecklistQuestion : AuditableEntity
     {
         if (value && Checked)
         {
-            throw new Exception("Tried to mark question as not applicable when it is checked");
+            throw new ChecklistValidationException("Tried to mark question as not applicable when it is checked");
         }
         NotApplicable = value;
     }
@@ -44,7 +45,7 @@ public class ChecklistQuestion : AuditableEntity
     {
         if (value && !IsQuestionCheckable())
         {
-            throw new Exception("Tried to mark question as checked when it is not checkable");
+            throw new ChecklistValidationException("Tried to mark question as checked when it is not checkable");
         }
         Checked = value;
     }

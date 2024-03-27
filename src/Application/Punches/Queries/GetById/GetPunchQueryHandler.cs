@@ -16,19 +16,17 @@ public class GetPunchQueryHandler : IRequestHandler<GetPunchQuery, PunchDto>
 {
     private readonly IPunchRepository _punchRepository;
 
-    private readonly IChecklistRepository _checklistRepository;
 
 
     private readonly IFileStorageRepository _fileStorageRepository;
 
     private readonly ICacheRepository _cacheRepository;
 
-    public GetPunchQueryHandler(IPunchRepository punchRepository, IFileStorageRepository fileStorageRepository, ICacheRepository cachRepository, IChecklistRepository checklistRepository)
+    public GetPunchQueryHandler(IPunchRepository punchRepository, IFileStorageRepository fileStorageRepository, ICacheRepository cachRepository)
     {
         _punchRepository = punchRepository;
         _fileStorageRepository = fileStorageRepository;
         _cacheRepository = cachRepository;
-        _checklistRepository = checklistRepository;
     }
 
     public async Task<PunchDto> Handle(GetPunchQuery request, CancellationToken cancellationToken)
@@ -36,15 +34,12 @@ public class GetPunchQueryHandler : IRequestHandler<GetPunchQuery, PunchDto>
         var punch = await _punchRepository.GetPunchNoTracking(request.PunchId, cancellationToken)
             ?? throw new NotFoundException(nameof(Punch), request.PunchId);
 
-        var checklist = await _checklistRepository.GetSingleChecklist(punch.ChecklistId)
-            ?? throw new NotFoundException(nameof(Checklist), punch.ChecklistId);
-
         var blobUris = punch.PunchFiles;
         if (blobUris.Count == 0)
             return punch.Adapt<PunchDto>();
 
     
-        var checklistCollectionId = checklist.ChecklistCollectionId;
+        var checklistCollectionId = punch.Checklist.ChecklistCollectionId;
         var containerSasUri = _cacheRepository.GetValue(checklistCollectionId.ToString());
 
         if (containerSasUri == null)

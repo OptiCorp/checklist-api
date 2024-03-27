@@ -22,6 +22,9 @@ public class Punch : AuditableEntity
 
     public Checklist Checklist {get; set;} = null!;
 
+    [NotMapped]
+    public string? ItemId => Checklist.ItemId;
+
     //public ChecklistSection Section { get; set; } = null!;
     public string Title { get; private set; } = string.Empty;
 

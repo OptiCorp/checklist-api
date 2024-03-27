@@ -10,11 +10,13 @@ namespace Application.Common.Interfaces
     {
         Task<Guid> AddChecklist(Checklist checklist, CancellationToken cancellationToken = default);
 
-        Task<Checklist?> GetChecklistByItemId (string itemId, Guid checklistCollectionId, CancellationToken cancellationToken = default);
+        Task<IEnumerable<Checklist>> GetChecklistsByItemId (string itemId, CancellationToken cancellationToken = default);
 
         // Task<IEnumerable<Punch>> GetChecklistItemsWithPunches(Guid checklistItemId, CancellationToken cancellationToken = default);
 
         Task<IEnumerable<Checklist>> GetChecklistsForChecklistCollection(Guid checklistCollectionId, CancellationToken cancellationToken = default);
+
+        Task<IEnumerable<Checklist>> GetChecklistsByChecklistTemplateId (Guid checklistTemplateId, CancellationToken cancellationToken = default);
 
         Task<PaginatedList<Checklist>> GetChecklistsWithPaginationFromChecklistCollection(Guid checklistCollectionId, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
 
@@ -23,11 +25,15 @@ namespace Application.Common.Interfaces
 
         Task DeleteChecklistById(Guid Id, CancellationToken cancellationToken = default);
 
-        Task<Checklist?> GetChecklistWithTemplate(Guid checklistId, CancellationToken cancellationToken = default);
+        // Task<Checklist?> GetChecklistWithTemplate(Guid checklistId, CancellationToken cancellationToken = default);
 
         Task<PaginatedList<Checklist>> GetChecklistsForItem(string ItemId, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<Checklist>> GetChecklistsByItemTemplateId(Guid itemTemplateId, CancellationToken cancellationToken = default);
+        Task<PaginatedList<Checklist>> GetChecklistsForItemBySearch(string itemId, string checklistSearchId, int pageNumber, int pageSize, CancellationToken cancellationToken = default);
+
+
+
+        // Task<IEnumerable<Checklist>> GetChecklistsByItemTemplateId(Guid itemTemplateId, CancellationToken cancellationToken = default);
 
 
         //void RemoveChecklist(Checklist checklist, CancellationToken cancellationToken = default);

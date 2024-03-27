@@ -10,6 +10,8 @@ namespace Application.Common.Interfaces
 
         Task<IEnumerable<ChecklistQuestion>> GetQuestionsByChecklistId (Guid Id, CancellationToken cancellationToken = default);
 
+        Task<IEnumerable<ChecklistQuestion>> GetQuestionsByQuestionTemplateId (Guid questionTemplateId, CancellationToken cancellationToken = default);
+
         Task SaveChanges(CancellationToken cancellationToken = default);
     }
 }

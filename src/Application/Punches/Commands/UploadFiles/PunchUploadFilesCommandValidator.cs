@@ -14,8 +14,8 @@ public class PunchUploadFileValidator : AbstractValidator<PunchUploadFile>
 
         RuleFor(v => v.ContentType)
            .NotNull()
-           .Must(x => x.Equals("image/jpeg") || x.Equals("image/jpg") || x.Equals("image/png"))
-           .WithMessage("Only image files (JPEG, JPG, PNG) are allowed");
+           .Must(x => x.Equals("image/jpeg") || x.Equals("image/jpg") || x.Equals("image/png") || x.Equals("application/pdf"))
+           .WithMessage("Only JPEG, JPG, PNG, PDF files are allowed");
 
         //TODO: add validator for the stream?
     }
@@ -30,6 +30,5 @@ public class PunchUploadFilesCommandValidator : AbstractValidator<PunchUploadFil
             .NotEmpty().Must(f => f.Count() <= 5).WithMessage(f => $"A maximum number of 5 files may be uploaded, found: {f.Files.Count()} files.");
 
         RuleForEach(v => v.Files).SetValidator(new PunchUploadFileValidator());
-
     }
 }

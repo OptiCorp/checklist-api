@@ -16,23 +16,25 @@ public class ItemTemplateRepository : IItemTemplateRepository
     }
 
 
-    public async Task<string> AddTemplate(ItemTemplate itemTemplate, CancellationToken cancellationToken = default)
+    public async Task<ItemTemplate> AddTemplate(ItemTemplate itemTemplate, CancellationToken cancellationToken = default)
     {
         await _modelContextBase.ItemTemplates.AddAsync(itemTemplate, cancellationToken);
         await _modelContextBase.SaveChangesAsync(cancellationToken);
-        return itemTemplate.Id;
+        return itemTemplate;
     }
 
     public async Task DeleteItemTemplate(string id, CancellationToken cancellationToken = default)
-    => await _modelContextBase.ItemTemplates.Where(m => m.Id == id).ExecuteDeleteAsync(cancellationToken); 
+    => await _modelContextBase.ItemTemplates.Where(m => m.Id == id).ExecuteDeleteAsync(cancellationToken);
 
     public async Task<ItemTemplate?> GetTemplateById(string templateId, CancellationToken cancellationToken = default)
     {
         return await _modelContextBase.ItemTemplates
-            .Include(itt => itt.Items)
-            .Include(t => t.ChecklistTemplate) 
-            .FirstOrDefaultAsync(x => x.Id == templateId, cancellationToken); 
+            //.Include(itt => itt.Items)
+            .Include(t => t.ChecklistTemplate)
+            .ThenInclude(ct => ct != null ? ct.Questions : null)
+            .FirstOrDefaultAsync(x => x.Id == templateId, cancellationToken);
     }
+
 
     // public async Task<ItemTemplate?> GetTemplateByItemId(string itemId, CancellationToken cancellationToken = default)
     // {

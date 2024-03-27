@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using Application.Mobilizations.Validations;
+using FluentValidation;
+using FluentValidation.Results;
 using MobDeMob.Application.Mobilizations.Commands;
 
 namespace MobDeMob.Application.Checklists;
@@ -8,10 +10,10 @@ public class UpdateMobilizationCommandValidator : AbstractValidator<UpdateMobili
     public UpdateMobilizationCommandValidator()
     {
         RuleFor(v => v.Title)
-            .NotEmpty().WithMessage("Title is requried");
-        
+            .NotEmpty();
+
         RuleFor(v => v.Title)
-            .MaximumLength(50).WithMessage("Title should not exceed 50 characters");
+            .MaximumLength(50);
 
         RuleFor(v => v.Description)
            .MaximumLength(200);

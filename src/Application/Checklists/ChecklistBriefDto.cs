@@ -8,20 +8,17 @@ using MobDeMob.Domain.Enums;
 
 namespace Application.Checklists.Dtos;
 
-public class ChecklistBriefDto : DtoExtension, IRegister
+public class ChecklistBriefDto : IRegister
 {
+    public Guid Id {get; init;}
     public string ItemId { get; init; }
 
-    //public Checklist Checklist {get; set;}
-
-    //public Guid ItemTemplateId { get; init; }
     public Guid MobilizationId {get; init;}
+
+    public Guid ChecklistTemplateId {get; private set;}
 
     public int? PunchesCount {get; init;}
 
-    //public ItemTemplateBriefDto Template { get; init; } = null!;
-
-    //public ICollection<PunchDto> Punches { get; init; } = [];
     public ChecklistStatus Status { get; init; }
 
     public void Register(TypeAdapterConfig config)

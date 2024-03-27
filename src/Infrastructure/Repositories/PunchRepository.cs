@@ -25,6 +25,7 @@ public class PunchRepository : RepositoryBase<Punch>, IPunchRepository
     {
         var punch = await GetSet()
             .AsNoTracking()
+            .Include(p => p.Checklist)
             .Include(p => p.PunchFiles)
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 

@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Application.Common;
+using Application.Templates.Models;
 using Domain.Entities.TemplateAggregate;
 using Mapster;
 using MobDeMob.Domain.Common;
@@ -7,9 +8,11 @@ using MobDeMob.Domain.ItemAggregate;
 
 namespace Application.Templates;
 
-public class ItemTemplateBriefDto : DtoExtension, IRegister
+public class ItemTemplateBriefDto : IRegister
 {
-    public required string ItemId { get; set; }
+    public string Id {get; init;}
+
+    public ChecklistTemplateDto? ChecklistTemplate {get; private set;}
 
     public void Register(TypeAdapterConfig config)
     {
