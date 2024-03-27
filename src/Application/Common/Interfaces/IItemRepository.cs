@@ -5,6 +5,8 @@ namespace Application.Common.Interfaces;
 
 public interface IItemReposiory
 {
+    Task<Item?> GetItemByIdNoTracking(string Id, CancellationToken cancellationToken = default);
+
     Task<Item?> GetItemById(string Id, CancellationToken cancellationToken = default);
 
     Task AddItem(Item item, CancellationToken cancellationToken = default);

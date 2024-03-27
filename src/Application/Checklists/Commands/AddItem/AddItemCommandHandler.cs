@@ -42,7 +42,7 @@ public class AddItemCommandHandler : IRequestHandler<AddItemCommand, Guid>
         var mobilization = await _mobilizationRepository.GetMobilizationById(request.MobilizationId)
             ?? throw new NotFoundException(nameof(Mobilization), request.MobilizationId);
 
-        var item = await _itemReposiory.GetItemById(request.ItemId, cancellationToken)
+        var item = await _itemReposiory.GetItemByIdNoTracking(request.ItemId, cancellationToken)
             ?? throw new NotFoundException(nameof(Item), request.ItemId);
         
         //TODO: fix exception

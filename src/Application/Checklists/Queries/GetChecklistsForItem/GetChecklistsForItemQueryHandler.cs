@@ -28,7 +28,7 @@ public class GetMobilizationForItemQueryHandler : IRequestHandler<GetChecklistsF
 
     public async Task<PaginatedList<ChecklistBriefDto>> Handle(GetChecklistsForItemQuery request, CancellationToken cancellationToken)
     {
-        var item = await _itemReposiory.GetItemById(request.ItemId) 
+        var item = await _itemReposiory.GetItemByIdNoTracking(request.ItemId) 
             ?? throw new NotFoundException(nameof(Item), request.ItemId);
 
         var checklistPaginated = await _checklistRepository.GetChecklistsForItem(request.ItemId, request.PageNumber, request.PageSize, cancellationToken);

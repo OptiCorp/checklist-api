@@ -30,11 +30,18 @@ public class ItemRepository : IItemReposiory
         await _modelContextBase.Items.Where(i => i.Id == id).ExecuteDeleteAsync(cancellationToken);
     }
 
-    public async Task<Item?> GetItemById(string Id, CancellationToken cancellationToken = default)
+    public async Task<Item?> GetItemByIdNoTracking(string Id, CancellationToken cancellationToken = default)
     {
         return await _modelContextBase.Items
             .AsNoTracking()
             .Include(i => i.ItemTemplate)
+            .Where(i => i.Id == Id)
+            .SingleOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<Item?> GetItemById(string Id, CancellationToken cancellationToken = default)
+    {
+        return await _modelContextBase.Items
             .Where(i => i.Id == Id)
             .SingleOrDefaultAsync(cancellationToken);
     }

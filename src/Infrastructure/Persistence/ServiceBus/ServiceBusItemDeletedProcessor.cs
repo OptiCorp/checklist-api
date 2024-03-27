@@ -35,9 +35,12 @@ public class ServiceBusItemDeletedProcessor : BaseHostedService
 
             var itemDeleted = DeserializeObject(args.Message.Body);
             _logger.Log(LogLevel.Information, $"Read itemId: {itemDeleted.itemId} from service bus");
-
-            await itemRepository.DeleteItemById(itemDeleted.itemId);
-            _logger.Log(LogLevel.Information, $"Deleted item with id: {itemDeleted.itemId}");
+            var item = await itemRepository.GetItemById(itemDeleted.itemId);
+            if (item != null)
+            {
+                await itemRepository.DeleteItemById(itemDeleted.itemId);
+                _logger.Log(LogLevel.Information, $"Deleted item with id: {itemDeleted.itemId}");
+            }
         }
 
         await args.CompleteMessageAsync(args.Message);
