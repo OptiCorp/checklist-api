@@ -2,6 +2,7 @@
 using System.Text.Json;
 using Application.Common.Interfaces;
 using Azure.Messaging.ServiceBus;
+using checklist_inventory_contracts.Items;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,13 +16,13 @@ public class ServiceBusItemDeletedProcessor : BaseHostedService
     private readonly ILogger<ServiceBusItemDeletedProcessor> _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public ServiceBusItemDeletedProcessor(ServiceBusClient serviceBusClient, IServiceScopeFactory serviceScopFactory, ILogger<ServiceBusItemDeletedProcessor> logger, IConfiguration configuration) : base(serviceBusClient, serviceScopFactory, logger, configuration) 
+    public ServiceBusItemDeletedProcessor(ServiceBusClient serviceBusClient, IServiceScopeFactory serviceScopFactory, ILogger<ServiceBusItemDeletedProcessor> logger, IConfiguration configuration) : base(serviceBusClient, serviceScopFactory, logger, configuration)
     {
         var topicName = configuration.GetSection("ServiceBus")["TopicItemDeleted"] ?? throw new Exception("Missing topic name in configuration");
         var subcriptionName = configuration.GetSection("ServiceBus")["SubscriptionName"] ?? throw new Exception("Missing topic name in configuration");
 
         _logger = logger;
-        _serviceBusClient = serviceBusClient;  
+        _serviceBusClient = serviceBusClient;
         _serviceScopeFactory = serviceScopFactory;
         _processor = _serviceBusClient.CreateProcessor(topicName, subcriptionName, new ServiceBusProcessorOptions());
     }
@@ -31,10 +32,12 @@ public class ServiceBusItemDeletedProcessor : BaseHostedService
         using (var scope = _serviceScopeFactory.CreateScope())
         {
             var itemRepository = scope.ServiceProvider.GetRequiredService<IItemReposiory>();
-            var itemId = args.Message.Body.ToString();
-            await itemRepository.DeleteItemById(itemId);
 
-            _logger.Log(LogLevel.Information, $"Read itemId: {itemId}");
+            var itemDeleted = DeserializeObject(args.Message.Body);
+            _logger.Log(LogLevel.Information, $"Read itemId: {itemDeleted.itemId} from service bus");
+
+            await itemRepository.DeleteItemById(itemDeleted.itemId);
+            _logger.Log(LogLevel.Information, $"Deleted item with id: {itemDeleted.itemId}");
         }
 
         await args.CompleteMessageAsync(args.Message);
@@ -47,8 +50,9 @@ public class ServiceBusItemDeletedProcessor : BaseHostedService
         return Task.CompletedTask;
     }
 
-    protected override object DeserializeObject(BinaryData data)
+    protected override ItemDeletedContract DeserializeObject(BinaryData data)
     {
-        throw new NotImplementedException();
+        var ItemDeleted = JsonSerializer.Deserialize<ItemDeletedContract>(data) ?? throw new Exception("Could not serialize from service bus");
+        return ItemDeleted;
     }
 }

@@ -1,5 +1,4 @@
 using Azure.Messaging.ServiceBus;
-using Infrastructure.Persistence.ServiceBus.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

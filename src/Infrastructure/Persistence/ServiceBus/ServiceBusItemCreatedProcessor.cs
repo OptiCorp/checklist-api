@@ -2,8 +2,8 @@
 using System.Text.Json;
 using Application.Common.Interfaces;
 using Azure.Messaging.ServiceBus;
+using checklist_inventory_contracts.Items;
 using Domain.Entities;
-using Infrastructure.Persistence.ServiceBus.Models;
 using Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,9 +57,9 @@ public class ServiceBusItemCreatedProcessor : BaseHostedService
         return Task.CompletedTask;
     }
 
-    protected override ItemCreated DeserializeObject(BinaryData data)
+    protected override ItemCreatedContract DeserializeObject(BinaryData data)
     {
-        var ItemCreated = JsonSerializer.Deserialize<ItemCreated>(data) ?? throw new Exception("Could not serialize from service bus");
+        var ItemCreated = JsonSerializer.Deserialize<ItemCreatedContract>(data) ?? throw new Exception("Could not serialize from service bus");
         return ItemCreated;
     }
 
